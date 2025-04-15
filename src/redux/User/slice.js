@@ -8,8 +8,11 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    login: (state) => {
-      state.login = true;
+    loginClient: (state) => {
+      state.login = "client";
+    },
+    loginProfissional: (state) => {
+      state.login = "profissional";
     },
     logout: (state) => {
       state.login = null;

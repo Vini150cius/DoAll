@@ -4,6 +4,9 @@ import InitScreen from "./screens/InitScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 const Stack = createStackNavigator();
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import ToggleTypeUser from "./screens/ToggleTypeUser";
+import SignIn from "./screens/SignIn";
+import SignUp from "./screens/SignUp";
 
 const Drawer = createDrawerNavigator();
 
@@ -19,9 +22,9 @@ export default function Routes() {
             initialRouteName="InitScreen"
           >
             <Stack.Screen name="InitScreen" component={InitScreen} />
-            {/* <Stack.Screen name="ToggleTypeUser" component={ToggleTypeUser} />
+            <Stack.Screen name="ToggleTypeUser" component={ToggleTypeUser} />
             <Stack.Screen name="SignIn" component={SignIn} />
-            <Stack.Screen name="SignUp" component={SignUp} /> */}
+            <Stack.Screen name="SignUp" component={SignUp} /> 
           </Stack.Navigator>
         </>
       ) : loginStatus == "client" ? (

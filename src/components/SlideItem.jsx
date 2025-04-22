@@ -1,9 +1,19 @@
-import { Image, StyleSheet, Text, View, Dimensions, TouchableOpacity } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
+import { typeUser } from "../redux/User/slice";
+import { useDispatch } from "react-redux";
 
 const { width, height } = Dimensions.get("screen");
 
-const SlideItem = ({ item , navigation }) => {
+const SlideItem = ({ item, navigation }) => {
+  const dispatch = useDispatch();
   return (
     <View style={styles.container}>
       <Image source={item.img} resizeMode="cover" style={styles.image} />
@@ -12,7 +22,16 @@ const SlideItem = ({ item , navigation }) => {
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.text}>{item.text}</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate("SignIn")}
+          onPress={() => {
+            navigation.navigate("SignIn");
+            if (item.title == "Cliente") {
+              dispatch(typeUser("client"));
+            } else if (item.title == "Profissional") {
+              dispatch(typeUser("profissional"));
+            } else {
+              console.log("erro");
+            }
+          }}
           style={styles.button}
         >
           <Text style={styles.textButton}>Entrar</Text>
@@ -35,7 +54,6 @@ const styles = StyleSheet.create({
     flex: 0.5,
     width: "80%",
     height: "80%",
-
   },
   content: {
     flex: 0.3,
@@ -55,18 +73,18 @@ const styles = StyleSheet.create({
   },
   button: {
     fontSize: 45,
-    backgroundColor: '#b18461',
+    backgroundColor: "#b18461",
     borderCurve: 100,
     paddingHorizontal: 55,
     paddingVertical: 15,
     marginTop: 10,
-    alignItems: 'center',
-    overflow: 'hidden',
+    alignItems: "center",
+    overflow: "hidden",
     borderRadius: 50,
   },
-  textButton:{
+  textButton: {
     fontSize: 25,
     fontWeight: 700,
-    color: '#E4E4E4',
-  }
+    color: "#E4E4E4",
+  },
 });

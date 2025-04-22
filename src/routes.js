@@ -29,13 +29,16 @@ export default function Routes() {
         </>
       ) : loginStatus == "client" ? (
         <Drawer.Navigator>
-          <Drawer.Screen name="Home" component={HomeScreen} />
-          <Drawer.Screen name="Profile" component={ProfileScreen} />
+          {/* <Drawer.Screen name="Home" component={HomeScreen} />
+          <Drawer.Screen name="Profile" component={ProfileScreen} /> */}
+          <Drawer.Screen name="Profile" component={InitScreen} />
+          
         </Drawer.Navigator>
       ) : (
         <Drawer.Navigator>
-          <Drawer.Screen name="Home" component={HomeScreen} />
-          <Drawer.Screen name="Profile" component={ProfileScreen} />
+          {/* <Drawer.Screen name="Home" component={HomeScreen} />
+          <Drawer.Screen name="Profile" component={ProfileScreen} /> */}
+          <Drawer.Screen name="Profile" component={InitScreen} />
         </Drawer.Navigator>
       )}
     </>

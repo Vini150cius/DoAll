@@ -13,6 +13,9 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 5,
+    paddingHorizontal: 35,
+    alignContent: "center",
+    justifyContent: "center",
   },
   titleContainer: {
     paddingLeft: "20",
@@ -28,6 +31,20 @@ const styles = StyleSheet.create({
   },
   backButton: {
     paddingTop: 15,
-  }
+  },
+  label: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#E4E4E4",
+    paddingBottom: 5,
+  },
+  input: {
+    backgroundColor: "#888",
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 20,
+    fontSize: 18,
+    color: "#333E44",
+  },
 });
 export default styles;

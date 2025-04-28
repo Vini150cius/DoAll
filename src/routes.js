@@ -7,6 +7,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import ToggleTypeUser from "./screens/ToggleTypeUser";
 import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
+import Home from "./screens/Home";
 
 const Drawer = createDrawerNavigator();
 
@@ -29,10 +30,7 @@ export default function Routes() {
         </>
       ) : loginStatus == "client" ? (
         <Drawer.Navigator>
-          {/* <Drawer.Screen name="Home" component={HomeScreen} />
-          <Drawer.Screen name="Profile" component={ProfileScreen} /> */}
-          <Drawer.Screen name="Profile" component={InitScreen} />
-          
+          <Drawer.Screen name="Home" component={Home} />
         </Drawer.Navigator>
       ) : (
         <Drawer.Navigator>

@@ -1,44 +1,82 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import InitScreen from "./screens/InitScreen";
-import { createStackNavigator } from "@react-navigation/stack";
-const Stack = createStackNavigator();
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createStackNavigator } from "@react-navigation/stack";
+import { View, Image, StyleSheet } from "react-native";
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+} from "@react-navigation/drawer";
+import InitScreen from "./screens/InitScreen";
 import ToggleTypeUser from "./screens/ToggleTypeUser";
 import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
 import Home from "./screens/Home";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
+const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-export default function Routes() {
+function DrawerApp() {
   const loginStatus = useSelector((state) => state.userReducer.login);
-
   return (
-    <>
-      {loginStatus == null ? (
-        <>
-          <Stack.Navigator
-            screenOptions={{ headerShown: false }}
-            initialRouteName="InitScreen"
-          >
-            <Stack.Screen name="InitScreen" component={InitScreen} />
-            <Stack.Screen name="ToggleTypeUser" component={ToggleTypeUser} />
-            <Stack.Screen name="SignIn" component={SignIn} />
-            <Stack.Screen name="SignUp" component={SignUp} /> 
-          </Stack.Navigator>
-        </>
-      ) : loginStatus == "client" ? (
-        <Drawer.Navigator>
-          <Drawer.Screen name="Home" component={Home} />
-        </Drawer.Navigator>
-      ) : (
-        <Drawer.Navigator>
-          {/* <Drawer.Screen name="Home" component={HomeScreen} />
-          <Drawer.Screen name="Profile" component={ProfileScreen} /> */}
-          <Drawer.Screen name="Profile" component={InitScreen} />
-        </Drawer.Navigator>
+    <Drawer.Navigator
+      screenOptions={{
+        headerShown: false,
+        drawerActiveTintColor: "#FE8330",
+        drawerInactiveTintColor: "#000",
+      }}
+      drawerContent={(props) => (
+        <View style={{ flex: 1 }}>
+          <View style={styles.logoContainer}>
+            <Image source={require("../assets/icon.png")} style={styles.logo} />
+          </View>
+          <DrawerContentScrollView {...props}>
+            <DrawerItemList {...props} />
+          </DrawerContentScrollView>
+        </View>
       )}
-    </>
+    >
+      <Drawer.Screen
+        name="Home"
+        component={Home}
+        options={{
+          drawerIcon: ({ focused, size }) => (
+            <AntDesign
+              name="home"
+              size={size}
+              color={focused ? "#FE8330" : "#000"}
+            />
+          ),
+        }}
+      />
+    </Drawer.Navigator>
   );
 }
+
+export default function Routes() {
+  return (
+    <Stack.Navigator
+    screenOptions={{ headerShown: false }}
+    initialRouteName="DrawerApp"
+    >
+      <Stack.Screen name="DrawerApp" component={DrawerApp} />
+      <Stack.Screen name="InitScreen" component={InitScreen} />
+      <Stack.Screen name="ToggleTypeUser" component={ToggleTypeUser} />
+      <Stack.Screen name="SignIn" component={SignIn} />
+      <Stack.Screen name="SignUp" component={SignUp} />
+    </Stack.Navigator>
+  );
+}
+
+const styles = StyleSheet.create({
+  logoContainer: {
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  logo: {
+    width: 100,
+    height: 100,
+    resizeMode: "contain",
+  },
+});

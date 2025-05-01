@@ -9,7 +9,7 @@ import {
 import styles from "./styles";
 import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";
-import { login, typeUser } from "../../redux/User/slice";
+import { login } from "../../redux/User/slice";
 import {
   getAuth,
   createUserWithEmailAndPassword} from "firebase/auth";
@@ -53,20 +53,6 @@ export default function SignUp({ navigation }) {
       });
   };
 
-  const signInWithGoogle = () => {
-    const auth = getAuth();
-    getRedirectResult(auth)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        const user = result.user;
-      }).catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        const email = error.customData.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-      });
-  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -105,9 +91,6 @@ export default function SignUp({ navigation }) {
           onChangeText={setConfirmPassword}
           secureTextEntry
         />
-        <TouchableOpacity style={styles.button} onPress={signInWithGoogle}>
-          <Text style={styles.textButton}>Goog</Text>
-        </TouchableOpacity>
         {error && <Text style={styles.error}>{error}</Text>}
         <TouchableOpacity style={styles.button} onPress={signUp}>
           <Text style={styles.textButton}>Entrar</Text>

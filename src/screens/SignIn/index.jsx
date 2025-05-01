@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import styles from "./styles";
 import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons";
-import { useSelector } from "react-redux";
-import { typeUser } from "../../redux/User/slice";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../redux/User/slice";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -19,6 +19,7 @@ export default function SignIn({ navigation }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const typeUser = useSelector((state) => state.userReducer.typeUser);
+  const dispatch = useDispatch();
 
 
   const firebaseConfig = {
@@ -48,8 +49,10 @@ export default function SignIn({ navigation }) {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        return;
       });
 
+    dispatch(login(typeUser));
     navigation.navigate("Home");
   };
 
@@ -93,7 +96,6 @@ export default function SignIn({ navigation }) {
           <Text
             style={styles.textButton}
             onPress={() => {
-              
               navigation.navigate("SignUp");
             }}
           >

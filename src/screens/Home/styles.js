@@ -4,6 +4,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#1c2024",
+    color: "#fff",
   },
   header: {
     backgroundColor: "#b18461",
@@ -28,12 +29,39 @@ const styles = StyleSheet.create({
   searchIcon: {
     marginLeft: 10,
   },
-
-
-
-
+  title: {
+    color: "#fff",
+    textAlign: "center",
+  },
+  input: {
+    backgroundColor: "#888",
+    borderRadius: 10,
+    padding: 10,
+    margin: 20,
+    fontSize: 18,
+    color: "#333E44",
+  },
+  button: {
+    backgroundColor: "#b18461",
+    borderRadius: 50,
+    paddingVertical: 15,
+    marginVertical: 10,
+    width: 200,
+    alignItems: "center",
+    alignSelf: "center",
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  listContainer: {
+    flex: 1,
+  },
   areaPessoa: {
-    border: '2px solid white',
+    borderWidth: 2,
+    borderColor: 'white',
+    borderRadius: 10,
     borderRadius: 10,
     marginBottom: 10,
     padding: 5
@@ -46,7 +74,6 @@ const styles = StyleSheet.create({
 
   listaContainer: {
     padding: 10,
-    backgroundColor: '#121'
   }
 });
 export default styles;

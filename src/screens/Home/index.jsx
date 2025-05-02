@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   FlatList,
   SafeAreaView,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -11,7 +12,14 @@ import styles from "./styles";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
+import { onValue, ref, set } from "firebase/database";
 import axios from "axios";
+import { db } from "../../config/firebase";
+import Toast from "react-native-toast-message";
+
+//! PESSOAL: eu já inseri o firebase e está funcionando, usei esse video como base:https://www.youtube.com/watch?v=q1bxyyKh3Dc, fiz o create e o read, não fiz o resto pq não há necessidade ainda. Não sei se o firebase vcs preferem usar na conta do Zeno para que todos tenham acesso ou na minha conta, mas eu fiz na minha conta. Se vcs preferirem usar a conta do Zeno, é só me avisar que eu coloco lá. 
+//? A, vcs devem notar uma semelhança com o flatList da Magali, já que eu peguei o código dela...
+
 
 export default function Home({ navigation }) {
   const [text, setText] = useState("");
@@ -19,11 +27,11 @@ export default function Home({ navigation }) {
   const idUser = useSelector((state) => state.userReducer.idUser);
 
   useEffect(() => {
-    viewTest();
+    read();
     const interval = setInterval(() => {
-      viewTest();
+      read();
     }, 5000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -36,69 +44,41 @@ export default function Home({ navigation }) {
 
   const renderItem = ({ item }) => <Pessoa data={item} />;
 
-  async function addTest() {
-    try {
-      const getResponse = await axios.get(
-        `https://doall-83ded-default-rtdb.firebaseio.com/teste/${idUser}.json`
-      );
-      
-      const currentData = getResponse.data || {};
-      
-      const newItemId = `item_${Date.now()}`;
-      
-      const updatedData = {
-        ...currentData,
-        [newItemId]: { 
-          text: text,
-        }
-      };
-      
-      const res = await axios.put(
-        `https://doall-83ded-default-rtdb.firebaseio.com/teste/${idUser}.json`,
-        updatedData
-      );
-      
-      console.log("Dados adicionados:", res.data);
-      setText(""); 
-      viewTest(); 
-    } catch (error) {
-      console.error("Erro ao adicionar teste:", error);
-    }
+  function create() {
+    const id = idUser + "-" + new Date().getTime(); 
+    set(ref(db, "feed/" + id), {
+      text: text,
+      idUser: idUser,
+    })
+      .then(() => {
+        setText("");
+        Toast.show({
+          type: "success",
+          text1: "Sucesso",
+          text2: "Dados enviados com sucesso!",
+        });
+      })
+      .catch(() => {
+        Toast.show({
+          type: "error",
+          text1: "Erro",
+          text2: "Erro ao enviar dados!",
+        });
+      });
   }
 
-  async function viewTest() {
-    try {
-      const res = await axios.get(
-        "https://doall-83ded-default-rtdb.firebaseio.com/teste.json"
-      );
-      
-      if (res.data) {
-        const feedArray = [];
-
-        Object.keys(res.data).forEach(userId => {
-          const userData = res.data[userId];
-          if (userData && typeof userData === 'object') {
-            Object.keys(userData).forEach(itemId => {
-              feedArray.push({
-                id: `${userId}_${itemId}`, 
-                idUser: userId,
-                itemId: itemId,
-                ...userData[itemId]
-              });
-            });
-          }
-        });
-
-        feedArray.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-        
-        setFeed(feedArray);
-      } else {
-        setFeed([]);
-      }
-    } catch (error) {
-      console.error("Erro ao buscar dados:", error);
-      setFeed([]);
-    }
+  function read() {
+    const startCountRef = ref(db, "feed/");
+    onValue(startCountRef, (snapshot) => {
+      const data = snapshot.val();
+      const feedData = Object.keys(data).map((key) => ({
+        id: key, 
+        idUser: key, 
+        text: data[key].text,
+        ...data[key],
+      }));
+      setFeed(feedData);
+    });
   }
 
   return (
@@ -121,13 +101,13 @@ export default function Home({ navigation }) {
       </View>
       <View style={styles.content}>
         <Text style={styles.title}>Bem-vindo ao Home Screen {idUser}</Text>
-        <TextInput 
-          style={styles.input} 
-          value={text} 
+        <TextInput
+          style={styles.input}
+          value={text}
           onChangeText={setText}
           placeholder="Digite seu texto aqui"
         />
-        <TouchableOpacity style={styles.button} onPress={addTest}>
+        <TouchableOpacity style={styles.button} onPress={create}>
           <Text style={styles.buttonText}>Enviar</Text>
         </TouchableOpacity>
       </View>
@@ -137,7 +117,9 @@ export default function Home({ navigation }) {
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
           contentContainerStyle={styles.listaContainer}
-          ListEmptyComponent={<Text style={styles.emptyText}>Nenhum dado encontrado</Text>}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>Nenhum dado encontrado</Text>
+          }
         />
       </View>
     </SafeAreaView>

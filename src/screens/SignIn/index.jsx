@@ -9,10 +9,11 @@ import {
 import styles from "./styles";
 import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../redux/User/slice";
+import { idUser, login } from "../../redux/User/slice";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { app } from "../../config/firebase";
 
 export default function SignIn({ navigation }) {
   const [email, setEmail] = useState("");
@@ -21,39 +22,29 @@ export default function SignIn({ navigation }) {
   const typeUser = useSelector((state) => state.userReducer.typeUser);
   const dispatch = useDispatch();
 
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBL9KoyoV-J0nKCH7gM9QICxAExFlh9OWM",
-    authDomain: "doall-83ded.firebaseapp.com",
-    projectId: "doall-83ded",
-    storageBucket: "doall-83ded.firebasestorage.app",
-    messagingSenderId: "910120304549",
-    appId: "1:910120304549:web:7245488810c96846af324c",
-    measurementId: "G-B388X7XZ68"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-
   const signIn = () => {
     if (email === "" || password === "") {
       setError("Preencha todos os campos");
       return;
     }
 
-    const auth = getAuth();
+    const auth = getAuth(app);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        dispatch(idUser(user.uid));
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
-        return;
+        Toast.show({
+            type: 'error',
+            text1: 'Erro ao entrar',
+            text2: errorMessage,
+        });
       });
 
     dispatch(login(typeUser));
-    navigation.navigate("Home");
+    navigation.navigate("DrawerApp");
   };
 
   return (
@@ -91,15 +82,15 @@ export default function SignIn({ navigation }) {
         <TouchableOpacity style={styles.button} onPress={signIn}>
           <Text style={styles.textButton}>Entrar</Text>
         </TouchableOpacity>
-        <Text style={styles.textButton}>
-          Não tem uma conta?{" "}
+        <Text style={styles.text}>
+          Você ainda não tem uma conta? {" "}
           <Text
-            style={styles.textButton}
+            style={styles.textSignUp}
             onPress={() => {
               navigation.navigate("SignUp");
             }}
           >
-            Cadastre-se
+            Criar conta
           </Text>
         </Text>
       </View>

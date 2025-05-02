@@ -20,11 +20,17 @@ const Drawer = createDrawerNavigator();
 function DrawerApp() {
   const loginStatus = useSelector((state) => state.userReducer.login);
   return (
+    // documentação: https://reactnavigation.org/docs/drawer-navigator
+
     <Drawer.Navigator
       screenOptions={{
         headerShown: false,
-        drawerActiveTintColor: "#FE8330",
-        drawerInactiveTintColor: "#000",
+        drawerActiveTintColor: "#b18461",
+        drawerInactiveTintColor: "#ccc",
+        drawerStyle: {
+          backgroundColor: "#1c2024",
+          width: 250,
+        },
       }}
       drawerContent={(props) => (
         <View style={{ flex: 1 }}>
@@ -45,7 +51,20 @@ function DrawerApp() {
             <AntDesign
               name="home"
               size={size}
-              color={focused ? "#FE8330" : "#000"}
+              color={focused ? "#b18461" : "#ccc"}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="InitScreen"
+        component={InitScreen}
+        options={{
+          drawerIcon: ({ focused, size }) => (
+            <AntDesign
+              name="home"
+              size={size}
+              color={focused ? "#b18461" : "#ccc"}
             />
           ),
         }}
@@ -58,7 +77,7 @@ export default function Routes() {
   return (
     <Stack.Navigator
     screenOptions={{ headerShown: false }}
-    initialRouteName="DrawerApp"
+    initialRouteName="SignIn"
     >
       <Stack.Screen name="DrawerApp" component={DrawerApp} />
       <Stack.Screen name="InitScreen" component={InitScreen} />

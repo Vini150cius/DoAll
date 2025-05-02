@@ -3,9 +3,10 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#1c2024",
   },
   header: {
-    backgroundColor: "#FE8330",
+    backgroundColor: "#b18461",
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 10,
@@ -27,5 +28,25 @@ const styles = StyleSheet.create({
   searchIcon: {
     marginLeft: 10,
   },
+
+
+
+
+  areaPessoa: {
+    border: '2px solid white',
+    borderRadius: 10,
+    marginBottom: 10,
+    padding: 5
+  },
+
+  textoPessoa: {
+    marginBottom: 10,
+    color: 'white'
+  },
+
+  listaContainer: {
+    padding: 10,
+    backgroundColor: '#121'
+  }
 });
 export default styles;

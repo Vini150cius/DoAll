@@ -13,7 +13,8 @@ import { login } from "../../redux/User/slice";
 import {
   getAuth,
   createUserWithEmailAndPassword} from "firebase/auth";
-import {  getRedirectResult, GoogleAuthProvider } from "firebase/auth";
+import { app } from "../../config/firebase";
+import Toast from "react-native-toast-message";
 
 // Documentação sobre o firebase: https://firebase.google.com/docs/auth/web/start?hl=pt-br#web_2
 
@@ -24,10 +25,6 @@ export default function SignUp({ navigation }) {
   const [error, setError] = useState(null);
   const typeUser = useSelector((state) => state.userReducer.typeUser);
   const dispatch = useDispatch();
-
-  const handleTypeUser = (typeUser) => {
-    dispatch(login(typeUser));
-  };
 
   const signUp = () => {
     if (email === "" || password === "" || confirmPassword === "") {
@@ -40,16 +37,20 @@ export default function SignUp({ navigation }) {
       return;
     }
 
-    const auth = getAuth();
+    const auth = getAuth(app);
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        handleTypeUser(typeUser);
+        dispatch(login(typeUser));
         navigation.navigate("Home");
       })
       .catch((error) => {
         const errorMessage = error.message;
-        setError(errorMessage);
+        Toast.show({
+            type: 'error',
+            text1: 'Erro ao entrar',
+            text2: errorMessage,
+        });
       });
   };
 
@@ -95,10 +96,10 @@ export default function SignUp({ navigation }) {
         <TouchableOpacity style={styles.button} onPress={signUp}>
           <Text style={styles.textButton}>Entrar</Text>
         </TouchableOpacity>
-        <Text style={styles.textButton}>
+        <Text style={styles.text}>
           Já tem uma conta?{" "}
           <Text
-            style={styles.textButton}
+            style={styles.textSignIn}
             onPress={() => navigation.navigate("SignIn")}
           >
             Entre

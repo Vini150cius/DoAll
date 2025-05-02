@@ -46,5 +46,32 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#333E44",
   },
+  button: {
+    fontSize: 35,
+    backgroundColor: "#b18461",
+    borderCurve: 100,
+    paddingVertical: 15,
+    marginVertical: 10,
+    borderRadius: 50,
+    width: 200, 
+    alignItems: "center",
+    alignSelf: "center",
+  },
+  textButton: {
+    fontSize: 25,
+    fontWeight: 700,
+    color: "#E4E4E4",
+  },
+  textSignIn: {
+    fontSize: 18,
+    fontWeight: 700,
+    color: "#b18461",
+    textDecorationLine: "underline",
+  },
+  text: {
+    color: "#E4E4E4",
+    fontSize: 14,
+    marginBottom: 10,
+  },
 });
 export default styles;

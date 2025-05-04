@@ -9,16 +9,16 @@ import {
 import styles from "./styles";
 import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../redux/User/slice";
-import {
-  getAuth,
-  createUserWithEmailAndPassword} from "firebase/auth";
-import { app } from "../../config/firebase";
+import { idUser, login } from "../../redux/User/slice";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { app, db } from "../../config/firebase";
 import Toast from "react-native-toast-message";
+import { ref, set } from "firebase/database";
 
 // Documentação sobre o firebase: https://firebase.google.com/docs/auth/web/start?hl=pt-br#web_2
 
 export default function SignUp({ navigation }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -26,8 +26,30 @@ export default function SignUp({ navigation }) {
   const typeUser = useSelector((state) => state.userReducer.typeUser);
   const dispatch = useDispatch();
 
+  function create(user) {
+    set(ref(db, "users/" + user.uid), {
+      idUser: user.uid,
+      name: name.trim(),
+      typeUser: typeUser,
+    })
+      .then(() => {
+        Toast.show({
+          type: "success",
+          text1: "Sucesso",
+          text2: "Dados enviados com sucesso!",
+        });
+      })
+      .catch((error) => {
+        Toast.show({
+          type: "error",
+          text1: "Erro",
+          text2: "Erro ao enviar dados: " + error.message,
+        });
+      });
+  }
+
   const signUp = () => {
-    if (email === "" || password === "" || confirmPassword === "") {
+    if (name === "" || email === "" || password === "" || confirmPassword === "") {
       setError("Preencha todos os campos");
       return;
     }
@@ -41,15 +63,17 @@ export default function SignUp({ navigation }) {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        create(user);
         dispatch(login(typeUser));
-        navigation.navigate("Home");
+        dispatch(idUser(user.uid));
+        navigation.navigate("DrawerApp");
       })
       .catch((error) => {
         const errorMessage = error.message;
         Toast.show({
-            type: 'error',
-            text1: 'Erro ao entrar',
-            text2: errorMessage,
+          type: "error",
+          text1: "Erro ao entrar",
+          text2: errorMessage,
         });
       });
   };
@@ -71,6 +95,12 @@ export default function SignUp({ navigation }) {
         </View>
       </View>
       <View style={styles.formContainer}>
+        <Text style={styles.label}>Nome</Text>
+        <TextInput
+          style={styles.input}
+          value={name}
+          onChangeText={setName}
+        />
         <Text style={styles.label}>Email</Text>
         <TextInput
           style={styles.input}

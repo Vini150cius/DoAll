@@ -66,7 +66,17 @@ export default function SignUp({ navigation }) {
         create(user);
         dispatch(login(typeUser));
         dispatch(idUser(user.uid));
-        navigation.navigate("DrawerApp");
+        try {
+          if (typeUser == "client") {
+            navigation.navigate("DrawerApp");
+          } else if (typeUser == "profissional") {
+            navigation.navigate("ProfessionalSignUp");
+          }else {
+            navigation.navigate("ToggleTypeUser");
+          }
+        } catch (error) {
+          console.error("Erro na navegação:", error);
+        }
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -130,7 +140,9 @@ export default function SignUp({ navigation }) {
           Já tem uma conta?{" "}
           <Text
             style={styles.textSignIn}
-            onPress={() => navigation.navigate("SignIn")}
+            onPress={
+              () => navigation.navigate("SignIn")
+            }
           >
             Entre
           </Text>

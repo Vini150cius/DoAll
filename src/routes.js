@@ -13,6 +13,7 @@ import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
 import Home from "./screens/Home";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import ProfessionalSignUp from "./screens/ProfessionalSignUp";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -77,13 +78,14 @@ export default function Routes() {
   return (
     <Stack.Navigator
     screenOptions={{ headerShown: false }}
-    initialRouteName="SignIn"
+    initialRouteName="ProfessionalSignUp"
     >
       <Stack.Screen name="DrawerApp" component={DrawerApp} />
       <Stack.Screen name="InitScreen" component={InitScreen} />
       <Stack.Screen name="ToggleTypeUser" component={ToggleTypeUser} />
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="SignUp" component={SignUp} />
+      <Stack.Screen name="ProfessionalSignUp" component={ProfessionalSignUp} />
     </Stack.Navigator>
   );
 }

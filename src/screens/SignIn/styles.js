@@ -73,5 +73,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 10,
   },
+  error: {
+    color: "#FF0000",
+    fontSize: 14,
+    marginBottom: 10,
+    textAlign: "center",
+  },
 });
 export default styles;

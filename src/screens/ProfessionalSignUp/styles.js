@@ -86,9 +86,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  containerImage: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+  },
   imageUpload: {
-    width: 100,
-    height: 100,
+    width: 150,
+    height: 150,
     resizeMode: "cover",
   },
   inputFone: {
@@ -111,7 +116,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     borderRadius: 10,
-    border: 'none',
+    border: "none",
     backgroundColor: "#ccc",
     marginBottom: 20,
   },
@@ -131,7 +136,12 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 700,
     color: "#E4E4E4",
-
+  },
+  error: {
+    color: "#ff0000",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 export default styles;

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  Image,
   SafeAreaView,
   ScrollView,
   Text,
@@ -11,11 +12,21 @@ import * as ImagePicker from "expo-image-picker";
 import Feather from "react-native-vector-icons/Feather";
 import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
+import { useSelector } from "react-redux";
+import { ref, set } from "firebase/database";
+import { db } from "../../config/firebase";
 
 export default function ProfessionalSignUp({ navigation }) {
-  const [file, setFile] = useState(null);
-  const [error, setError] = useState(null);
-  const [selectedType, setSelectedType] = useState(null);
+  const [name, setName] = useState("");
+  const [services, setServices] = useState("");
+  const [sentence, setSentence] = useState("");
+  const [file, setFile] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const userId = useSelector((state) => state.userReducer.idUser);
+  const typeUser = useSelector((state) => state.userReducer.typeUser);
 
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -27,10 +38,16 @@ export default function ProfessionalSignUp({ navigation }) {
         text2: "Desculpe, precisamos de permissão para acessar a galeria.",
       });
     } else {
-      const result = await ImagePicker.launchImageLibraryAsync();
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
 
-      if (!result.cancelled) {
-        setFile(result.uri);
+      if (!result.canceled) {
+        const imageUri = result.assets ? result.assets[0].uri : result.uri;
+        setFile(imageUri);
         setError(null);
       }
     }
@@ -47,11 +64,27 @@ export default function ProfessionalSignUp({ navigation }) {
   ];
 
   function submitForm() {
-    function create(user) {
-      set(ref(db, "users/" + user.uid), {
-        idUser: user.uid,
-        name: name.trim(),
+    if (
+      name == "" ||
+      services == "" ||
+      sentence == "" ||
+      file == "" ||
+      telefone == "" ||
+      email == ""
+    ) {
+      setError("Preencha todos os campos");
+      return;
+    } else {
+      set(ref(db, "users/" + userId), {
+        idUser: userId,
+        name: name,
         typeUser: typeUser,
+        file: file,
+        sentence: sentence,
+        services: services,
+        telefone: telefone,
+        email: email,
+        serviceType: serviceTypes[selectedType].name,
       })
         .then(() => {
           Toast.show({
@@ -59,7 +92,10 @@ export default function ProfessionalSignUp({ navigation }) {
             text1: "Sucesso",
             text2: "Dados enviados com sucesso!",
           });
-          navigation.navigate("DrawerApp");
+
+          setTimeout(() => {
+            navigation.navigate("DrawerApp");
+          }, 500);
         })
         .catch((error) => {
           Toast.show({
@@ -77,10 +113,17 @@ export default function ProfessionalSignUp({ navigation }) {
         <Text style={styles.textHeader}>Conta do profissional</Text>
       </View>
       <View style={styles.containerForm}>
-        <ScrollView style={styles.scrollView}>
+        <ScrollView
+          style={styles.scrollView}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.containerInput}>
             <Text style={styles.textInput}>Escreva o seu nome</Text>
-            <TextInput style={styles.inputName} />
+            <TextInput
+              style={styles.inputName}
+              value={name}
+              onChangeText={setName}
+            />
           </View>
           <View style={styles.containerInput}>
             <Text style={styles.textInput}>Escreva os seus serviços</Text>
@@ -89,6 +132,8 @@ export default function ProfessionalSignUp({ navigation }) {
               multiline={true}
               numberOfLines={4}
               maxLength={100}
+              value={services}
+              onChangeText={setServices}
             />
           </View>
           <View style={styles.containerInput}>
@@ -97,6 +142,8 @@ export default function ProfessionalSignUp({ navigation }) {
               style={styles.inputSentence}
               placeholder="Ex: Cuidar do seu cabelo é minha arte."
               placeholderTextColor="#444"
+              value={sentence}
+              onChangeText={setSentence}
             />
           </View>
           <View style={styles.containerInput}>
@@ -105,9 +152,11 @@ export default function ProfessionalSignUp({ navigation }) {
             <TouchableOpacity style={styles.buttonUpload} onPress={pickImage}>
               <Feather name="upload-cloud" size={60} color="#888" />
             </TouchableOpacity>
-            {file && (
-              <Image source={{ uri: file }} style={styles.imageUpload} />
-            )}
+            <View style={styles.containerImage}>
+              {file && (
+                <Image source={{ uri: file }} style={styles.imageUpload} />
+              )}
+            </View>
           </View>
           <View style={styles.containerInput}>
             <Text style={styles.textInput}>
@@ -117,11 +166,15 @@ export default function ProfessionalSignUp({ navigation }) {
               style={styles.inputFone}
               placeholder="Telefone"
               placeholderTextColor="#444"
+              value={telefone}
+              onChangeText={setTelefone}
             />
             <TextInput
               style={styles.inputEmail}
               placeholder="Email"
               placeholderTextColor="#444"
+              value={email}
+              onChangeText={setEmail}
             />
             <Picker
               style={styles.picker}
@@ -133,6 +186,7 @@ export default function ProfessionalSignUp({ navigation }) {
               ))}
             </Picker>
           </View>
+          {error && <Text style={styles.error}>{error}</Text>}
           <TouchableOpacity style={styles.submitForm} onPress={submitForm}>
             <Text style={styles.textSubmitForm}>Salvar</Text>
           </TouchableOpacity>

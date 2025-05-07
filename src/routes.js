@@ -78,7 +78,7 @@ export default function Routes() {
   return (
     <Stack.Navigator
     screenOptions={{ headerShown: false }}
-    initialRouteName="ProfessionalSignUp"
+    initialRouteName="InitScreen"
     >
       <Stack.Screen name="DrawerApp" component={DrawerApp} />
       <Stack.Screen name="InitScreen" component={InitScreen} />

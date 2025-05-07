@@ -15,6 +15,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useSelector } from "react-redux";
 import { ref, set } from "firebase/database";
 import { db } from "../../config/firebase";
+import Toast from "react-native-toast-message";
 
 export default function ProfessionalSignUp({ navigation }) {
   const [name, setName] = useState("");
@@ -92,10 +93,7 @@ export default function ProfessionalSignUp({ navigation }) {
             text1: "Sucesso",
             text2: "Dados enviados com sucesso!",
           });
-
-          setTimeout(() => {
-            navigation.navigate("DrawerApp");
-          }, 500);
+          navigation.navigate("DrawerApp");
         })
         .catch((error) => {
           Toast.show({

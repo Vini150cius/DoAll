@@ -49,7 +49,12 @@ export default function SignUp({ navigation }) {
   }
 
   const signUp = () => {
-    if (name === "" || email === "" || password === "" || confirmPassword === "") {
+    if (
+      name === "" ||
+      email === "" ||
+      password === "" ||
+      confirmPassword === ""
+    ) {
       setError("Preencha todos os campos");
       return;
     }
@@ -66,7 +71,17 @@ export default function SignUp({ navigation }) {
         create(user);
         dispatch(login(typeUser));
         dispatch(idUser(user.uid));
-        navigation.navigate("DrawerApp");
+        try {
+          if (typeUser == "client") {
+            navigation.navigate("DrawerApp");
+          } else if (typeUser == "profissional") {
+            navigation.navigate("ProfessionalSignUp");
+          } else {
+            navigation.navigate("ToggleTypeUser");
+          }
+        } catch (error) {
+          console.error("Erro na navegação:", error);
+        }
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -96,11 +111,7 @@ export default function SignUp({ navigation }) {
       </View>
       <View style={styles.formContainer}>
         <Text style={styles.label}>Nome</Text>
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={setName}
-        />
+        <TextInput style={styles.input} value={name} onChangeText={setName} />
         <Text style={styles.label}>Email</Text>
         <TextInput
           style={styles.input}

@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 import Feather from "react-native-vector-icons/Feather";
 import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
@@ -29,6 +30,25 @@ export default function ProfessionalSignUp({ navigation }) {
   const userId = useSelector((state) => state.userReducer.idUser);
   const typeUser = useSelector((state) => state.userReducer.typeUser);
 
+
+  // Função para converter a imagem em base64, já que o Firebase não aceita imagens diretas, então é necessário converter a imagem para base64 antes de enviar.
+  const convertImageToBase64 = async (uri) => {
+    try {
+      const base64 = await FileSystem.readAsStringAsync(uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      return `data:image/jpeg;base64,${base64}`;
+    } catch (error) {
+      console.error("Erro ao converter imagem:", error);
+      Toast.show({
+        type: "error",
+        text1: "Erro",
+        text2: "Erro ao processar a imagem",
+      });
+      return null;
+    }
+  };
+
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -45,11 +65,13 @@ export default function ProfessionalSignUp({ navigation }) {
         aspect: [1, 1],
         quality: 1,
       });
-
       if (!result.canceled) {
         const imageUri = result.assets ? result.assets[0].uri : result.uri;
-        setFile(imageUri);
-        setError(null);
+        const base64Image = await convertImageToBase64(imageUri);
+        if (base64Image) {
+          setFile(base64Image);
+          setError(null);
+        }
       }
     }
   };

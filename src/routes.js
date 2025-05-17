@@ -14,6 +14,7 @@ import SignUp from "./screens/SignUp";
 import Home from "./screens/Home";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import ProfessionalSignUp from "./screens/ProfessionalSignUp";
+import Teste from "./screens/Teste";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -64,6 +65,19 @@ function DrawerApp() {
           drawerIcon: ({ focused, size }) => (
             <AntDesign
               name="home"
+              size={size}
+              color={focused ? "#b18461" : "#ccc"}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Teste"
+        component={Teste}
+        options={{
+          drawerIcon: ({ focused, size }) => (
+            <AntDesign
+              name="teste"
               size={size}
               color={focused ? "#b18461" : "#ccc"}
             />

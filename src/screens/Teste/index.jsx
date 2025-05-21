@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
-  Image,
-  Linking,
   SafeAreaView,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -12,21 +11,20 @@ import {
 import styles from "./styles";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { AirbnbRating } from "react-native-ratings";
+import { useSelector } from "react-redux";
 import { onValue, ref, set } from "firebase/database";
+import axios from "axios";
 import { db } from "../../config/firebase";
+import Toast from "react-native-toast-message";
 
-//! PESSOAL: eu já inseri o firebase e está funcionando, usei esse video como base:https://www.youtube.com/watch?v=q1bxyyKh3Dc, fiz o create e o read, não fiz o resto pq não há necessidade ainda. Não sei se o firebase vcs preferem usar na conta do Zeno para que todos tenham acesso ou na minha conta, mas eu fiz na minha conta. Se vcs preferirem usar a conta do Zeno, é só me avisar que eu coloco lá.
+//! PESSOAL: eu já inseri o firebase e está funcionando, usei esse video como base:https://www.youtube.com/watch?v=q1bxyyKh3Dc, fiz o create e o read, não fiz o resto pq não há necessidade ainda. Não sei se o firebase vcs preferem usar na conta do Zeno para que todos tenham acesso ou na minha conta, mas eu fiz na minha conta. Se vcs preferirem usar a conta do Zeno, é só me avisar que eu coloco lá. 
 //? A, vcs devem notar uma semelhança com o flatList da Magali, já que eu peguei o código dela...
 
-export default function Teste({ navigation }) {
-  const [feed, setFeed] = useState([]);
 
-  const formatPhone = (telefone) => {
-    if (!telefone) return "";
-    return telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-  };
+export default function Home({ navigation }) {
+  const [text, setText] = useState("");
+  const [feed, setFeed] = useState([]);
+  const idUser = useSelector((state) => state.userReducer.idUser);
 
   useEffect(() => {
     read();
@@ -38,51 +36,48 @@ export default function Teste({ navigation }) {
   }, []);
 
   const Pessoa = ({ data }) => (
-    <View style={styles.card}>
-      <Image source={{ uri: data.file }} style={styles.image} />
-      <View style={styles.info}>
-        <Text style={styles.title}>{data.services}</Text>
-        <Text style={styles.subtitle}>{data.sentence}</Text>
-
-        <AirbnbRating
-          count={5}
-          defaultRating={4}
-          size={15}
-          showRating={false}
-          isDisabled
-          selectedColor="#f1c40f"
-          starContainerStyle={styles.stars}
-        />
-
-        <TouchableOpacity
-          onPress={() => {
-            Linking.openURL(`tel:${data.telefone}`);
-          }}
-        >
-          <Text style={styles.phone}>{formatPhone(data.telefone)}</Text>
-        </TouchableOpacity>
-      </View>
-      <FontAwesome name="bookmark-o" size={22} color="#333" style={styles.bookmark} />
+    <View style={styles.areaPessoa}>
+      <Text style={styles.textoPessoa}>idUser: {data.idUser}</Text>
+      <Text style={styles.textoPessoa}>Texto: {data.text}</Text>
     </View>
   );
 
   const renderItem = ({ item }) => <Pessoa data={item} />;
 
+  function create() {
+    const id = idUser + "-" + new Date().getTime(); 
+    set(ref(db, "feed/" + id), {
+      text: text,
+      idUser: idUser,
+    })
+      .then(() => {
+        setText("");
+        Toast.show({
+          type: "success",
+          text1: "Sucesso",
+          text2: "Dados enviados com sucesso!",
+        });
+      })
+      .catch(() => {
+        Toast.show({
+          type: "error",
+          text1: "Erro",
+          text2: "Erro ao enviar dados!",
+        });
+      });
+  }
+
   function read() {
-    const usersRef = ref(db, "users/");
-    onValue(usersRef, (snapshot) => {
+    const startCountRef = ref(db, "feed/");
+    onValue(startCountRef, (snapshot) => {
       const data = snapshot.val();
-
-      if (data) {
-        const feedData = Object.keys(data).map((key) => ({
-          id: key,
-          ...data[key],
-        }));
-
-        setFeed(feedData);
-      } else {
-        setFeed([]);
-      }
+      const feedData = Object.keys(data).map((key) => ({
+        id: key, 
+        idUser: key, 
+        text: data[key].text,
+        ...data[key],
+      }));
+      setFeed(feedData);
     });
   }
 
@@ -102,6 +97,18 @@ export default function Teste({ navigation }) {
         />
         <TouchableOpacity style={styles.searchIcon}>
           <Ionicons name="notifications" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.content}>
+        <Text style={styles.title}>Bem-vindo ao Home Screen {idUser}</Text>
+        <TextInput
+          style={styles.input}
+          value={text}
+          onChangeText={setText}
+          placeholder="Digite seu texto aqui"
+        />
+        <TouchableOpacity style={styles.button} onPress={create}>
+          <Text style={styles.buttonText}>Enviar</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.listContainer}>

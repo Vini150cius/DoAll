@@ -3,14 +3,15 @@ import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 
   const firebaseConfig = {
-    apiKey: "AIzaSyBL9KoyoV-J0nKCH7gM9QICxAExFlh9OWM",
-    authDomain: "doall-83ded.firebaseapp.com",
-    projectId: "doall-83ded",
-    storageBucket: "doall-83ded.firebasestorage.app",
-    messagingSenderId: "910120304549",
-    appId: "1:910120304549:web:7245488810c96846af324c",
-    measurementId: "G-B388X7XZ68"
-  };
+  apiKey: "AIzaSyDq2_JdA5vcbpoEc1wwm22Z8lhCSnF9ux8",
+  authDomain: "pam-doall.firebaseapp.com",
+  databaseURL: "https://pam-doall-default-rtdb.firebaseio.com",
+  projectId: "pam-doall",
+  storageBucket: "pam-doall.firebasestorage.app",
+  messagingSenderId: "4140551182",
+  appId: "1:4140551182:web:ba8a7c7b12bf907ac7005f",
+  measurementId: "G-N16EVJDD84"
+};
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);

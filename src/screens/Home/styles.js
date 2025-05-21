@@ -29,51 +29,53 @@ const styles = StyleSheet.create({
   searchIcon: {
     marginLeft: 10,
   },
+  card: {
+    flexDirection: "row",
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 12,
+    margin: 12,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    alignItems: "flex-start",
+    position: "relative",
+  },
+  image: {
+    width: 70,
+    height: 70,
+    borderRadius: 8,
+    marginRight: 10,
+  },
+  info: {
+    flex: 1,
+  },
   title: {
-    color: "#fff",
-    textAlign: "center",
-  },
-  input: {
-    backgroundColor: "#888",
-    borderRadius: 10,
-    padding: 10,
-    margin: 20,
-    fontSize: 18,
-    color: "#333E44",
-  },
-  button: {
-    backgroundColor: "#b18461",
-    borderRadius: 50,
-    paddingVertical: 15,
-    marginVertical: 10,
-    width: 200,
-    alignItems: "center",
-    alignSelf: "center",
-  },
-  buttonText: {
-    fontSize: 18,
-    color: "#fff",
     fontWeight: "bold",
+    fontSize: 16,
+  },
+  subtitle: {
+    fontSize: 13,
+    marginVertical: 4,
+    color: "#333",
+  },
+  stars: {
+    alignSelf: "flex-start",
+    marginVertical: 4,
+  },
+  phone: {
+    color: "#007BFF",
+    fontSize: 13,
+  },
+  bookmark: {
+    position: "absolute",
+    top: 10,
+    right: 10,
   },
   listContainer: {
     flex: 1,
   },
-  areaPessoa: {
-    borderWidth: 2,
-    borderColor: 'white',
-    borderRadius: 10,
-    borderRadius: 10,
-    marginBottom: 10,
-    padding: 5
-  },
-
-  textoPessoa: {
-    marginBottom: 10,
-    color: 'white'
-  },
-
-  listaContainer: {
-    padding: 10,
-  }
 });
+
 export default styles;

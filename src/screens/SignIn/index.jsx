@@ -33,18 +33,17 @@ export default function SignIn({ navigation }) {
       .then((userCredential) => {
         const user = userCredential.user;
         dispatch(idUser(user.uid));
+        dispatch(login(typeUser));
+        navigation.navigate("DrawerApp");
       })
       .catch((error) => {
         const errorMessage = error.message;
         Toast.show({
-            type: 'error',
-            text1: 'Erro ao entrar',
-            text2: errorMessage,
+          type: "error",
+          text1: "Erro ao entrar",
+          text2: errorMessage,
         });
       });
-
-    dispatch(login(typeUser));
-    navigation.navigate("DrawerApp");
   };
 
   return (
@@ -78,12 +77,12 @@ export default function SignIn({ navigation }) {
           onChangeText={setPassword}
           secureTextEntry
         />
-      {error && <Text style={styles.error}>{error}</Text>}
+        {error && <Text style={styles.error}>{error}</Text>}
         <TouchableOpacity style={styles.button} onPress={signIn}>
           <Text style={styles.textButton}>Entrar</Text>
         </TouchableOpacity>
         <Text style={styles.text}>
-          Você ainda não tem uma conta? {" "}
+          Você ainda não tem uma conta?{" "}
           <Text
             style={styles.textSignUp}
             onPress={() => {

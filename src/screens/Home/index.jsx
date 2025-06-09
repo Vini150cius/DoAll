@@ -87,6 +87,7 @@ export default function Teste({ navigation }) {
   }
 
   return (
+  typeUser === 'client' ? (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity
@@ -107,7 +108,7 @@ export default function Teste({ navigation }) {
       <View style={styles.listContainer}>
         <FlatList
           data={feed}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
           contentContainerStyle={styles.listaContainer}
           ListEmptyComponent={
@@ -116,5 +117,12 @@ export default function Teste({ navigation }) {
         />
       </View>
     </SafeAreaView>
-  );
+    //daqui para baixo não mexer pretinho
+  ) : (
+    //pretinho não mexer
+    <View>
+      <Text>Você não é um cliente.</Text>
+    </View>
+  )
+);
 }

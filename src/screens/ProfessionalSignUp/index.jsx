@@ -98,7 +98,7 @@ export default function ProfessionalSignUp({ navigation }) {
       setError("Preencha todos os campos");
       return;
     } else {
-      set(ref(db, "users/" + userId), {
+      set(ref(db, "users/profissional" + userId), {
         idUser: userId,
         name: name,
         typeUser: typeUser,

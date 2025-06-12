@@ -29,13 +29,6 @@ const styles = StyleSheet.create({
   searchIcon: {
     marginLeft: 10,
   },
-  listCliente: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-    marginLeft: 15,
-    marginBottom: 10,
-  },
   card: {
     flexDirection: "row",
     backgroundColor: "#fff",
@@ -216,6 +209,112 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     justifyContent: "flex-start",
+  },
+
+  containerForm: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+
+  scrollView: {
+    width: "100%",
+    maxHeight: "90%",
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 20,
+    elevation: 10,
+  },
+
+  containerInput: {
+    marginBottom: 20,
+  },
+
+  textInput: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 8,
+  },
+
+  inputName: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    backgroundColor: "#f9f9f9",
+  },
+
+  inputServices: {
+    height: 100,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    padding: 15,
+    fontSize: 16,
+    backgroundColor: "#f9f9f9",
+    textAlignVertical: "top",
+  },
+
+  inputSentence: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    backgroundColor: "#f9f9f9",
+  },
+
+  buttonUpload: {
+    height: 120,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    borderStyle: "dashed",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fafafa",
+  },
+
+  inputFone: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    backgroundColor: "#f9f9f9",
+    marginBottom: 10,
+  },
+
+  inputEmail: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    backgroundColor: "#f9f9f9",
+  },
+
+  submitForm: {
+    backgroundColor: "#4CAF50",
+    paddingVertical: 15,
+    borderRadius: 12,
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 20,
+  },
+
+  textSubmitForm: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
 

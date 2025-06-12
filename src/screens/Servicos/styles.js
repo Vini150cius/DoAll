@@ -29,13 +29,6 @@ const styles = StyleSheet.create({
   searchIcon: {
     marginLeft: 10,
   },
-  listCliente: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-    marginLeft: 15,
-    marginBottom: 10,
-  },
   card: {
     flexDirection: "row",
     backgroundColor: "#fff",
@@ -67,22 +60,6 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     color: "#333",
   },
-  stars: {
-    alignSelf: "flex-start",
-    marginVertical: 4,
-  },
-  phone: {
-    color: "#007BFF",
-    fontSize: 13,
-  },
-  bookmark: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-  },
-  listContainer: {
-    flex: 1,
-  },
 
   viewButton: {
     flexDirection: "row",
@@ -90,10 +67,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 
-  buttonRegistrar: {
-    backgroundColor: "#3498db",
-    padding: 10,
-    borderRadius: 8,
+  viewButton1: {
+    flexDirection: "column",
+    justifyContent: "space-around",
+    marginVertical: 20,
   },
 
   buttonPendentes: {
@@ -107,56 +84,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  modalContainer1: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  modalContent: {
-    backgroundColor: "#fff",
-    padding: 20,
-    width: "90%",
-    borderRadius: 10,
-  },
-
-  modalTitle: {
-    fontSize: 18,
+  buttonText1: {
+    color: "black",
     fontWeight: "bold",
-    marginBottom: 10,
-  },
-
-  modalInput: {
-    height: 100,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 10,
-    textAlignVertical: "top",
-    marginBottom: 10,
-  },
-
-  modalButton: {
-    backgroundColor: "#3498db",
-    padding: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 10,
-  },
-
-  modalButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-
-  modalButtonCancelar: {
-    backgroundColor: "#3498db",
-    padding: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 10,
-    backgroundColor: "#ccc",
   },
 
   perfilModal: {

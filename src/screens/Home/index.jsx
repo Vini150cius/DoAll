@@ -79,7 +79,7 @@ export default function Teste({ navigation }) {
   const renderItem = ({ item }) => <Pessoa data={item} />;
 
   function read() {
-    const usersRef = ref(db, "users/");
+    const usersRef = ref(db, "users/profissional/");
     onValue(usersRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {

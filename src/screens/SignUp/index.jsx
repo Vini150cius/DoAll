@@ -26,8 +26,8 @@ export default function SignUp({ navigation }) {
   const typeUser = useSelector((state) => state.userReducer.typeUser);
   const dispatch = useDispatch();
 
-  function create(user) {
-    set(ref(db, "users/" + user.uid), {
+  function create(user, typeUser = "client") {
+    set(ref(db, "users/" + typeUser + "/" + user.uid), {
       idUser: user.uid,
       name: name.trim(),
       typeUser: typeUser,
@@ -68,7 +68,7 @@ export default function SignUp({ navigation }) {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        create(user);
+        create(user, typeUser);
         dispatch(login(typeUser));
         dispatch(idUser(user.uid));
         try {

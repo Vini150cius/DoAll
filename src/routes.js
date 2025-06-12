@@ -15,12 +15,13 @@ import Home from "./screens/Home";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import ProfessionalSignUp from "./screens/ProfessionalSignUp";
 import Teste from "./screens/Teste";
+import HomeProf from "./screens/HomeProf";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function DrawerApp() {
-  const loginStatus = useSelector((state) => state.userReducer.login);
+  const typeUser = useSelector((state) => state.userReducer.typeUser);
   return (
     // documentação: https://reactnavigation.org/docs/drawer-navigator
 
@@ -45,45 +46,91 @@ function DrawerApp() {
         </View>
       )}
     >
-      <Drawer.Screen
-        name="Home"
-        component={Home}
-        options={{
-          drawerIcon: ({ focused, size }) => (
-            <AntDesign
-              name="home"
-              size={size}
-              color={focused ? "#b18461" : "#ccc"}
-            />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="InitScreen"
-        component={InitScreen}
-        options={{
-          drawerIcon: ({ focused, size }) => (
-            <AntDesign
-              name="home"
-              size={size}
-              color={focused ? "#b18461" : "#ccc"}
-            />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Teste"
-        component={Teste}
-        options={{
-          drawerIcon: ({ focused, size }) => (
-            <AntDesign
-              name="teste"
-              size={size}
-              color={focused ? "#b18461" : "#ccc"}
-            />
-          ),
-        }}
-      />
+      {typeUser === "profissional" ? (
+        <>
+          <Drawer.Screen
+            name="Home do Profissional"
+            component={HomeProf}
+            options={{
+              drawerIcon: ({ focused, size }) => (
+                <AntDesign
+                  name="home"
+                  size={size}
+                  color={focused ? "#b18461" : "#ccc"}
+                />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="InitScreen"
+            component={InitScreen}
+            options={{
+              drawerIcon: ({ focused, size }) => (
+                <AntDesign
+                  name="search1"
+                  size={size}
+                  color={focused ? "#b18461" : "#ccc"}
+                />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Teste"
+            component={Teste}
+            options={{
+              drawerIcon: ({ focused, size }) => (
+                <AntDesign
+                  name="teste"
+                  size={size}
+                  color={focused ? "#b18461" : "#ccc"}
+                />
+              ),
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <Drawer.Screen
+            name="Home do Usuário"
+            component={Home}
+            options={{
+              drawerIcon: ({ focused, size }) => (
+                <AntDesign
+                  name="home"
+                  size={size}
+                  color={focused ? "#b18461" : "#ccc"}
+                />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="InitScreen"
+            component={InitScreen}
+            options={{
+              drawerIcon: ({ focused, size }) => (
+                <AntDesign
+                  name="home"
+                  size={size}
+                  color={focused ? "#b18461" : "#ccc"}
+                />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Teste"
+            component={Teste}
+            options={{
+              drawerIcon: ({ focused, size }) => (
+                <AntDesign
+                  name="teste"
+                  size={size}
+                  color={focused ? "#b18461" : "#ccc"}
+                />
+              ),
+            }}
+          />
+        </>
+      )}
     </Drawer.Navigator>
   );
 }
@@ -91,8 +138,8 @@ function DrawerApp() {
 export default function Routes() {
   return (
     <Stack.Navigator
-    screenOptions={{ headerShown: false }}
-    initialRouteName="InitScreen"
+      screenOptions={{ headerShown: false }}
+      initialRouteName="InitScreen"
     >
       <Stack.Screen name="DrawerApp" component={DrawerApp} />
       <Stack.Screen name="InitScreen" component={InitScreen} />

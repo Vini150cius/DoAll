@@ -14,10 +14,14 @@ import SignUp from "./screens/SignUp";
 import Home from "./screens/Home";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import ProfessionalSignUp from "./screens/ProfessionalSignUp";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import Teste from "./screens/Teste";
 import HomeProf from "./screens/HomeProf";
 import Contatos from "./screens/CustomerContacts/";
 import Conta from "./screens/CustomerProfile/";
+import PerfilProf from "./screens/PerfilProf";
+import Services from "./screens/Servicos";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -64,6 +68,32 @@ function DrawerApp() {
             }}
           />
           <Drawer.Screen
+            name="Perfil do Profissional"
+            component={PerfilProf}
+            options={{
+              drawerIcon: ({ focused, size }) => (
+                <MaterialIcons
+                  name="person"
+                  size={size}
+                  color={focused ? "#b18461" : "#ccc"}
+                />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Serviços"
+            component={Services}
+            options={{
+              drawerIcon: ({ focused, size }) => (
+                <Ionicons
+                  name="bag"
+                  size={size}
+                  color={focused ? "#b18461" : "#ccc"}
+                />
+              ),
+            }}
+          />
+          {/* <Drawer.Screen
             name="InitScreen"
             component={InitScreen}
             options={{
@@ -88,7 +118,7 @@ function DrawerApp() {
                 />
               ),
             }}
-          />
+          /> */}
         </>
       ) : (
         <>

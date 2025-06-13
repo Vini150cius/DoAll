@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  FlatList,
   Image,
-  Linking,
+  ScrollView,
   SafeAreaView,
   Text,
   TextInput,
@@ -14,85 +13,13 @@ import {
 import styles from "./styles";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { AirbnbRating } from "react-native-ratings";
-import { onValue, ref, set } from "firebase/database";
-import { db } from "../../config/firebase";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-export default function HomeProf({ navigation }) {
+export default function Services({ navigation }) {
   const [feed, setFeed] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalPerfilVisible, setModalPerfilVisible] = useState(false);
   const [servicoPrestado, setServicoPrestado] = useState("");
-
-  const formatPhone = (telefone) => {
-    if (!telefone) return "";
-    return telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-  };
-
-  useEffect(() => {
-    read();
-    const interval = setInterval(() => {
-      read();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const Profissional = ({ data }) => (
-    <View style={styles.card}>
-      <Image source={{ uri: data.file }} style={styles.image} />
-      <View style={styles.info}>
-        <Text style={styles.title}>{data.services}</Text>
-        <Text style={styles.subtitle}>{data.sentence}</Text>
-
-        <AirbnbRating
-          count={5}
-          defaultRating={4}
-          size={15}
-          showRating={false}
-          isDisabled
-          selectedColor="#f1c40f"
-          starContainerStyle={styles.stars}
-        />
-
-        <TouchableOpacity
-          onPress={() => {
-            Linking.openURL(`tel:${data.telefone}`);
-          }}
-        >
-          <Text style={styles.phone}>{formatPhone(data.telefone)}</Text>
-        </TouchableOpacity>
-      </View>
-      <FontAwesome
-        name="bookmark-o"
-        size={22}
-        color="#333"
-        style={styles.bookmark}
-      />
-    </View>
-  );
-
-  const renderItem = ({ item }) => <Profissional data={item} />;
-
-  function read() {
-    const usersRef = ref(db, "users/client/");
-    onValue(usersRef, (snapshot) => {
-      const data = snapshot.val();
-
-      if (data) {
-        const feedData = Object.keys(data).map((key) => ({
-          id: key,
-          ...data[key],
-        }));
-
-        setFeed(feedData);
-      } else {
-        setFeed([]);
-      }
-    });
-  }
 
   function salvarServico() {
     //para salvar o serviço prestado no firebase
@@ -129,17 +56,54 @@ export default function HomeProf({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.listContainer}>
-        <Text style={styles.listCliente}>Lista de Clientes</Text>
-        <FlatList
-          data={feed}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderItem}
-          contentContainerStyle={styles.listaContainer}
-          ListEmptyComponent={
-            <Text style={styles.emptyText}>Nenhum dado encontrado</Text>
-          }
-        />
+      <View style={styles.viewCard}>
+        <View style={styles.card}>
+          <Image
+            source={require("../../../assets/avatar.png")}
+            style={styles.image}
+          />
+          <View style={styles.info}>
+            <Text style={styles.title}>Trocar de chuveiro</Text>
+            <Text style={styles.subtitle}>
+              Serviço: trocar o chuveiro por um novo já comprado pelo cliente
+            </Text>
+            <Text style={styles.subtitle}>Telefone: (11) 99999-9999</Text>
+          </View>
+          <View style={styles.viewButton1}>
+            <TouchableOpacity onPress={() => Alert.alert("Serviço Concluído")}>
+              <Text style={styles.buttonText1}>Concluido</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => Alert.alert("Serviço Cancelado")}>
+              <Text style={styles.buttonText1}>Cancelar serviço</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.card}>
+          <Image
+            source={require("../../../assets/avatar.png")}
+            style={styles.image}
+          />
+          <View style={styles.info}>
+            <Text style={styles.title}>Fazer encanação</Text>
+            <Text style={styles.subtitle}>
+              Serviço: fazer toda a encanação do banheiro do cliente
+            </Text>
+            <Text style={styles.subtitle}>Telefone: (11) 98888-7777</Text>
+            <View style={styles.viewButton1}>
+              <TouchableOpacity
+                onPress={() => Alert.alert("Serviço Concluído")}
+              >
+                <Text style={styles.buttonText1}>Concluido</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => Alert.alert("Serviço Cancelado")}
+              >
+                <Text style={styles.buttonText1}>Cancelar serviço</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       </View>
 
       <Modal

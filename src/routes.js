@@ -16,6 +16,8 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import ProfessionalSignUp from "./screens/ProfessionalSignUp";
 import Teste from "./screens/Teste";
 import HomeProf from "./screens/HomeProf";
+import Contatos from "./screens/CustomerContacts/";
+import Conta from "./screens/CustomerProfile/";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -129,6 +131,19 @@ function DrawerApp() {
               ),
             }}
           />
+          <Drawer.Screen
+            name="Contatos"
+            component={Contatos}
+            options={{
+              drawerIcon: ({ focused, size }) => (
+                <AntDesign
+                  name="contacts"
+                  size={size}
+                  color={focused ? "#b18461" : "#ccc"}
+                />
+              ),
+            }}
+          />
         </>
       )}
     </Drawer.Navigator>
@@ -147,6 +162,7 @@ export default function Routes() {
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="ProfessionalSignUp" component={ProfessionalSignUp} />
+      <Stack.Screen name="Conta" component={Conta} />
     </Stack.Navigator>
   );
 }

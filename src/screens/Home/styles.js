@@ -37,56 +37,63 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-end',
-    paddingTop: 60, // Ajuste conforme o tamanho do seu header
-    paddingRight: 20,
-  },
-  modalContainer: {
-    backgroundColor: '#b18461',
-    borderRadius: 30,
+  perfilModal: {
+    backgroundColor: "#a87549", // marrom
+    padding: 20,
+    borderRadius: 12,
     width: 250,
-    paddingVertical: 8,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    alignSelf: "flex-end",
+    marginRight: 20,
+    marginTop: 50,
     elevation: 5,
   },
-  modalHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#000',
+
+  perfilHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
   },
-  clientName: {
+
+  perfilAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+
+  perfilName: {
     fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 4,
-    color: '#000',
+    color: "white",
+    fontWeight: "bold",
   },
-  clientEmail: {
+
+  perfilEmail: {
     fontSize: 14,
-    color: '#000',
+    color: "white",
   },
-  menuItem: {
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
+
+  perfilOpcao: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    gap: 10,
+  },
+
+  perfilOpcaoText: {
+    fontSize: 15,
+    color: "white",
+  },
+
+  linha: {
     borderBottomWidth: 1,
-    borderBottomColor: '#5c4532',
-    spaceBetween: 25,
+    borderBottomColor: "#fff",
+    marginVertical: 10,
   },
-  lastMenuItem: {
-    borderBottomWidth: 0,
-  },
-  menuText: {
-    fontSize: 16,
-    marginLeft: 15,
-    
+
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    justifyContent: "flex-start",
   },
   card: {
     flexDirection: "row",

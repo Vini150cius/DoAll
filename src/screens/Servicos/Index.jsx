@@ -15,7 +15,7 @@ import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-export default function Servico({ navigation }) {
+export default function Services({ navigation }) {
   const [feed, setFeed] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalPerfilVisible, setModalPerfilVisible] = useState(false);

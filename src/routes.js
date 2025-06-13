@@ -18,8 +18,8 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Teste from "./screens/Teste";
 import HomeProf from "./screens/HomeProf";
-import PerfilProf from "./screens/PerfilProf/Index";
-import Servico from "./screens/Servicos/Index";
+import PerfilProf from "./screens/PerfilProf";
+import Services from "./screens/Servicos";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -80,7 +80,7 @@ function DrawerApp() {
           />
           <Drawer.Screen
             name="Serviços"
-            component={Servico}
+            component={Services}
             options={{
               drawerIcon: ({ focused, size }) => (
                 <Ionicons

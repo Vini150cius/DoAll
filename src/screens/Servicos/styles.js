@@ -147,6 +147,69 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     justifyContent: "flex-start",
   },
+  // parte do vinicius
+  buttonAddIcon: {
+    color: "#000",
+    marginBottom: 20,
+  },
+  buttonAddText: {
+    color: "#000",
+    fontWeight: "bold",
+  },
+  buttonAdd: {
+    backgroundColor: "#fff",
+    paddingVertical: 20,
+    margin: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+  },
+  modalWrapper: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 12,
+    width: "90%",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "top",
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 10,
+  },
+  modalButtonText: {
+    backgroundColor: "#3498db",
+    padding: 10,
+    borderRadius: 8,
+    color: "#fff",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  listContainer: {
+    flex: 1,
+  },
+  viewCard: {
+  flex: 1,
+  paddingHorizontal: 5,
+},
 });
 
 export default styles;

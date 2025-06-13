@@ -27,7 +27,8 @@ const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function DrawerApp() {
-  const typeUser = useSelector((state) => state.userReducer.typeUser);
+  // const typeUser = useSelector((state) => state.userReducer.typeUser);
+  const typeUser = "profissional"; // Temporarily hardcoded for testing
   return (
     // documentação: https://reactnavigation.org/docs/drawer-navigator
 
@@ -184,7 +185,7 @@ export default function Routes() {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName="InitScreen"
+      initialRouteName="DrawerApp"
     >
       <Stack.Screen name="DrawerApp" component={DrawerApp} />
       <Stack.Screen name="InitScreen" component={InitScreen} />

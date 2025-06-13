@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -9,23 +9,127 @@ import {
   View,
   Modal,
   Alert,
+  FlatList,
 } from "react-native";
 import styles from "./styles";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Toast from "react-native-toast-message";
+import { useSelector } from "react-redux";
+import { onValue, ref, set } from "firebase/database";
+import { db } from "../../config/firebase";
 
 export default function Services({ navigation }) {
-  const [feed, setFeed] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
+  const idUser = useSelector((state) => state.userReducer.idUser);
+  const blabla = "10";
+  const [services, setServices] = useState([]);
+  const [modalAddVisible, setModalAddVisible] = useState(false);
   const [modalPerfilVisible, setModalPerfilVisible] = useState(false);
-  const [servicoPrestado, setServicoPrestado] = useState("");
 
-  function salvarServico() {
-    //para salvar o serviço prestado no firebase
-    Alert.alert("Serviço registrado", `Você adicionou: ${servicoPrestado}`);
-    setServicoPrestado("");
-    setModalVisible(false);
+  // Estados para o modal de adicionar serviço
+  const [servicoNome, setServicoNome] = useState("");
+  const [servicoDescricao, setServicoDescricao] = useState("");
+  const [servicoTelefone, setServicoTelefone] = useState("");
+  const [servicoValor, setServicoValor] = useState("");
+
+  useEffect(() => {
+    read();
+    const interval = setInterval(() => {
+      read();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  function read() {
+    const usersRef = ref(db, "users/profissional/" + blabla + "/");
+    onValue(usersRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const servicesData = Object.keys(data).map((key) => ({
+          id: key,
+          ...data[key],
+        }));
+
+        setServices(servicesData);
+      } else {
+        setServices([]);
+      }
+    });
+  }
+
+  function ServiceItem({ data }) {
+    return (
+      <View style={styles.card}>
+        <Image
+          source={require("../../../assets/avatar.png")}
+          style={styles.image}
+        />
+        <View style={styles.info}>
+          <Text style={styles.title}>{data.nameService}</Text>
+          <Text style={styles.subtitle}>Serviço: {data.descService}</Text>
+          <Text style={styles.subtitle}>Telefone: {data.phoneService}</Text>
+          <Text style={styles.subtitle}>Valor: R$ {data.valueService}</Text>
+          <View style={styles.viewButton1}>
+            <TouchableOpacity onPress={() => Alert.alert("Serviço Concluído")}>
+              <Text style={styles.buttonText1}>Concluído</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => Alert.alert("Serviço Cancelado")}>
+              <Text style={styles.buttonText1}>Cancelar serviço</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  const renderItem = ({ item }) => <ServiceItem data={item} />;
+
+  function addService() {
+    if (
+      servicoNome !== "" &&
+      servicoDescricao !== "" &&
+      servicoTelefone !== "" &&
+      servicoValor !== ""
+    ) {
+      createService();
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Erro",
+        text2: "Por favor preencher todos os campos!",
+      });
+    }
+    
+    function createService() {
+      const idService = blabla + "-" + new Date().getTime();
+      set(ref(db, "users/profissional/" + blabla + "/" + idService), {
+        nameService: servicoNome,
+        descService: servicoDescricao,
+        phoneService: servicoTelefone,
+        valueService: servicoValor,
+      })
+        .then(() => {
+          Toast.show({
+            type: "success",
+            text1: "Sucesso",
+            text2: "Dados enviados com sucesso!",
+          });
+          setServicoNome("");
+          setServicoDescricao("");
+          setServicoTelefone("");
+          setServicoValor("");
+          setModalAddVisible(false);
+        })
+        .catch(() => {
+          Toast.show({
+            type: "error",
+            text1: "Erro",
+            text2: "Erro ao enviar dados!",
+          });
+        });
+    }
   }
 
   return (
@@ -56,54 +160,24 @@ export default function Services({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.viewCard}>
-        <View style={styles.card}>
-          <Image
-            source={require("../../../assets/avatar.png")}
-            style={styles.image}
-          />
-          <View style={styles.info}>
-            <Text style={styles.title}>Trocar de chuveiro</Text>
-            <Text style={styles.subtitle}>
-              Serviço: trocar o chuveiro por um novo já comprado pelo cliente
-            </Text>
-            <Text style={styles.subtitle}>Telefone: (11) 99999-9999</Text>
-          </View>
-          <View style={styles.viewButton1}>
-            <TouchableOpacity onPress={() => Alert.alert("Serviço Concluído")}>
-              <Text style={styles.buttonText1}>Concluido</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => Alert.alert("Serviço Cancelado")}>
-              <Text style={styles.buttonText1}>Cancelar serviço</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+      <TouchableOpacity
+        style={styles.buttonAdd}
+        onPress={() => setModalAddVisible(true)}
+      >
+        <Feather name="plus" size={40} style={styles.buttonAddText} />
+        <Text style={styles.buttonAddText}>Adicionar Serviço</Text>
+      </TouchableOpacity>
 
-        <View style={styles.card}>
-          <Image
-            source={require("../../../assets/avatar.png")}
-            style={styles.image}
-          />
-          <View style={styles.info}>
-            <Text style={styles.title}>Fazer encanação</Text>
-            <Text style={styles.subtitle}>
-              Serviço: fazer toda a encanação do banheiro do cliente
-            </Text>
-            <Text style={styles.subtitle}>Telefone: (11) 98888-7777</Text>
-            <View style={styles.viewButton1}>
-              <TouchableOpacity
-                onPress={() => Alert.alert("Serviço Concluído")}
-              >
-                <Text style={styles.buttonText1}>Concluido</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => Alert.alert("Serviço Cancelado")}
-              >
-                <Text style={styles.buttonText1}>Cancelar serviço</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+      <View style={styles.viewCard}>
+        <FlatList
+          data={services}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderItem}
+          contentContainerStyle={styles.listContainer}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>Nenhum dado encontrado</Text>
+          }
+        />
       </View>
 
       <Modal
@@ -158,6 +232,54 @@ export default function Services({ navigation }) {
             >
               <Feather name="log-out" size={20} color="#fff" />
               <Text style={styles.perfilOpcaoText}>Sair</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={modalAddVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setModalAddVisible(false)}
+      >
+        <View style={styles.modalWrapper}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Adicionar Serviço</Text>
+              <TouchableOpacity
+                style={styles.modalCloseButton}
+                onPress={() => setModalAddVisible(false)}
+              >
+                <Feather name="x" size={24} color="#000" />
+              </TouchableOpacity>
+            </View>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Nome do serviço"
+              value={servicoNome}
+              onChangeText={setServicoNome}
+            />
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Descrição"
+              value={servicoDescricao}
+              onChangeText={setServicoDescricao}
+            />
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Telefone"
+              value={servicoTelefone}
+              onChangeText={setServicoTelefone}
+            />
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Valor do serviço"
+              value={servicoValor}
+              onChangeText={setServicoValor}
+            />
+            <TouchableOpacity style={styles.modalButton} onPress={addService}>
+              <Text style={styles.modalButtonText}>Adicionar</Text>
             </TouchableOpacity>
           </View>
         </View>

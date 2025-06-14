@@ -15,6 +15,7 @@ import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { AirbnbRating } from "react-native-ratings";
+import { useSelector } from "react-redux";
 import { onValue, ref, set } from "firebase/database";
 import { db } from "../../config/firebase";
 //! PESSOAL: eu já inseri o firebase e está funcionando, usei esse video como base:https://www.youtube.com/watch?v=q1bxyyKh3Dc, fiz o create e o read, não fiz o resto pq não há necessidade ainda. Não sei se o firebase vcs preferem usar na conta do Zeno para que todos tenham acesso ou na minha conta, mas eu fiz na minha conta. Se vcs preferirem usar a conta do Zeno, é só me avisar que eu coloco lá.
@@ -23,6 +24,7 @@ import { db } from "../../config/firebase";
 export default function Teste({ navigation }) {
   const [feed, setFeed] = useState([]);
   const [modalPerfilVisible, setModalPerfilVisible] = useState(false);
+  const idUser = useSelector((state) => state.userReducer.idUser);
 
   const formatPhone = (telefone) => {
     if (!telefone) return "";
@@ -39,6 +41,7 @@ export default function Teste({ navigation }) {
   }, []);
 
   function Pessoa({ data }) {
+    return (
     <View style={styles.card}>
       <Image source={{ uri: data.file }} style={styles.image} />
       <View style={styles.info}>
@@ -63,15 +66,22 @@ export default function Teste({ navigation }) {
           <Text style={styles.phone}>{formatPhone(data.telefone)}</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => function Favoritar() {
+        set(ref(db,'users/profissional/' + idUser + data.id), {
+          ...data,
+          favorited: !data.favorited,
+        });
+      }}>
+      
         <FontAwesome
-          name={"bookmark-o"}
+          name= {data.favorited ? "bookmark" : "bookmark-o"}
           size={22}
-          color={"#333"}
+          color={ data.favorited ? "#f1c40f" : "#333"}
           style={styles.bookmark}
         />
       </TouchableOpacity>
-    </View>;
+    </View>
+    );
   }
 
   const renderItem = ({ item }) => <Pessoa data={item} />;

@@ -135,6 +135,7 @@ function DrawerApp() {
               ),
             }}
           />
+          {/*
           <Drawer.Screen
             name="InitScreen"
             component={InitScreen}
@@ -161,6 +162,7 @@ function DrawerApp() {
               ),
             }}
           />
+*/}
           <Drawer.Screen
             name="Contatos"
             component={Contatos}

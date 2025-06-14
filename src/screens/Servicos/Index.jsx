@@ -43,6 +43,16 @@ export default function Services({ navigation }) {
     return () => clearInterval(interval);
   }, []);
 
+  function toggleFilter(filterType) {
+    if (filter === filterType) {
+      setFilter("");
+      read("");
+    } else {
+      setFilter(filterType);
+      read(filterType);
+    }
+  }
+
   function read(filter = "") {
     setFilter(filter);
     const usersRef = ref(db, "users/profissional/" + idUser + "/");
@@ -212,7 +222,7 @@ export default function Services({ navigation }) {
               ? styles.filterButtonActive
               : styles.filterButton
           }
-          onPress={() => read("concluido")}
+          onPress={() => toggleFilter("concluido")}
         >
           <Text style={styles.filterButtonTextFinished}>Concluido</Text>
           <View style={styles.filterIconFinished}>
@@ -225,7 +235,7 @@ export default function Services({ navigation }) {
               ? styles.filterButtonActive
               : styles.filterButton
           }
-          onPress={() => read("pendente")}
+          onPress={() => toggleFilter("pendente")}
         >
           <Text style={styles.filterButtonTextPending}>Andamento</Text>
           <View style={styles.filterIconPending}>
@@ -238,7 +248,7 @@ export default function Services({ navigation }) {
               ? styles.filterButtonActive
               : styles.filterButton
           }
-          onPress={() => read("cancelado")}
+          onPress={() => toggleFilter("cancelado")}
         >
           <Text style={styles.filterButtonTextCanceled}>Cancelado</Text>
           <View style={styles.filterIconCanceled}>

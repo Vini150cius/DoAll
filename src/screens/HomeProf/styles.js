@@ -212,22 +212,45 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 
-modalContainer: {
-  flex: 1,
-  backgroundColor: "rgba(0, 0, 0, 0.5)", 
-  justifyContent: "flex-start",
-  alignItems: "flex-end", 
-  paddingTop: 50,
-  paddingRight: 20, 
-},
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-start",
+    alignItems: "flex-end",
+    paddingTop: 50,
+    paddingRight: 20,
+  },
 
-perfilModal: {
-  backgroundColor: "#a87549", // marrom
-  padding: 20,
-  borderRadius: 12,
-  width: 250,
-  elevation: 5,
-},
+  perfilModal: {
+    backgroundColor: "#a87549", // marrom
+    padding: 20,
+    borderRadius: 12,
+    width: 250,
+    elevation: 5,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
+  buttonAgree: {
+    flexDirection: "row",
+    backgroundColor: "#2ecc71",
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 10,
+    gap: 10,
+  },
+  buttonReject: {
+    flexDirection: "row",
+    backgroundColor: "#e74c3c",
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 10,
+    gap: 10,
+  },
 });
 
 export default styles;

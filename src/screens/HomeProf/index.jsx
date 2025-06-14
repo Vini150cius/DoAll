@@ -131,7 +131,31 @@ export default function HomeProf({ navigation }) {
 
       <View style={styles.listContainer}>
         <Text style={styles.listCliente}>Lista de Clientes</Text>
-        <FlatList
+        <View style={styles.card}>
+          <Image
+            source={require("../../../assets/avatar.png")}
+            style={styles.image}
+          />
+          <View style={styles.info}>
+            <Text style={styles.title}>Mariana Peneira</Text>
+            <Text style={styles.subtitle}>
+              Queda de energia constante em dois cômodos da casa. Suspeita de
+              fiação antiga.
+            </Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.buttonAgree}>
+                <Text style={styles.buttonText}>Aceitar</Text>
+                <FontAwesome name="check" size={22} color="#fff" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonReject}>
+                <Text style={styles.buttonText}>Recusar</Text>
+                <FontAwesome name="remove" size={22} color="#fff" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+        {/* <FlatList
           data={feed}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
@@ -139,7 +163,7 @@ export default function HomeProf({ navigation }) {
           ListEmptyComponent={
             <Text style={styles.emptyText}>Nenhum dado encontrado</Text>
           }
-        />
+        /> */}
       </View>
 
       <Modal

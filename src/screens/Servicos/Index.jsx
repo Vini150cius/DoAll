@@ -14,10 +14,11 @@ import {
 import styles from "./styles";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
-import { onValue, ref, set } from "firebase/database";
+import { onValue, ref, set, update } from "firebase/database";
 import { db } from "../../config/firebase";
 
 export default function Services({ navigation }) {
@@ -43,7 +44,7 @@ export default function Services({ navigation }) {
   }, []);
 
   function read() {
-    const usersRef = ref(db, "users/profissional/" + blabla + "/");
+    const usersRef = ref(db, "users/profissional/" + idUser + "/");
     onValue(usersRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -61,24 +62,35 @@ export default function Services({ navigation }) {
 
   function ServiceItem({ data }) {
     return (
-      <View style={styles.card}>
-        <Image
-          source={require("../../../assets/avatar.png")}
-          style={styles.image}
-        />
+      <View
+        style={
+          data.statusService === "pendente"
+            ? styles.card
+            : data.statusService === "concluido"
+            ? styles.cardFinished
+            : styles.cardCanceled
+        }
+      >
         <View style={styles.info}>
-          <Text style={styles.title}>{data.nameService}</Text>
+          <Text style={styles.title}>{data.nameClient}</Text>
           <Text style={styles.subtitle}>Serviço: {data.descService}</Text>
           <Text style={styles.subtitle}>Telefone: {data.phoneService}</Text>
           <Text style={styles.subtitle}>Valor: R$ {data.valueService}</Text>
-          <View style={styles.viewButton1}>
-            <TouchableOpacity onPress={() => Alert.alert("Serviço Concluído")}>
-              <Text style={styles.buttonText1}>Concluído</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => Alert.alert("Serviço Cancelado")}>
-              <Text style={styles.buttonText1}>Cancelar serviço</Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={styles.subtitle}>Status: {data.statusService}</Text>
+        </View>
+        <View style={styles.containerActions}>
+          <TouchableOpacity
+            style={styles.buttonFinished}
+            onPress={() => updateServiceStatus(data.id, "concluido")}
+          >
+            <FontAwesome5 name="check" size={24} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonCanceled}
+            onPress={() => updateServiceStatus(data.id, "cancelado")}
+          >
+            <Feather name="slash" size={24} color="#fff" />
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -101,14 +113,15 @@ export default function Services({ navigation }) {
         text2: "Por favor preencher todos os campos!",
       });
     }
-    
+
     function createService() {
-      const idService = blabla + "-" + new Date().getTime();
-      set(ref(db, "users/profissional/" + blabla + "/" + idService), {
-        nameService: servicoNome,
+      const idService = idUser + "-" + new Date().getTime();
+      set(ref(db, "users/profissional/" + idUser + "/" + idService), {
+        nameClient: servicoNome,
         descService: servicoDescricao,
         phoneService: servicoTelefone,
         valueService: servicoValor,
+        statusService: "pendente",
       })
         .then(() => {
           Toast.show({
@@ -132,6 +145,30 @@ export default function Services({ navigation }) {
     }
   }
 
+  function updateServiceStatus(serviceId, status) {
+    const serviceRef = ref(
+      db,
+      "users/profissional/" + idUser + "/" + serviceId
+    );
+    update(serviceRef, {
+      statusService: status,
+    })
+      .then(() => {
+        Toast.show({
+          type: "success",
+          text1: "Sucesso",
+          text2: `Serviço ${status} com sucesso!`,
+        });
+        read();
+      })
+      .catch(() => {
+        Toast.show({
+          type: "error",
+          text1: "Erro",
+          text2: "Erro ao atualizar status do serviço!",
+        });
+      });
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -256,7 +293,7 @@ export default function Services({ navigation }) {
             </View>
             <TextInput
               style={styles.modalInput}
-              placeholder="Nome do serviço"
+              placeholder="Nome do cliente"
               value={servicoNome}
               onChangeText={setServicoNome}
             />

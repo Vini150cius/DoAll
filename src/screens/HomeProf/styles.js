@@ -159,16 +159,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#ccc",
   },
 
-  perfilModal: {
-    backgroundColor: "#a87549", // marrom
-    padding: 20,
-    borderRadius: 12,
-    width: 250,
-    alignSelf: "flex-end",
-    marginRight: 20,
-    marginTop: 50,
-    elevation: 5,
-  },
+  // perfilModal: {
+  //   backgroundColor: "#a87549", // marrom
+  //   padding: 20,
+  //   borderRadius: 12,
+  //   width: 250,
+  //   alignSelf: "flex-end",
+  //   marginRight: 20,
+  //   marginTop: 50,
+  //   elevation: 5,
+  // },
 
   perfilHeader: {
     flexDirection: "row",
@@ -212,11 +212,22 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 
-  modalContainer: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
-    justifyContent: "flex-start",
-  },
+modalContainer: {
+  flex: 1,
+  backgroundColor: "rgba(0, 0, 0, 0.5)", 
+  justifyContent: "flex-start",
+  alignItems: "flex-end", 
+  paddingTop: 50,
+  paddingRight: 20, 
+},
+
+perfilModal: {
+  backgroundColor: "#a87549", // marrom
+  padding: 20,
+  borderRadius: 12,
+  width: 250,
+  elevation: 5,
+},
 });
 
 export default styles;

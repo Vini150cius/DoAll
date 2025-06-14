@@ -255,6 +255,63 @@ const styles = StyleSheet.create({
     color: "#666",
     marginTop: 20,
   },
+  filtersContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    paddingVertical: 10,
+    marginBottom: 10,
+  },
+  filterIcon: {
+    backgroundColor: "#2ecc71",
+    borderRadius: 50,
+    padding: 2,
+    marginLeft: 5,
+  },
+  filterButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 50,
+  },
+  filterButtonActive: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#333",
+    padding: 10,
+    borderRadius: 50,
+  },
+  filterIconPending: {
+    backgroundColor: "#f1c40f",
+    borderRadius: 50,
+    padding: 2,
+    marginLeft: 5,
+  },
+  filterIconFinished: {
+    backgroundColor: "#2ecc71",
+    borderRadius: 50,
+    padding: 2,
+    marginLeft: 5,
+  },
+  filterIconCanceled: {
+    backgroundColor: "#e74c3c",
+    borderRadius: 50,
+    padding: 2,
+    marginLeft: 5,
+  },
+  filterButtonTextFinished: {
+    color: "#2ecc71",
+    fontWeight: "bold",
+  },
+  filterButtonTextPending: {
+    color: "#f1c40f",
+    fontWeight: "bold",
+  },
+  filterButtonTextCanceled: {
+    color: "#e74c3c",
+    fontWeight: "bold",
+  },
 });
 
 export default styles;

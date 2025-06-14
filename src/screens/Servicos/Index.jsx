@@ -23,8 +23,8 @@ import { db } from "../../config/firebase";
 
 export default function Services({ navigation }) {
   const idUser = useSelector((state) => state.userReducer.idUser);
-  const blabla = "10";
   const [services, setServices] = useState([]);
+  const [filter, setFilter] = useState("");
   const [modalAddVisible, setModalAddVisible] = useState(false);
   const [modalPerfilVisible, setModalPerfilVisible] = useState(false);
 
@@ -38,20 +38,27 @@ export default function Services({ navigation }) {
     read();
     const interval = setInterval(() => {
       read();
-    }, 5000);
+    }, 50000);
 
     return () => clearInterval(interval);
   }, []);
 
-  function read() {
+  function read(filter = "") {
+    setFilter(filter);
     const usersRef = ref(db, "users/profissional/" + idUser + "/");
     onValue(usersRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const servicesData = Object.keys(data).map((key) => ({
+        let servicesData = Object.keys(data).map((key) => ({
           id: key,
           ...data[key],
         }));
+
+        if (filter !== "") {
+          servicesData = servicesData.filter(
+            (service) => service.statusService === filter
+          );
+        }
 
         setServices(servicesData);
       } else {
@@ -133,6 +140,7 @@ export default function Services({ navigation }) {
           setServicoDescricao("");
           setServicoTelefone("");
           setServicoValor("");
+          read();
           setModalAddVisible(false);
         })
         .catch(() => {
@@ -194,6 +202,48 @@ export default function Services({ navigation }) {
           onPress={() => setModalPerfilVisible(true)}
         >
           <MaterialIcons name="person" size={26} color="white" />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.filtersContainer}>
+        <TouchableOpacity
+          style={
+            filter === "concluido"
+              ? styles.filterButtonActive
+              : styles.filterButton
+          }
+          onPress={() => read("concluido")}
+        >
+          <Text style={styles.filterButtonTextFinished}>Concluido</Text>
+          <View style={styles.filterIconFinished}>
+            <Feather name="check" size={20} color="#fff" />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={
+            filter === "pendente"
+              ? styles.filterButtonActive
+              : styles.filterButton
+          }
+          onPress={() => read("pendente")}
+        >
+          <Text style={styles.filterButtonTextPending}>Andamento</Text>
+          <View style={styles.filterIconPending}>
+            <Feather name="check" size={20} color="#fff" />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={
+            filter === "cancelado"
+              ? styles.filterButtonActive
+              : styles.filterButton
+          }
+          onPress={() => read("cancelado")}
+        >
+          <Text style={styles.filterButtonTextCanceled}>Cancelado</Text>
+          <View style={styles.filterIconCanceled}>
+            <Feather name="check" size={20} color="#fff" />
+          </View>
         </TouchableOpacity>
       </View>
 

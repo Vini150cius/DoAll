@@ -193,8 +193,16 @@ export default function PerfilProf({ navigation }) {
         transparent={true}
         onRequestClose={() => setModalPerfilVisible(false)}
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.perfilModal}>
+        <TouchableOpacity
+          style={styles.modalContainer}
+          activeOpacity={1}
+          onPress={() => setModalPerfilVisible(false)}
+        >
+          <TouchableOpacity
+            style={styles.perfilModal}
+            activeOpacity={1}
+            onPress={(e) => e.stopPropagation()}
+          >
             <View style={styles.perfilHeader}>
               <Image
                 source={require("../../../assets/avatar.png")}
@@ -208,19 +216,22 @@ export default function PerfilProf({ navigation }) {
 
             <TouchableOpacity
               style={styles.perfilOpcao}
-              onPress={() => navigation.navigate("PerfilProf")}
+              onPress={() => navigation.navigate("Perfil do Profissional")}
             >
               <Feather name="user" size={20} color="#fff" />
               <Text style={styles.perfilOpcaoText}>Conta</Text>
             </TouchableOpacity>
+
             <View style={styles.perfilOpcao}>
               <Feather name="settings" size={20} color="#fff" />
               <Text style={styles.perfilOpcaoText}>Configuração</Text>
             </View>
+
             <View style={styles.perfilOpcao}>
               <Feather name="book-open" size={20} color="#fff" />
               <Text style={styles.perfilOpcaoText}>Guia</Text>
             </View>
+
             <TouchableOpacity
               style={styles.perfilOpcao}
               onPress={() => setModalPerfilVisible(false)}
@@ -240,8 +251,8 @@ export default function PerfilProf({ navigation }) {
               <Feather name="log-out" size={20} color="#fff" />
               <Text style={styles.perfilOpcaoText}>Sair</Text>
             </TouchableOpacity>
-          </View>
-        </View>
+          </TouchableOpacity>
+        </TouchableOpacity>
       </Modal>
     </SafeAreaView>
   );

@@ -12,7 +12,7 @@ O **DoAll** é um aplicativo desenvolvido para facilitar a conexão entre client
 
 Além de permitir a visualização da avaliação de cada profissional, o aplicativo ajuda os clientes a escolherem a melhor opção para suas necessidades.  
 
-O aplicativo foi desenvolvido utilizando **React Native** e utiliza o **Firebase** como backend e banco de dados.
+O aplicativo foi desenvolvido utilizando **React Native** e utiliza o **Firebase** como banco de dados.
 
 Este projeto foi desenvolvido como parte da disciplina de **Programação de Aplicativos Mobile (PAM)**, sob orientação da professora **Magali Benedita Teixeira Nery**.
 
@@ -34,8 +34,6 @@ npm install
 npm start
 ```
 
-> ⚠️ **Obs.:** É necessário ter o ambiente React Native configurado na sua máquina. Caso não tenha, consulte a documentação oficial: [React Native Environment Setup](https://reactnative.dev/docs/environment-setup)
-
 ## ✨ Funcionalidades
 
 -  Visualizar prestadores de serviço e suas avaliações
@@ -48,7 +46,7 @@ npm start
 ## 🔧 Tecnologias utilizadas
 
 - **React Native** — Framework para desenvolvimento mobile multiplataforma.
-- **Firebase** — Backend como serviço, utilizado para autenticação, banco de dados em tempo real e armazenamento.
+- **Firebase** — utilizado para autenticação, banco de dados em tempo real e armazenamento.
 
 ## 📝 Licença
 

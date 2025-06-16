@@ -55,7 +55,7 @@ export default function Services({ navigation }) {
 
   function read(filter = "") {
     setFilter(filter);
-    const usersRef = ref(db, "users/profissional/" + idUser + "/");
+    const usersRef = ref(db, "users/profissional/" + idUser + "/servicos/");
     onValue(usersRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -133,7 +133,7 @@ export default function Services({ navigation }) {
 
     function createService() {
       const idService = idUser + "-" + new Date().getTime();
-      set(ref(db, "users/profissional/" + idUser + "/" + idService), {
+      set(ref(db, "users/profissional/" + idUser + "/servicos/" + idService), {
         nameClient: servicoNome,
         descService: servicoDescricao,
         phoneService: servicoTelefone,
@@ -153,7 +153,8 @@ export default function Services({ navigation }) {
           read();
           setModalAddVisible(false);
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log("Erro ao criar serviço:", error);
           Toast.show({
             type: "error",
             text1: "Erro",
@@ -166,7 +167,7 @@ export default function Services({ navigation }) {
   function updateServiceStatus(serviceId, status) {
     const serviceRef = ref(
       db,
-      "users/profissional/" + idUser + "/" + serviceId
+      "users/profissional/" + idUser + "/servicos/" + serviceId
     );
     update(serviceRef, {
       statusService: status,
@@ -179,7 +180,8 @@ export default function Services({ navigation }) {
         });
         read();
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log("Erro ao atualizar serviço:", error);
         Toast.show({
           type: "error",
           text1: "Erro",

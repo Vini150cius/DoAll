@@ -16,10 +16,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { AirbnbRating } from "react-native-ratings";
 import { useSelector } from "react-redux";
-import { onValue, ref, set } from "firebase/database";
+import { onValue, ref, set, update } from "firebase/database";
 import { db } from "../../config/firebase";
-//! PESSOAL: eu já inseri o firebase e está funcionando, usei esse video como base:https://www.youtube.com/watch?v=q1bxyyKh3Dc, fiz o create e o read, não fiz o resto pq não há necessidade ainda. Não sei se o firebase vcs preferem usar na conta do Zeno para que todos tenham acesso ou na minha conta, mas eu fiz na minha conta. Se vcs preferirem usar a conta do Zeno, é só me avisar que eu coloco lá.
-//? A, vcs devem notar uma semelhança com o flatList da Magali, já que eu peguei o código dela...
 
 export default function Teste({ navigation }) {
   const [feed, setFeed] = useState([]);
@@ -40,47 +38,44 @@ export default function Teste({ navigation }) {
     return () => clearInterval(interval);
   }, []);
 
+
+
   function Pessoa({ data }) {
     return (
-    <View style={styles.card}>
-      <Image source={{ uri: data.file }} style={styles.image} />
-      <View style={styles.info}>
-        <Text style={styles.title}>{data.services}</Text>
-        <Text style={styles.subtitle}>{data.sentence}</Text>
+      <View style={styles.card}>
+        <Image source={{ uri: data.file }} style={styles.image} />
+        <View style={styles.info}>
+          <Text style={styles.title}>{data.services}</Text>
+          <Text style={styles.subtitle}>{data.sentence}</Text>
 
-        <AirbnbRating
-          count={5}
-          defaultRating={4}
-          size={15}
-          showRating={false}
-          isDisabled
-          selectedColor="#f1c40f"
-          starContainerStyle={styles.stars}
-        />
+          <AirbnbRating
+            count={5}
+            defaultRating={4}
+            size={15}
+            showRating={false}
+            isDisabled
+            selectedColor="#f1c40f"
+            starContainerStyle={styles.stars}
+          />
 
-        <TouchableOpacity
-          onPress={() => {
-            Linking.openURL(`tel:${data.telefone}`);
-          }}
-        >
-          <Text style={styles.phone}>{formatPhone(data.telefone)}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(`tel:${data.telefone}`);
+            }}
+          >
+            <Text style={styles.phone}>{formatPhone(data.telefone)}</Text>
+          </TouchableOpacity>
+        </View>
+        
+        <TouchableOpacity onPress={() => console.log("Favorito clicado")}>
+          <FontAwesome
+            name="bookmark-o"
+            size={22}
+            color="#333"
+            style={styles.bookmark}
+          />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={() => function Favoritar() {
-        set(ref(db,'users/profissional/' + idUser + data.id), {
-          ...data,
-          favorited: !data.favorited,
-        });
-      }}>
-      
-        <FontAwesome
-          name= {data.favorited ? "bookmark" : "bookmark-o"}
-          size={22}
-          color={ data.favorited ? "#f1c40f" : "#333"}
-          style={styles.bookmark}
-        />
-      </TouchableOpacity>
-    </View>
     );
   }
 
@@ -90,16 +85,30 @@ export default function Teste({ navigation }) {
     const usersRef = ref(db, "users/profissional/");
     onValue(usersRef, (snapshot) => {
       const data = snapshot.val();
+      console.log("Dados recebidos:", data); // DEBUG
+      
       if (data) {
-        const feedData = Object.keys(data).map((key) => ({
-          id: key,
-          ...data[key],
-        }));
+        // CORREÇÃO: Verificar se data é um objeto antes de mapear
+        if (typeof data === 'object' && data !== null) {
+          const feedData = Object.keys(data).map((key) => ({
+            id: key,
+            ...data[key],
+          }));
 
-        setFeed(feedData);
+          console.log("Dados processados:", feedData); // DEBUG
+          setFeed(feedData);
+        } else {
+          console.log("Dados não são um objeto válido:", data);
+          setFeed([]);
+        }
       } else {
+        console.log("Nenhum dado encontrado");
         setFeed([]);
       }
+    }, (error) => {
+      // CORREÇÃO: Tratar erros de leitura
+      console.log("Erro ao ler dados:", error);
+      setFeed([]);
     });
   }
 

@@ -85,20 +85,16 @@ export default function Teste({ navigation }) {
     const usersRef = ref(db, "users/profissional/");
     onValue(usersRef, (snapshot) => {
       const data = snapshot.val();
-      console.log("Dados recebidos:", data); // DEBUG
       
       if (data) {
-        // CORREÇÃO: Verificar se data é um objeto antes de mapear
         if (typeof data === 'object' && data !== null) {
           const feedData = Object.keys(data).map((key) => ({
             id: key,
             ...data[key],
           }));
 
-          console.log("Dados processados:", feedData); // DEBUG
           setFeed(feedData);
         } else {
-          console.log("Dados não são um objeto válido:", data);
           setFeed([]);
         }
       } else {
@@ -106,7 +102,6 @@ export default function Teste({ navigation }) {
         setFeed([]);
       }
     }, (error) => {
-      // CORREÇÃO: Tratar erros de leitura
       console.log("Erro ao ler dados:", error);
       setFeed([]);
     });

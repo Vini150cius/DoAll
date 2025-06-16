@@ -21,7 +21,7 @@ import HomeProf from "./screens/HomeProf";
 import Contatos from "./screens/CustomerContacts/";
 import Conta from "./screens/CustomerProfile/";
 import PerfilProf from "./screens/PerfilProf";
-import Services from "./screens/Servicos";
+import Services from "./screens/Services";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();

@@ -226,7 +226,7 @@ export default function Services({ navigation }) {
           }
           onPress={() => toggleFilter("concluido")}
         >
-          <Text style={styles.filterButtonTextFinished}>Concluido</Text>
+          <Text style={styles.filterButtonTextFinished}>Concluído</Text>
           <View style={styles.filterIconFinished}>
             <Feather name="check" size={20} color="#fff" />
           </View>

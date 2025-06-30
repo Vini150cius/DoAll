@@ -55,7 +55,7 @@ function DrawerApp() {
       {typeUser === "profissional" ? (
         <>
           <Drawer.Screen
-            name="Home do Profissional"
+            name="Home"
             component={HomeProf}
             options={{
               drawerIcon: ({ focused, size }) => (
@@ -68,7 +68,7 @@ function DrawerApp() {
             }}
           />
           <Drawer.Screen
-            name="Perfil do Profissional"
+            name="Perfil"
             component={PerfilProf}
             options={{
               drawerIcon: ({ focused, size }) => (
@@ -123,7 +123,7 @@ function DrawerApp() {
       ) : (
         <>
           <Drawer.Screen
-            name="Home do Usuário"
+            name="Home"
             component={Home}
             options={{
               drawerIcon: ({ focused, size }) => (

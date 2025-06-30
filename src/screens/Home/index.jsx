@@ -38,8 +38,6 @@ export default function Teste({ navigation }) {
     return () => clearInterval(interval);
   }, []);
 
-
-
   function Pessoa({ data }) {
     return (
       <View style={styles.card}>
@@ -66,7 +64,7 @@ export default function Teste({ navigation }) {
             <Text style={styles.phone}>{formatPhone(data.telefone)}</Text>
           </TouchableOpacity>
         </View>
-        
+
         <TouchableOpacity onPress={() => console.log("Favorito clicado")}>
           <FontAwesome
             name="bookmark-o"
@@ -83,28 +81,32 @@ export default function Teste({ navigation }) {
 
   function read() {
     const usersRef = ref(db, "users/profissional/");
-    onValue(usersRef, (snapshot) => {
-      const data = snapshot.val();
-      
-      if (data) {
-        if (typeof data === 'object' && data !== null) {
-          const feedData = Object.keys(data).map((key) => ({
-            id: key,
-            ...data[key],
-          }));
+    onValue(
+      usersRef,
+      (snapshot) => {
+        const data = snapshot.val();
 
-          setFeed(feedData);
+        if (data) {
+          if (typeof data === "object" && data !== null) {
+            const feedData = Object.keys(data).map((key) => ({
+              id: key,
+              ...data[key],
+            }));
+
+            setFeed(feedData);
+          } else {
+            setFeed([]);
+          }
         } else {
+          console.log("Nenhum dado encontrado");
           setFeed([]);
         }
-      } else {
-        console.log("Nenhum dado encontrado");
+      },
+      (error) => {
+        console.log("Erro ao ler dados:", error);
         setFeed([]);
       }
-    }, (error) => {
-      console.log("Erro ao ler dados:", error);
-      setFeed([]);
-    });
+    );
   }
 
   return (
@@ -160,18 +162,21 @@ export default function Teste({ navigation }) {
                 <Feather name="user" size={20} color="#fff" />
                 <Text style={styles.perfilOpcaoText}>Conta</Text>
               </TouchableOpacity>
-              <View style={styles.perfilOpcao}>
+              <TouchableOpacity style={styles.perfilOpcao}>
                 <Feather name="settings" size={20} color="#fff" />
                 <Text style={styles.perfilOpcaoText}>Configuração</Text>
-              </View>
-              <View style={styles.perfilOpcao}>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.perfilOpcao}>
                 <Feather name="book-open" size={20} color="#fff" />
                 <Text style={styles.perfilOpcaoText}>Guia</Text>
-              </View>
-              <View style={styles.perfilOpcao}>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.perfilOpcao}
+                onPress={() => setModalPerfilVisible(false)}
+              >
                 <Feather name="help-circle" size={20} color="#fff" />
                 <Text style={styles.perfilOpcaoText}>Ajuda</Text>
-              </View>
+              </TouchableOpacity>
 
               <View style={styles.linha} />
 

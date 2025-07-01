@@ -9,90 +9,23 @@ import {
 import styles from "./styles";
 import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";
+import { supabase } from "../../config/supabaseConfig";
 import { idUser, login } from "../../redux/User/slice";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { app, db } from "../../config/firebase";
 import Toast from "react-native-toast-message";
 import { ref, set } from "firebase/database";
 
-// Documentação sobre o firebase: https://firebase.google.com/docs/auth/web/start?hl=pt-br#web_2
-
 export default function SignUp({ navigation }) {
+  const [session, setSession] = useState(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const typeUser = useSelector((state) => state.userReducer.typeUser);
   const dispatch = useDispatch();
-
-  // function create(user, typeUser = "client") {
-  //   set(ref(db, "users/" + typeUser + "/" + user.uid), {
-  //     idUser: user.uid,
-  //     name: name.trim(),
-  //     typeUser: typeUser,
-  //   })
-  //     .then(() => {
-  //       Toast.show({
-  //         type: "success",
-  //         text1: "Sucesso",
-  //         text2: "Dados enviados com sucesso!",
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       Toast.show({
-  //         type: "error",
-  //         text1: "Erro",
-  //         text2: "Erro ao enviar dados: " + error.message,
-  //       });
-  //     });
-  // }
-
-  // const signUp = () => {
-  //   if (
-  //     name === "" ||
-  //     email === "" ||
-  //     password === "" ||
-  //     confirmPassword === ""
-  //   ) {
-  //     setError("Preencha todos os campos");
-  //     return;
-  //   }
-
-  //   if (password !== confirmPassword) {
-  //     setError("As senhas não são iguais");
-  //     return;
-  //   }
-
-  //   const auth = getAuth(app);
-  //   createUserWithEmailAndPassword(auth, email, password)
-  //     .then((userCredential) => {
-  //       const user = userCredential.user;
-  //       create(user, typeUser);
-  //       dispatch(login(typeUser));
-  //       dispatch(idUser(user.uid));
-  //       try {
-  //         if (typeUser == "client") {
-  //           navigation.navigate("DrawerApp");
-  //         } else if (typeUser == "profissional") {
-  //           navigation.navigate("ProfessionalSignUp");
-  //         } else {
-  //           navigation.navigate("ToggleTypeUser");
-  //         }
-  //       } catch (error) {
-  //         console.error("Erro na navegação:", error);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       const errorMessage = error.message;
-  //       Toast.show({
-  //         type: "error",
-  //         text1: "Erro ao entrar",
-  //         text2: errorMessage,
-  //       });
-  //     });
-  // };
-  // Função para criar usuário no Firebase
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -118,9 +51,11 @@ export default function SignUp({ navigation }) {
 
   async function signUpWithEmail() {
     setLoading(true);
+    const cleanEmail = email.toLowerCase().replace(/\s+/g, "");
+
     if (
       name === "" ||
-      email === "" ||
+      cleanEmail === "" ||
       password === "" ||
       confirmPassword === ""
     ) {
@@ -129,6 +64,7 @@ export default function SignUp({ navigation }) {
         text1: "Erro",
         text2: "Preencha todos os campos!",
       });
+      setLoading(false);
       return;
     }
 
@@ -144,7 +80,7 @@ export default function SignUp({ navigation }) {
 
     try {
       const { data, error: signUpError } = await supabase.auth.signUp({
-        email,
+        email: cleanEmail,
         password,
       });
 
@@ -161,10 +97,11 @@ export default function SignUp({ navigation }) {
       const uuid = data.user?.id;
       if (uuid) {
         const { error: insertError } = await supabase.from("profiles").insert({
-          id: uuid,
+          user_id: uuid,
           name,
-          email,
-          typeUser,
+          email: cleanEmail,
+          type_user: typeUser,
+          login_completed: typeUser === "client",
         });
 
         if (insertError) {
@@ -173,6 +110,7 @@ export default function SignUp({ navigation }) {
             text1: "Erro",
             text2: "Erro ao salvar no banco.",
           });
+          console.error("Insert error:", insertError);
           setLoading(false);
           return;
         }
@@ -220,7 +158,7 @@ export default function SignUp({ navigation }) {
           style={styles.input}
           value={email}
           onChangeText={setEmail}
-          keyboardType="email-addres"
+          keyboardType="email-address"
         />
         <Text style={styles.label}>Senha</Text>
         <TextInput
@@ -237,9 +175,17 @@ export default function SignUp({ navigation }) {
           secureTextEntry
         />
         {error && <Text style={styles.error}>{error}</Text>}
-        <TouchableOpacity style={styles.button} onPress={signUp}>
-          <Text style={styles.textButton}>Entrar</Text>
+
+        <TouchableOpacity
+          style={[styles.button, loading && { opacity: 0.5 }]}
+          onPress={signUpWithEmail}
+          disabled={loading}
+        >
+          <Text style={styles.textButton}>
+            {loading ? "Carregando..." : "Entrar"}
+          </Text>
         </TouchableOpacity>
+
         <Text style={styles.text}>
           Já tem uma conta?{" "}
           <Text

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   Text,
@@ -149,7 +149,7 @@ export default function SignIn({ navigation }) {
           secureTextEntry
         />
         {error && <Text style={styles.error}>{error}</Text>}
-        <TouchableOpacity style={styles.button} onPress={signIn}>
+        <TouchableOpacity style={styles.button} onPress={signInWithEmail}>
           <Text style={styles.textButton}>Entrar</Text>
         </TouchableOpacity>
         <Text style={styles.text}>

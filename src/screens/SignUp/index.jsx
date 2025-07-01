@@ -26,72 +26,175 @@ export default function SignUp({ navigation }) {
   const typeUser = useSelector((state) => state.userReducer.typeUser);
   const dispatch = useDispatch();
 
-  function create(user, typeUser = "client") {
-    set(ref(db, "users/" + typeUser + "/" + user.uid), {
-      idUser: user.uid,
-      name: name.trim(),
-      typeUser: typeUser,
-    })
-      .then(() => {
-        Toast.show({
-          type: "success",
-          text1: "Sucesso",
-          text2: "Dados enviados com sucesso!",
-        });
-      })
-      .catch((error) => {
-        Toast.show({
-          type: "error",
-          text1: "Erro",
-          text2: "Erro ao enviar dados: " + error.message,
-        });
-      });
-  }
+  // function create(user, typeUser = "client") {
+  //   set(ref(db, "users/" + typeUser + "/" + user.uid), {
+  //     idUser: user.uid,
+  //     name: name.trim(),
+  //     typeUser: typeUser,
+  //   })
+  //     .then(() => {
+  //       Toast.show({
+  //         type: "success",
+  //         text1: "Sucesso",
+  //         text2: "Dados enviados com sucesso!",
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       Toast.show({
+  //         type: "error",
+  //         text1: "Erro",
+  //         text2: "Erro ao enviar dados: " + error.message,
+  //       });
+  //     });
+  // }
 
-  const signUp = () => {
+  // const signUp = () => {
+  //   if (
+  //     name === "" ||
+  //     email === "" ||
+  //     password === "" ||
+  //     confirmPassword === ""
+  //   ) {
+  //     setError("Preencha todos os campos");
+  //     return;
+  //   }
+
+  //   if (password !== confirmPassword) {
+  //     setError("As senhas não são iguais");
+  //     return;
+  //   }
+
+  //   const auth = getAuth(app);
+  //   createUserWithEmailAndPassword(auth, email, password)
+  //     .then((userCredential) => {
+  //       const user = userCredential.user;
+  //       create(user, typeUser);
+  //       dispatch(login(typeUser));
+  //       dispatch(idUser(user.uid));
+  //       try {
+  //         if (typeUser == "client") {
+  //           navigation.navigate("DrawerApp");
+  //         } else if (typeUser == "profissional") {
+  //           navigation.navigate("ProfessionalSignUp");
+  //         } else {
+  //           navigation.navigate("ToggleTypeUser");
+  //         }
+  //       } catch (error) {
+  //         console.error("Erro na navegação:", error);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       const errorMessage = error.message;
+  //       Toast.show({
+  //         type: "error",
+  //         text1: "Erro ao entrar",
+  //         text2: errorMessage,
+  //       });
+  //     });
+  // };
+  // Função para criar usuário no Firebase
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (session && session.user) {
+      navigation.navigate("DrawerApp");
+    }
+  }, [session]);
+
+  async function signUpWithEmail() {
+    setLoading(true);
     if (
       name === "" ||
       email === "" ||
       password === "" ||
       confirmPassword === ""
     ) {
-      setError("Preencha todos os campos");
+      Toast.show({
+        type: "error",
+        text1: "Erro",
+        text2: "Preencha todos os campos!",
+      });
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("As senhas não são iguais");
+      Toast.show({
+        type: "error",
+        text1: "Erro",
+        text2: "As senhas não coincidem!",
+      });
+      setLoading(false);
       return;
     }
 
-    const auth = getAuth(app);
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        create(user, typeUser);
-        dispatch(login(typeUser));
-        dispatch(idUser(user.uid));
-        try {
-          if (typeUser == "client") {
-            navigation.navigate("DrawerApp");
-          } else if (typeUser == "profissional") {
-            navigation.navigate("ProfessionalSignUp");
-          } else {
-            navigation.navigate("ToggleTypeUser");
-          }
-        } catch (error) {
-          console.error("Erro na navegação:", error);
-        }
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
+    try {
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (signUpError) {
         Toast.show({
           type: "error",
-          text1: "Erro ao entrar",
-          text2: errorMessage,
+          text1: "Erro",
+          text2: signUpError.message,
         });
+        setLoading(false);
+        return;
+      }
+
+      const uuid = data.user?.id;
+      if (uuid) {
+        const { error: insertError } = await supabase.from("profiles").insert({
+          id: uuid,
+          name,
+          email,
+          typeUser,
+        });
+
+        if (insertError) {
+          Toast.show({
+            type: "error",
+            text1: "Erro",
+            text2: "Erro ao salvar no banco.",
+          });
+          setLoading(false);
+          return;
+        }
+
+        Toast.show({
+          type: "success",
+          text1: "Cadastro feito",
+          text2: "Verifique seu e-mail para confirmar o login",
+        });
+
+        navigation.navigate("SignIn");
+      }
+    } catch (err) {
+      Toast.show({
+        type: "error",
+        text1: "Erro inesperado",
+        text2: "Tente novamente mais tarde.",
       });
-  };
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>

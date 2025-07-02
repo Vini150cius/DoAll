@@ -38,7 +38,6 @@ export default function SignIn({ navigation }) {
     });
 
     return () => {
-      console.log("CLEANUP: Desinscrito de onAuthStateChange.");
       subscription.unsubscribe();
     };
   }, []);
@@ -73,6 +72,7 @@ export default function SignIn({ navigation }) {
         type: "success",
         text1: "Login realizado com sucesso",
       });
+      dispatch(idUser(session.user.id));
       navigation.navigate("DrawerApp");
     } else {
       Toast.show({
@@ -80,6 +80,7 @@ export default function SignIn({ navigation }) {
         text1: "Complete seu cadastro",
         text2: "Redirecionando para o cadastro profissional.",
       });
+      dispatch(idUser(session.user.id));
       navigation.navigate("ProfessionalSignUp");
     }
     setLoading(false);
@@ -125,7 +126,7 @@ export default function SignIn({ navigation }) {
 
     const user = data.user;
 
-    dispatch(idUser(user.id));
+    dispatch(idUser(session.user.id));
     dispatch(login(typeUser));
 
     await handleLoginCompletionCheck(user.id);

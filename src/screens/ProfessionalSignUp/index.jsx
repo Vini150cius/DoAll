@@ -9,14 +9,14 @@ import {
   View,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
 import * as FileSystem from "expo-file-system";
 import Feather from "react-native-vector-icons/Feather";
 import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
 import { useSelector } from "react-redux";
-import { ref, set } from "firebase/database";
-import { db } from "../../config/firebase";
 import Toast from "react-native-toast-message";
+import { supabase } from "../../config/supabaseConfig";
 
 export default function ProfessionalSignUp({ navigation }) {
   const [name, setName] = useState("");
@@ -27,52 +27,122 @@ export default function ProfessionalSignUp({ navigation }) {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [selectedType, setSelectedType] = useState("");
+  const [uploading, setUploading] = useState(false);
   const userId = useSelector((state) => state.userReducer.idUser);
   const typeUser = useSelector((state) => state.userReducer.typeUser);
 
-
-  // Função para converter a imagem em base64, já que o Firebase não aceita imagens diretas, então é necessário converter a imagem para base64 antes de enviar.
-  const convertImageToBase64 = async (uri) => {
+  // Função para comprimir imagem
+  const compressImage = async (uri) => {
     try {
-      const base64 = await FileSystem.readAsStringAsync(uri, {
+      let manipResult = await ImageManipulator.manipulateAsync(
+        uri,
+        [{ resize: { width: 800, height: 800 } }],
+        {
+          compress: 0.7,
+          format: ImageManipulator.SaveFormat.JPEG,
+        }
+      );
+
+      const fileInfo = await FileSystem.getInfoAsync(manipResult.uri);
+      const fileSizeInMB = fileInfo.size / (1024 * 1024);
+
+      if (fileSizeInMB > 0.5) {
+        manipResult = await ImageManipulator.manipulateAsync(
+          manipResult.uri,
+          [{ resize: { width: 600, height: 600 } }],
+          {
+            compress: 0.5,
+            format: ImageManipulator.SaveFormat.JPEG,
+          }
+        );
+      }
+
+      return manipResult.uri;
+    } catch (error) {
+      console.error("Erro ao comprimir imagem:", error);
+      throw error;
+    }
+  };
+
+  // Função para fazer upload da imagem
+  const uploadImageToSupabase = async (imageUri) => {
+    try {
+      // Comprime a imagem
+      const compressedUri = await compressImage(imageUri);
+      const fileData = await FileSystem.readAsStringAsync(compressedUri, {
         encoding: FileSystem.EncodingType.Base64,
       });
-      return `data:image/jpeg;base64,${base64}`;
+
+      // Cria nome do arquivo organizando por pasta do usuário
+      const fileName = `${userId}/profile_${Date.now()}.jpg`;
+
+      const byteCharacters = atob(fileData);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+
+      // Upload para Supabase Storage
+      const { data, error } = await supabase.storage
+        .from("profile-images")
+        .upload(fileName, byteArray, {
+          contentType: "image/jpeg",
+          upsert: true,
+        });
+
+      if (error) {
+        console.error("Erro no upload storage:", error);
+        throw error;
+      }
+
+      const { data: publicData } = supabase.storage
+        .from("profile-images")
+        .getPublicUrl(fileName);
+
+      return publicData.publicUrl;
     } catch (error) {
-      console.error("Erro ao converter imagem:", error);
-      Toast.show({
-        type: "error",
-        text1: "Erro",
-        text2: "Erro ao processar a imagem",
-      });
-      return null;
+      console.error("Erro no upload:", error);
+      throw error;
     }
   };
 
   const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    try {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (status !== "granted") {
-      Toast.show({
-        type: "error",
-        text1: "Erro",
-        text2: "Desculpe, precisamos de permissão para acessar a galeria.",
-      });
-    } else {
+      if (status !== "granted") {
+        Toast.show({
+          type: "error",
+          text1: "Erro",
+          text2: "Precisamos de permissão para acessar a galeria.",
+        });
+        return;
+      }
+
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 1,
+        quality: 0.8,
       });
+
       if (!result.canceled) {
-        const imageUri = result.assets ? result.assets[0].uri : result.uri;
-        const base64Image = await convertImageToBase64(imageUri);
-        if (base64Image) {
-          setFile(base64Image);
-          setError(null);
-        }
+        setFile(result.assets[0].uri);
+
+        Toast.show({
+          type: "info",
+          text1: "Imagem selecionada",
+          text2: "Pronta para upload!",
+        });
       }
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Erro",
+        text2: "Erro ao selecionar imagem",
+      });
     }
   };
 
@@ -86,44 +156,88 @@ export default function ProfessionalSignUp({ navigation }) {
     { key: 7, name: "Outros serviços úteis" },
   ];
 
-  function submitForm() {
+  async function submitForm() {
     if (
       name == "" ||
       services == "" ||
       sentence == "" ||
       file == "" ||
       telefone == "" ||
-      email == ""
+      email == "" ||
+      selectedType == ""
     ) {
       setError("Preencha todos os campos");
+      Toast.show({
+        type: "error",
+        text1: "Erro",
+        text2: "Preencha todos os campos",
+      });
       return;
-    } else {
-      set(ref(db, "users/profissional/" + userId), {
-        idUser: userId,
-        name: name,
-        typeUser: typeUser,
-        file: file,
-        sentence: sentence,
-        services: services,
-        telefone: telefone,
-        email: email,
-        serviceType: serviceTypes[selectedType].name,
-      })
-        .then(() => {
-          Toast.show({
-            type: "success",
-            text1: "Sucesso",
-            text2: "Dados enviados com sucesso!",
-          });
-          navigation.navigate("DrawerApp");
+    }
+
+    try {
+      setUploading(true);
+      setError("");
+
+      const imageUrl = await uploadImageToSupabase(file);
+
+      const { data: updateData, error: updateError } = await supabase
+        .from("profiles")
+        .update({
+          name,
+          email,
+          services,
+          sentence,
+          telefone,
+          photo_url: imageUrl,
+          service_type: selectedType,
+          type_user: typeUser,
+          login_completed: true,
         })
-        .catch((error) => {
-          Toast.show({
-            type: "error",
-            text1: "Erro",
-            text2: "Erro ao enviar dados: " + error.message,
-          });
-        });
+        .eq("user_id", userId)
+        .select();
+
+      let result = { data: updateData, error: updateError };
+
+      if (!updateError && (!updateData || updateData.length === 0)) {
+        result = await supabase
+          .from("profiles")
+          .insert({
+            user_id: userId,
+            name,
+            email,
+            services,
+            sentence,
+            telefone,
+            photo_url: imageUrl,
+            service_type: serviceTypes[selectedType].name,
+            type_user: typeUser,
+            login_completed: true,
+          })
+          .select();
+      }
+      if (result.error) {
+        console.error("Erro ao salvar perfil:", result.error);
+        throw result.error;
+      }
+
+      Toast.show({
+        type: "success",
+        text1: "Sucesso!",
+        text2: "Perfil salvo com sucesso!",
+      });
+      navigation.navigate("DrawerApp");
+    } catch (error) {
+      console.error("Erro completo:", error);
+
+      setError(errorMessage);
+      Toast.show({
+        type: "error",
+        text1: "Erro",
+        text2: "Erro ao salvar perfil",
+      });
+    } finally {
+      setUploading(false);
     }
   }
 
@@ -143,8 +257,10 @@ export default function ProfessionalSignUp({ navigation }) {
               style={styles.inputName}
               value={name}
               onChangeText={setName}
+              editable={!uploading}
             />
           </View>
+
           <View style={styles.containerInput}>
             <Text style={styles.textInput}>Escreva os seus serviços</Text>
             <TextInput
@@ -154,8 +270,10 @@ export default function ProfessionalSignUp({ navigation }) {
               maxLength={100}
               value={services}
               onChangeText={setServices}
+              editable={!uploading}
             />
           </View>
+
           <View style={styles.containerInput}>
             <Text style={styles.textInput}>Escreva sua frase de efeito</Text>
             <TextInput
@@ -164,13 +282,25 @@ export default function ProfessionalSignUp({ navigation }) {
               placeholderTextColor="#444"
               value={sentence}
               onChangeText={setSentence}
+              editable={!uploading}
             />
           </View>
+
           <View style={styles.containerInput}>
             <Text style={styles.textInput}>Coloque a sua foto aqui</Text>
-            {/* Fonte: https://www.geeksforgeeks.org/how-to-upload-and-preview-an-image-in-react-native/ */}
-            <TouchableOpacity style={styles.buttonUpload} onPress={pickImage}>
-              <Feather name="upload-cloud" size={60} color="#888" />
+            <TouchableOpacity
+              style={styles.buttonUpload}
+              onPress={pickImage}
+              disabled={uploading}
+            >
+              <Feather
+                name={uploading ? "clock" : "upload-cloud"}
+                size={60}
+                color={uploading ? "#ccc" : "#888"}
+              />
+              {uploading && (
+                <Text style={styles.uploadingText}>Processando...</Text>
+              )}
             </TouchableOpacity>
             <View style={styles.containerImage}>
               {file && (
@@ -178,6 +308,7 @@ export default function ProfessionalSignUp({ navigation }) {
               )}
             </View>
           </View>
+
           <View style={styles.containerInput}>
             <Text style={styles.textInput}>
               Como os clientes podem entrar em contato com você?
@@ -188,6 +319,7 @@ export default function ProfessionalSignUp({ navigation }) {
               placeholderTextColor="#444"
               value={telefone}
               onChangeText={setTelefone}
+              editable={!uploading}
             />
             <TextInput
               style={styles.inputEmail}
@@ -195,20 +327,38 @@ export default function ProfessionalSignUp({ navigation }) {
               placeholderTextColor="#444"
               value={email}
               onChangeText={setEmail}
+              editable={!uploading}
             />
             <Picker
               style={styles.picker}
               selectedValue={selectedType}
               onValueChange={(value) => setSelectedType(value)}
+              enabled={!uploading}
             >
-              {serviceTypes.map((type, index) => (
-                <Picker.Item key={type.key} value={index} label={type.name} />
+              <Picker.Item label="Selecione o tipo de serviço" value="" />
+              {serviceTypes.map((type) => (
+                <Picker.Item
+                  key={type.key}
+                  value={type.key}
+                  label={type.name}
+                />
               ))}
             </Picker>
           </View>
+
           {error && <Text style={styles.error}>{error}</Text>}
-          <TouchableOpacity style={styles.submitForm} onPress={submitForm}>
-            <Text style={styles.textSubmitForm}>Salvar</Text>
+
+          <TouchableOpacity
+            style={[
+              styles.submitForm,
+              uploading && { backgroundColor: "#ccc" },
+            ]}
+            onPress={submitForm}
+            disabled={uploading}
+          >
+            <Text style={styles.textSubmitForm}>
+              {uploading ? "Salvando..." : "Salvar"}
+            </Text>
           </TouchableOpacity>
         </ScrollView>
       </View>

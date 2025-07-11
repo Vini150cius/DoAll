@@ -206,11 +206,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
 
-  linha: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#fff",
-    marginVertical: 10,
-  },
+
 
   modalContainer: {
     flex: 1,

@@ -12,6 +12,7 @@ import { supabase } from "../../config/supabaseConfig";
 import { useDispatch, useSelector } from "react-redux";
 import { idUser, login } from "../../redux/User/slice";
 import Toast from "react-native-toast-message"; // Certifique-se de que esta importação está presente!
+import { GetUserInfo } from "../../services/get-user-info";
 
 export default function SignIn({ navigation }) {
   const [session, setSession] = useState(null);
@@ -73,6 +74,7 @@ export default function SignIn({ navigation }) {
         text1: "Login realizado com sucesso",
       });
       dispatch(idUser(session.user.id));
+      const { data: userData } = GetUserInfo(session.user.id, dispatch)
       navigation.navigate("DrawerApp");
     } else {
       Toast.show({

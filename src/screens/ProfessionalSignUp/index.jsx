@@ -26,7 +26,7 @@ export default function ProfessionalSignUp({ navigation }) {
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  const [selectedType, setSelectedType] = useState("");
+  const [selectedType, setSelectedType] = useState(""); // This will be a string from Picker
   const [uploading, setUploading] = useState(false);
   const userId = useSelector((state) => state.userReducer.idUser);
   const typeUser = useSelector((state) => state.userReducer.typeUser);
@@ -156,6 +156,10 @@ export default function ProfessionalSignUp({ navigation }) {
     { key: 7, name: "Outros serviços úteis" },
   ];
 
+  function getServiceTypeByKey (key) {
+    return serviceTypes.find(type => type.key === parseInt(key));
+  };
+
   async function submitForm() {
     if (
       name == "" ||
@@ -180,6 +184,10 @@ export default function ProfessionalSignUp({ navigation }) {
       setError("");
 
       const imageUrl = await uploadImageToSupabase(file);
+      const selectedServiceType = getServiceTypeByKey(selectedType);
+      if (!selectedServiceType) {
+        throw new Error("Tipo de serviço inválido");
+      }
 
       const { data: updateData, error: updateError } = await supabase
         .from("profiles")
@@ -190,7 +198,7 @@ export default function ProfessionalSignUp({ navigation }) {
           sentence,
           telefone,
           photo_url: imageUrl,
-          service_type: selectedType,
+          service_type: selectedServiceType.name, 
           type_user: typeUser,
           login_completed: true,
         })
@@ -210,12 +218,13 @@ export default function ProfessionalSignUp({ navigation }) {
             sentence,
             telefone,
             photo_url: imageUrl,
-            service_type: serviceTypes[selectedType].name,
+            service_type: selectedServiceType.name, 
             type_user: typeUser,
             login_completed: true,
           })
           .select();
       }
+      
       if (result.error) {
         console.error("Erro ao salvar perfil:", result.error);
         throw result.error;
@@ -339,7 +348,7 @@ export default function ProfessionalSignUp({ navigation }) {
               {serviceTypes.map((type) => (
                 <Picker.Item
                   key={type.key}
-                  value={type.key}
+                  value={type.key.toString()} // Convert to string for Picker
                   label={type.name}
                 />
               ))}

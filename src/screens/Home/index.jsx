@@ -5,24 +5,22 @@ import {
   Linking,
   SafeAreaView,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
-  Modal,
 } from "react-native";
 import styles from "./styles";
-import Feather from "react-native-vector-icons/Feather";
-import Ionicons from "react-native-vector-icons/Ionicons";
+
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { AirbnbRating } from "react-native-ratings";
 import { useSelector } from "react-redux";
 import { onValue, ref, set, update } from "firebase/database";
 import { db } from "../../config/firebase";
+import { Header } from "../../components/Header";
 
 export default function Teste({ navigation }) {
   const [feed, setFeed] = useState([]);
-  const [modalPerfilVisible, setModalPerfilVisible] = useState(false);
-  const idUser = useSelector((state) => state.userReducer.idUser);
+  const dataUser = useSelector((state) => state.userReducer.data);
+
 
   const formatPhone = (telefone) => {
     if (!telefone) return "";
@@ -111,90 +109,7 @@ export default function Teste({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => navigation.openDrawer()}
-          style={styles.menuIcon}
-        >
-          <Feather name="menu" size={24} color="white" />
-        </TouchableOpacity>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Buscar..."
-          placeholderTextColor="#999"
-        />
-        <TouchableOpacity style={styles.searchIcon}>
-          <Ionicons name="notifications" size={24} color="white" />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.userButton}
-          onPress={() => setModalPerfilVisible(true)}
-        >
-          <Ionicons name="person-circle-outline" size={24} color="white" />
-        </TouchableOpacity>
-
-        <Modal
-          visible={modalPerfilVisible}
-          animationType="fade"
-          transparent={true}
-          onRequestClose={() => setModalPerfilVisible(false)}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.perfilModal}>
-              <View style={styles.perfilHeader}>
-                <Image
-                  source={require("../../../assets/avatar.png")}
-                  style={styles.perfilAvatar}
-                />
-                <View>
-                  <Text style={styles.perfilName}>Cliente</Text>
-                  <Text style={styles.perfilEmail}>cliente@gmail.com</Text>
-                </View>
-              </View>
-
-              <TouchableOpacity
-                style={styles.perfilOpcao}
-                onPress={() => (
-                  setModalPerfilVisible(false), navigation.navigate("Conta")
-                )}
-              >
-                <Feather name="user" size={20} color="#fff" />
-                <Text style={styles.perfilOpcaoText}>Conta</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.perfilOpcao}>
-                <Feather name="settings" size={20} color="#fff" />
-                <Text style={styles.perfilOpcaoText}>Configuração</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.perfilOpcao}>
-                <Feather name="book-open" size={20} color="#fff" />
-                <Text style={styles.perfilOpcaoText}>Guia</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.perfilOpcao}
-                onPress={() => setModalPerfilVisible(false)}
-              >
-                <Feather name="help-circle" size={20} color="#fff" />
-                <Text style={styles.perfilOpcaoText}>Ajuda</Text>
-              </TouchableOpacity>
-
-              <View style={styles.linha} />
-
-              <TouchableOpacity
-                style={styles.perfilOpcao}
-                onPress={() => (
-                  setModalPerfilVisible(false),
-                  navigation.navigate("InitScreen")
-                )}
-              >
-                <Feather name="log-out" size={20} color="#fff" />
-                <Text style={styles.perfilOpcaoText}>Sair</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-      </View>
-
+      <Header />
       <View style={styles.listContainer}>
         <FlatList
           data={feed}
@@ -204,6 +119,14 @@ export default function Teste({ navigation }) {
             <Text style={styles.emptyText}>Nenhum dado encontrado</Text>
           }
         />
+      </View>
+      <View>
+        <Text style={{color: "white"}}>
+          {dataUser.name}
+        </Text>
+        <Text style={{color: "white"}}>
+          {dataUser.photo_url}
+        </Text>
       </View>
     </SafeAreaView>
   );

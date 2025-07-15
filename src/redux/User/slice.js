@@ -17,7 +17,6 @@ export const userSlice = createSlice({
     logout: (state) => {
       state.login = null;
       state.idUser = null;
-      state.typeUser = "client";
       state.data = {};
     },
     typeUser: (state, action) => {

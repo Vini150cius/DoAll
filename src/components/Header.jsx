@@ -111,9 +111,8 @@ export function Header() {
             <TouchableOpacity
               style={styles.perfilOpcao}
               onPress={async () => {
-                const response = await logout();
+                const response = await logout(dispatch);
                 if (response) {
-                  dispatch(logout());
                   setModalPerfilVisible(false);
                   navigation.navigate("InitScreen");
                 }

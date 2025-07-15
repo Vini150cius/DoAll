@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   SafeAreaView,
   Text,
   TextInput,
@@ -11,8 +12,9 @@ import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons"
 import { supabase } from "../../config/supabaseConfig";
 import { useDispatch, useSelector } from "react-redux";
 import { idUser, login } from "../../redux/User/slice";
-import Toast from "react-native-toast-message"; // Certifique-se de que esta importação está presente!
-import { GetUserInfo } from "../../services/get-user-info";
+import { loginCompletionCheck } from "../../services/login-completion-check";
+import { checkTypeUser } from "../../services/check-type-user";
+import { logout } from "../../services/logout";
 
 export default function SignIn({ navigation }) {
   const [session, setSession] = useState(null);
@@ -46,47 +48,35 @@ export default function SignIn({ navigation }) {
   // Função para entrar no aplicativo se já estiver logado
   useEffect(() => {
     if (session && session.user) {
-      handleLoginCompletionCheck(session.user.id);
+      const checkLoginCompletionAndType = async () => {
+        try {
+          const typeCorrect = await checkTypeUser(session.user.id, typeUser);
+          if (typeCorrect == false) {
+            Alert.alert("Tipo de usuario incorreto");
+            logout(dispatch);
+            setLoading(false);
+            return;
+          }
+        } catch (error) {
+          console.error("Erro ao verificar tipo de usuário:", error);
+          return;
+        }
+        try {
+          await loginCompletionCheck(
+            session.user.id,
+            dispatch,
+            navigation,
+            setLoading
+          );
+        } catch (error) {
+          console.error("Erro ao verificar login:", error);
+          setLoading(false);
+        }
+      };
+
+      checkLoginCompletionAndType();
     }
   }, [session]);
-
-  // Função para verificar login_completed e navegar
-  async function handleLoginCompletionCheck(userId) {
-    const { data: profileData, error: profileError } = await supabase
-      .from("profiles")
-      .select("login_completed")
-      .eq("user_id", userId)
-      .single();
-
-    if (profileError) {
-      Toast.show({
-        type: "error",
-        text1: "Erro ao verificar perfil",
-        text2: profileError.message,
-      });
-      setLoading(false);
-      return;
-    }
-
-    if (profileData && profileData.login_completed === true) {
-      Toast.show({
-        type: "success",
-        text1: "Login realizado com sucesso",
-      });
-      dispatch(idUser(session.user.id));
-      const { data: userData } = GetUserInfo(session.user.id, dispatch)
-      navigation.navigate("DrawerApp");
-    } else {
-      Toast.show({
-        type: "info",
-        text1: "Complete seu cadastro",
-        text2: "Redirecionando para o cadastro profissional.",
-      });
-      dispatch(idUser(session.user.id));
-      navigation.navigate("ProfessionalSignUp");
-    }
-    setLoading(false);
-  }
 
   // Função para entrar no aplicativo pelo Supabase usando email e senha
   async function signInWithEmail() {
@@ -126,12 +116,10 @@ export default function SignIn({ navigation }) {
       return;
     }
 
-    const user = data.user;
-
     dispatch(idUser(session.user.id));
     dispatch(login(typeUser));
 
-    await handleLoginCompletionCheck(user.id);
+    await checkLoginCompletionAndType();
   }
 
   return (

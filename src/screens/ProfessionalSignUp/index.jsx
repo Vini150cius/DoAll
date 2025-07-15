@@ -156,9 +156,9 @@ export default function ProfessionalSignUp({ navigation }) {
     { key: 7, name: "Outros serviços úteis" },
   ];
 
-  function getServiceTypeByKey (key) {
-    return serviceTypes.find(type => type.key === parseInt(key));
-  };
+  function getServiceTypeByKey(key) {
+    return serviceTypes.find((type) => type.key === parseInt(key));
+  }
 
   async function submitForm() {
     if (
@@ -188,7 +188,7 @@ export default function ProfessionalSignUp({ navigation }) {
       if (!selectedServiceType) {
         throw new Error("Tipo de serviço inválido");
       }
-
+      console.log(imageUrl);
       const { data: updateData, error: updateError } = await supabase
         .from("profiles")
         .update({
@@ -198,7 +198,7 @@ export default function ProfessionalSignUp({ navigation }) {
           sentence,
           telefone,
           photo_url: imageUrl,
-          service_type: selectedServiceType.name, 
+          service_type: selectedServiceType.name,
           type_user: typeUser,
           login_completed: true,
         })
@@ -218,13 +218,13 @@ export default function ProfessionalSignUp({ navigation }) {
             sentence,
             telefone,
             photo_url: imageUrl,
-            service_type: selectedServiceType.name, 
+            service_type: selectedServiceType.name,
             type_user: typeUser,
             login_completed: true,
           })
           .select();
       }
-      
+
       if (result.error) {
         console.error("Erro ao salvar perfil:", result.error);
         throw result.error;

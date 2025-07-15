@@ -16,19 +16,16 @@ import { useSelector } from "react-redux";
 import { onValue, ref, set, update } from "firebase/database";
 import { db } from "../../config/firebase";
 import { Header } from "../../components/Header";
+import { formatPhone } from "../../services/format-phone";
+import { GetFreelancers } from "../../services/get-freelancers ";
 
 export default function Teste({ navigation }) {
   const [feed, setFeed] = useState([]);
   const dataUser = useSelector((state) => state.userReducer.data);
 
-
-  const formatPhone = (telefone) => {
-    if (!telefone) return "";
-    return telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-  };
-
   useEffect(() => {
     read();
+
     const interval = setInterval(() => {
       read();
     }, 5000);
@@ -39,8 +36,9 @@ export default function Teste({ navigation }) {
   function Pessoa({ data }) {
     return (
       <View style={styles.card}>
-        <Image source={{ uri: data.file }} style={styles.image} />
+        <Image source={{ uri: data.photo_url }} style={styles.image} />
         <View style={styles.info}>
+          <Text></Text>
           <Text style={styles.title}>{data.services}</Text>
           <Text style={styles.subtitle}>{data.sentence}</Text>
 
@@ -77,34 +75,28 @@ export default function Teste({ navigation }) {
 
   const renderItem = ({ item }) => <Pessoa data={item} />;
 
-  function read() {
-    const usersRef = ref(db, "users/profissional/");
-    onValue(
-      usersRef,
-      (snapshot) => {
-        const data = snapshot.val();
+  async function read() {
+    const { dataFreelancers, error } = await GetFreelancers();
 
-        if (data) {
-          if (typeof data === "object" && data !== null) {
-            const feedData = Object.keys(data).map((key) => ({
-              id: key,
-              ...data[key],
-            }));
+    if (error) {
+      console.error("Erro:", error);
+      return;
+    } 
+    if (dataFreelancers) {
+      if (typeof dataFreelancers === "object" && dataFreelancers !== null) {
+        const feedData = Object.keys(dataFreelancers).map((key) => ({
+          id: key,
+          ...dataFreelancers[key],
+        }));
 
-            setFeed(feedData);
-          } else {
-            setFeed([]);
-          }
-        } else {
-          console.log("Nenhum dado encontrado");
-          setFeed([]);
-        }
-      },
-      (error) => {
-        console.log("Erro ao ler dados:", error);
+        setFeed(feedData);
+      } else {
         setFeed([]);
       }
-    );
+    } else {
+      console.log("Nenhum dado encontrado");
+      setFeed([]);
+    }
   }
 
   return (
@@ -121,12 +113,8 @@ export default function Teste({ navigation }) {
         />
       </View>
       <View>
-        <Text style={{color: "white"}}>
-          {dataUser.name}
-        </Text>
-        <Text style={{color: "white"}}>
-          {dataUser.photo_url}
-        </Text>
+        <Text style={{ color: "white" }}>{dataUser.name}</Text>
+        <Text style={{ color: "white" }}>{dataUser.photo_url}</Text>
       </View>
     </SafeAreaView>
   );

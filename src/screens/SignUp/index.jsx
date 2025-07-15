@@ -10,11 +10,8 @@ import styles from "./styles";
 import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";
 import { supabase } from "../../config/supabaseConfig";
-import { idUser, login } from "../../redux/User/slice";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { app, db } from "../../config/firebase";
 import Toast from "react-native-toast-message";
-import { ref, set } from "firebase/database";
+import { loginCompletionCheck } from "../../services/login-completion-check";
 
 export default function SignUp({ navigation }) {
   const [session, setSession] = useState(null);
@@ -45,7 +42,20 @@ export default function SignUp({ navigation }) {
 
   useEffect(() => {
     if (session && session.user) {
-      navigation.navigate("DrawerApp");
+      const checkLoginCompletion = async () => {
+        try {
+          await loginCompletionCheck(
+            session.user.id,
+            dispatch,
+            navigation,
+            setLoading
+          );
+        } catch (error) {
+          console.error("Erro ao verificar login:", error);
+          setLoading(false);
+        }
+      };
+      checkLoginCompletion();
     }
   }, [session]);
 
@@ -120,8 +130,6 @@ export default function SignUp({ navigation }) {
           text1: "Cadastro feito",
           text2: "Verifique seu e-mail para confirmar o login",
         });
-
-        navigation.navigate("SignIn");
       }
     } catch (err) {
       Toast.show({

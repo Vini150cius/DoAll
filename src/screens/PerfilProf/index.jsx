@@ -14,12 +14,22 @@ import styles from "./styles";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { useSelector } from "react-redux";
 
 export default function PerfilProf({ navigation }) {
   const [feed, setFeed] = useState([]);
+  const [name, setName] = useState("");
+  const [services, setServices] = useState("");
+  const [sentence, setSentence] = useState("");
+  const [file, setFile] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [uploading, setUploading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalPerfilVisible, setModalPerfilVisible] = useState(false);
   const [servicoPrestado, setServicoPrestado] = useState("");
+  const dataUser = useSelector((state) => state.userReducer.data);
 
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -78,18 +88,15 @@ export default function PerfilProf({ navigation }) {
 
       <View style={styles.viewCard}>
         <View style={styles.card}>
-          <Image
-            source={require("../../../assets/avatar.png")}
-            style={styles.image}
-          />
+          <Image source={{ uri: dataUser.photo_url }} style={styles.image} />
           <View style={styles.info}>
-            <Text style={styles.title}>Nome do Profissional</Text>
-            <Text style={styles.subtitle}>Serviços: Corte, Coloração</Text>
+            <Text style={styles.title}>{dataUser.name}</Text>
+            <Text style={styles.subtitle}>Serviços: {dataUser.services}</Text>
             <Text style={styles.subtitle}>
-              Frase de Efeito: "Seu cabelo, sua arte"
+              Frase de Efeito: "{dataUser.sentence}"
             </Text>
-            <Text style={styles.subtitle}>Email: profissional@gmail.com</Text>
-            <Text style={styles.subtitle}>Telefone: (11) 99999-9999</Text>
+            <Text style={styles.subtitle}>Email: {dataUser.email}</Text>
+            <Text style={styles.subtitle}>Telefone: {dataUser.telefone}</Text>
           </View>
         </View>
       </View>
@@ -120,6 +127,9 @@ export default function PerfilProf({ navigation }) {
                 style={styles.inputName}
                 placeholder="Ex: João da Silva"
                 placeholderTextColor="#444"
+                value={name}
+                onChangeText={setName}
+                editable={!uploading}
               />
             </View>
             <View style={styles.containerInput}>
@@ -131,6 +141,9 @@ export default function PerfilProf({ navigation }) {
                 maxLength={100}
                 placeholder="Ex: Corte, Coloração, Escova"
                 placeholderTextColor="#444"
+                value={services}
+                onChangeText={setServices}
+                editable={!uploading}
               />
             </View>
             <View style={styles.containerInput}>
@@ -139,19 +152,28 @@ export default function PerfilProf({ navigation }) {
                 style={styles.inputSentence}
                 placeholder="Ex: Cuidar do seu cabelo é minha arte."
                 placeholderTextColor="#444"
+                value={sentence}
+                onChangeText={setSentence}
+                editable={!uploading}
               />
             </View>
             <View style={styles.containerInput}>
               <Text style={styles.textInput}>Coloque a sua foto aqui</Text>
               {/* Fonte: https://www.geeksforgeeks.org/how-to-upload-and-preview-an-image-in-react-native/ */}
-              <TouchableOpacity style={styles.buttonUpload} onPress={pickImage}>
-                <Feather name="upload-cloud" size={60} color="#888" />
-              </TouchableOpacity>
-              {/* <View style={styles.containerImage}>
-                {file && (
-                  <Image source={{ uri: file }} style={styles.imageUpload} />
+              <TouchableOpacity
+                style={styles.buttonUpload}
+                onPress={pickImage}
+                disabled={uploading}
+              >
+                <Feather
+                  name={uploading ? "clock" : "upload-cloud"}
+                  size={60}
+                  color={uploading ? "#ccc" : "#888"}
+                />
+                {uploading && (
+                  <Text style={styles.uploadingText}>Processando...</Text>
                 )}
-              </View> */}
+              </TouchableOpacity>
             </View>
             <View style={styles.containerInput}>
               <Text style={styles.textInput}>
@@ -161,21 +183,18 @@ export default function PerfilProf({ navigation }) {
                 style={styles.inputFone}
                 placeholder="Telefone"
                 placeholderTextColor="#444"
+                value={telefone}
+                onChangeText={setTelefone}
+                editable={!uploading}
               />
               <TextInput
                 style={styles.inputEmail}
                 placeholder="Email"
                 placeholderTextColor="#444"
+                value={email}
+                onChangeText={setEmail}
+                editable={!uploading}
               />
-              {/* <Picker
-                style={styles.picker}
-                selectedValue={selectedType}
-                onValueChange={(value) => setSelectedType(value)}
-              >
-                {serviceTypes.map((type, index) => (
-                  <Picker.Item key={type.key} value={index} label={type.name} />
-                ))}
-              </Picker> */}
             </View>
             <TouchableOpacity
               style={styles.submitForm}
@@ -185,6 +204,7 @@ export default function PerfilProf({ navigation }) {
             </TouchableOpacity>
           </ScrollView>
         </View>
+        {error && <Text style={styles.error}>{error}</Text>}
       </Modal>
 
       <Modal

@@ -13,10 +13,8 @@ import styles from "./styles";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { AirbnbRating } from "react-native-ratings";
 import { useSelector } from "react-redux";
-import { onValue, ref, set, update } from "firebase/database";
-import { db } from "../../config/firebase";
 import { Header } from "../../components/Header";
-import { formatPhone } from "../../services/format-phone";
+import { formatPhone } from "../../services/format";
 import { GetFreelancers } from "../../services/get-freelancers ";
 
 export default function Teste({ navigation }) {

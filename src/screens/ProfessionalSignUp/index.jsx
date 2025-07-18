@@ -17,6 +17,8 @@ import { Picker } from "@react-native-picker/picker";
 import { useSelector } from "react-redux";
 import Toast from "react-native-toast-message";
 import { supabase } from "../../config/supabaseConfig";
+import { updateProfessionalInfo } from "../../services/crud-professional-info";
+import { formatEmail } from "../../services/format";
 
 export default function ProfessionalSignUp({ navigation }) {
   const [name, setName] = useState("");
@@ -26,7 +28,7 @@ export default function ProfessionalSignUp({ navigation }) {
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  const [selectedType, setSelectedType] = useState(""); // This will be a string from Picker
+  const [selectedType, setSelectedType] = useState("");
   const [uploading, setUploading] = useState(false);
   const userId = useSelector((state) => state.userReducer.idUser);
   const typeUser = useSelector((state) => state.userReducer.typeUser);
@@ -183,27 +185,39 @@ export default function ProfessionalSignUp({ navigation }) {
       setUploading(true);
       setError("");
 
+      const cleanEmail = formatEmail(email);
       const imageUrl = await uploadImageToSupabase(file);
       const selectedServiceType = getServiceTypeByKey(selectedType);
       if (!selectedServiceType) {
         throw new Error("Tipo de serviço inválido");
       }
       console.log(imageUrl);
-      const { data: updateData, error: updateError } = await supabase
-        .from("profiles")
-        .update({
-          name,
-          email,
-          services,
-          sentence,
-          telefone,
-          photo_url: imageUrl,
-          service_type: selectedServiceType.name,
-          type_user: typeUser,
-          login_completed: true,
-        })
-        .eq("user_id", userId)
-        .select();
+      const { updateData, updateError } = await updateProfessionalInfo(
+        userId,
+        name,
+        cleanEmail,
+        services,
+        sentence,
+        telefone,
+        imageUrl,
+        selectedServiceType.name,
+        typeUser
+      );
+      // const { data: updateData, error: updateError } = await supabase
+      //   .from("profiles")
+      //   .update({
+      //     name,
+      //     email,
+      //     services,
+      //     sentence,
+      //     telefone,
+      //     photo_url: imageUrl,
+      //     service_type: selectedServiceType.name,
+      //     type_user: typeUser,
+      //     login_completed: true,
+      //   })
+      //   .eq("user_id", userId)
+      //   .select();
 
       let result = { data: updateData, error: updateError };
 
@@ -348,7 +362,7 @@ export default function ProfessionalSignUp({ navigation }) {
               {serviceTypes.map((type) => (
                 <Picker.Item
                   key={type.key}
-                  value={type.key.toString()} // Convert to string for Picker
+                  value={type.key.toString()}
                   label={type.name}
                 />
               ))}

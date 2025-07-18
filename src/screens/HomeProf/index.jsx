@@ -15,18 +15,18 @@ import { AirbnbRating } from "react-native-ratings";
 import { onValue, ref, set } from "firebase/database";
 import { db } from "../../config/firebase";
 import { Header } from "../../components/Header";
+import { formatPhone } from "../../services/format";
+import { useSelector } from "react-redux";
 
 export default function HomeProf({ navigation }) {
   const [feed, setFeed] = useState([]);
   const [servicoPrestado, setServicoPrestado] = useState("");
-
-  const formatPhone = (telefone) => {
-    if (!telefone) return "";
-    return telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-  };
+  const dataUser = useSelector((state) => state.userReducer.data);
 
   useEffect(() => {
     read();
+    console.log(dataUser);
+
     const interval = setInterval(() => {
       read();
     }, 5000);

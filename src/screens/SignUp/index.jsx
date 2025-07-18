@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { supabase } from "../../config/supabaseConfig";
 import Toast from "react-native-toast-message";
 import { loginCompletionCheck } from "../../services/login-completion-check";
+import { formatEmail } from "../../services/format";
 
 export default function SignUp({ navigation }) {
   const [session, setSession] = useState(null);
@@ -61,7 +62,7 @@ export default function SignUp({ navigation }) {
 
   async function signUpWithEmail() {
     setLoading(true);
-    const cleanEmail = email.toLowerCase().replace(/\s+/g, "");
+    const cleanEmail = formatEmail(email)
 
     if (
       name === "" ||

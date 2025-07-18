@@ -18,6 +18,7 @@ export function Header() {
   const navigation = useNavigation(); // Estou adicionando assim pq é a opção mais utilizada e se for utilizar pegando como parametro fica meio feio.
   const [modalPerfilVisible, setModalPerfilVisible] = useState(false);
   const typeUser = useSelector((state) => state.userReducer.typeUser);
+  const userData = useSelector((state) => state.userReducer.data);
   const dispatch = useDispatch();
 
   return (
@@ -62,12 +63,12 @@ export function Header() {
           >
             <View style={styles.perfilHeader}>
               <Image
-                source={require("../../assets/avatar.png")}
+                source={{ uri: userData.photo_url }}
                 style={styles.perfilAvatar}
               />
               <View>
-                <Text style={styles.perfilName}>Cliente</Text>
-                <Text style={styles.perfilEmail}>cliente@gmail.com</Text>
+                <Text style={styles.perfilName}>{userData.name}</Text>
+                <Text style={styles.perfilEmail}>{userData.email}</Text>
               </View>
             </View>
 

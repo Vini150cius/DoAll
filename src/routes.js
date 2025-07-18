@@ -93,32 +93,6 @@ function DrawerApp() {
               ),
             }}
           />
-          {/* <Drawer.Screen
-            name="InitScreen"
-            component={InitScreen}
-            options={{
-              drawerIcon: ({ focused, size }) => (
-                <AntDesign
-                  name="search1"
-                  size={size}
-                  color={focused ? "#b18461" : "#ccc"}
-                />
-              ),
-            }}
-          />
-          <Drawer.Screen
-            name="Teste"
-            component={Teste}
-            options={{
-              drawerIcon: ({ focused, size }) => (
-                <AntDesign
-                  name="teste"
-                  size={size}
-                  color={focused ? "#b18461" : "#ccc"}
-                />
-              ),
-            }}
-          /> */}
         </>
       ) : (
         <>
@@ -135,34 +109,6 @@ function DrawerApp() {
               ),
             }}
           />
-          {/*
-          <Drawer.Screen
-            name="InitScreen"
-            component={InitScreen}
-            options={{
-              drawerIcon: ({ focused, size }) => (
-                <AntDesign
-                  name="home"
-                  size={size}
-                  color={focused ? "#b18461" : "#ccc"}
-                />
-              ),
-            }}
-          />
-          <Drawer.Screen
-            name="Teste"
-            component={Teste}
-            options={{
-              drawerIcon: ({ focused, size }) => (
-                <AntDesign
-                  name="teste"
-                  size={size}
-                  color={focused ? "#b18461" : "#ccc"}
-                />
-              ),
-            }}
-          />
-*/}
           <Drawer.Screen
             name="Contatos"
             component={Contatos}
@@ -194,6 +140,7 @@ export default function Routes() {
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="ProfessionalSignUp" component={ProfessionalSignUp} />
+      <Stack.Screen name="Perfil do Profissional" component={PerfilProf} />
       <Stack.Screen name="Conta" component={Conta} />
     </Stack.Navigator>
   );

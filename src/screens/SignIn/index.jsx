@@ -15,6 +15,7 @@ import { idUser, login } from "../../redux/User/slice";
 import { loginCompletionCheck } from "../../services/login-completion-check";
 import { checkTypeUser } from "../../services/check-type-user";
 import { logout } from "../../services/logout";
+import { formatEmail } from "../../services/format";
 
 export default function SignIn({ navigation }) {
   const [session, setSession] = useState(null);
@@ -101,8 +102,9 @@ export default function SignIn({ navigation }) {
       return;
     }
 
+    const cleanEmail = formatEmail(email);
     const { data, error: authError } = await supabase.auth.signInWithPassword({
-      email: email,
+      email: cleanEmail,
       password: password,
     });
 

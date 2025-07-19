@@ -20,6 +20,14 @@ import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
 import { onValue, ref, set, update } from "firebase/database";
 import { db } from "../../config/firebase";
+import {
+  createService,
+  readService,
+  readServices,
+  updateServices,
+} from "../../services/crud-services";
+import { Header } from "../../components/Header";
+import { formatOnlyNumbers } from "../../services/format";
 
 export default function Services({ navigation }) {
   const idUser = useSelector((state) => state.userReducer.idUser);
@@ -53,47 +61,50 @@ export default function Services({ navigation }) {
     }
   }
 
-  function read(filter = "") {
+  async function read(filter = "") {
     setFilter(filter);
-    const usersRef = ref(db, "users/profissional/" + idUser + "/servicos/");
-    onValue(usersRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        let servicesData = Object.keys(data).map((key) => ({
+    const data = await readServices(idUser);
+    if (data) {
+      if (typeof data === "object" && data !== null) {
+        let feedData = Object.keys(data).map((key) => ({
           id: key,
           ...data[key],
         }));
-
         if (filter !== "") {
-          servicesData = servicesData.filter(
-            (service) => service.statusService === filter
+          feedData = feedData.filter(
+            (service) => service.status_service === filter
           );
         }
 
-        setServices(servicesData);
+        setServices(feedData);
       } else {
         setServices([]);
       }
-    });
+    } else {
+      console.log("Nenhum dado encontrado");
+      setServices([]);
+    }
   }
 
   function ServiceItem({ data }) {
     return (
       <View
         style={
-          data.statusService === "pendente"
+          data.status_service === "pendente"
             ? styles.card
-            : data.statusService === "concluido"
+            : data.status_service === "concluido"
             ? styles.cardFinished
             : styles.cardCanceled
         }
       >
         <View style={styles.info}>
-          <Text style={styles.title}>{data.nameClient}</Text>
-          <Text style={styles.subtitle}>Serviço: {data.descService}</Text>
-          <Text style={styles.subtitle}>Telefone: {data.phoneService}</Text>
-          <Text style={styles.subtitle}>Valor: R$ {data.valueService}</Text>
-          <Text style={styles.subtitle}>Status: {data.statusService}</Text>
+          <Text style={styles.title}>{data.name_client}</Text>
+          <Text style={styles.subtitle}>
+            Serviço: {data.description_service}
+          </Text>
+          <Text style={styles.subtitle}>Telefone: {data.phone_client}</Text>
+          <Text style={styles.subtitle}>Valor: R$ {data.price_service}</Text>
+          <Text style={styles.subtitle}>Status: {data.status_service}</Text>
         </View>
         <View style={styles.containerActions}>
           <TouchableOpacity
@@ -115,14 +126,38 @@ export default function Services({ navigation }) {
 
   const renderItem = ({ item }) => <ServiceItem data={item} />;
 
-  function addService() {
+  async function addService() {
     if (
       servicoNome !== "" &&
       servicoDescricao !== "" &&
       servicoTelefone !== "" &&
       servicoValor !== ""
     ) {
-      createService();
+      const serviceData = {
+        professional_id: idUser,
+        description_service: servicoDescricao,
+        name_client: servicoNome,
+        phone_client: servicoTelefone,
+        status_client: "pendente",
+        price_service: formatOnlyNumbers(servicoValor),
+      };
+      const { data, insertError } = await createService(
+        serviceData.professional_id,
+        null,
+        serviceData.description_service,
+        serviceData.name_client,
+        serviceData.phone_client,
+        serviceData.status_client,
+        serviceData.price_service
+      );
+      if (!insertError) {
+        setServicoNome("");
+        setServicoDescricao("");
+        setServicoTelefone("");
+        setServicoValor("");
+        setModalAddVisible(false);
+        read();
+      }
     } else {
       Toast.show({
         type: "error",
@@ -130,92 +165,15 @@ export default function Services({ navigation }) {
         text2: "Por favor preencher todos os campos!",
       });
     }
-
-    function createService() {
-      const idService = idUser + "-" + new Date().getTime();
-      set(ref(db, "users/profissional/" + idUser + "/servicos/" + idService), {
-        nameClient: servicoNome,
-        descService: servicoDescricao,
-        phoneService: servicoTelefone,
-        valueService: servicoValor,
-        statusService: "pendente",
-      })
-        .then(() => {
-          Toast.show({
-            type: "success",
-            text1: "Sucesso",
-            text2: "Dados enviados com sucesso!",
-          });
-          setServicoNome("");
-          setServicoDescricao("");
-          setServicoTelefone("");
-          setServicoValor("");
-          read();
-          setModalAddVisible(false);
-        })
-        .catch((error) => {
-          console.log("Erro ao criar serviço:", error);
-          Toast.show({
-            type: "error",
-            text1: "Erro",
-            text2: "Erro ao enviar dados!",
-          });
-        });
-    }
   }
 
-  function updateServiceStatus(serviceId, status) {
-    const serviceRef = ref(
-      db,
-      "users/profissional/" + idUser + "/servicos/" + serviceId
-    );
-    update(serviceRef, {
-      statusService: status,
-    })
-      .then(() => {
-        Toast.show({
-          type: "success",
-          text1: "Sucesso",
-          text2: `Serviço ${status} com sucesso!`,
-        });
-        read();
-      })
-      .catch((error) => {
-        console.log("Erro ao atualizar serviço:", error);
-        Toast.show({
-          type: "error",
-          text1: "Erro",
-          text2: "Erro ao atualizar status do serviço!",
-        });
-      });
+  async function updateServiceStatus(serviceId, status) {
+    await updateServices(serviceId, idUser, status);
+    read(filter);
   }
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => navigation.openDrawer()}
-          style={styles.menuIcon}
-        >
-          <Feather name="menu" size={24} color="white" />
-        </TouchableOpacity>
-
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Buscar..."
-          placeholderTextColor="#999"
-        />
-
-        <TouchableOpacity style={styles.searchIcon}>
-          <Ionicons name="notifications" size={24} color="white" />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{ marginLeft: 10 }}
-          onPress={() => setModalPerfilVisible(true)}
-        >
-          <MaterialIcons name="person" size={26} color="white" />
-        </TouchableOpacity>
-      </View>
+      <Header />
 
       <View style={styles.filtersContainer}>
         <TouchableOpacity
@@ -272,69 +230,11 @@ export default function Services({ navigation }) {
           data={services}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
-          contentContainerStyle={styles.listContainer}
           ListEmptyComponent={
             <Text style={styles.emptyText}>Nenhum dado encontrado</Text>
           }
         />
       </View>
-
-      <Modal
-        visible={modalPerfilVisible}
-        animationType="fade"
-        transparent={true}
-        onRequestClose={() => setModalPerfilVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.perfilModal}>
-            <View style={styles.perfilHeader}>
-              <Image
-                source={require("../../../assets/avatar.png")}
-                style={styles.perfilAvatar}
-              />
-              <View>
-                <Text style={styles.perfilName}>Cliente</Text>
-                <Text style={styles.perfilEmail}>cliente@gmail.com</Text>
-              </View>
-            </View>
-
-            <TouchableOpacity
-              style={styles.perfilOpcao}
-              onPress={() => navigation.navigate("PerfilProf")}
-            >
-              <Feather name="user" size={20} color="#fff" />
-              <Text style={styles.perfilOpcaoText}>Conta</Text>
-            </TouchableOpacity>
-            <View style={styles.perfilOpcao}>
-              <Feather name="settings" size={20} color="#fff" />
-              <Text style={styles.perfilOpcaoText}>Configuração</Text>
-            </View>
-            <View style={styles.perfilOpcao}>
-              <Feather name="book-open" size={20} color="#fff" />
-              <Text style={styles.perfilOpcaoText}>Guia</Text>
-            </View>
-            <TouchableOpacity
-              style={styles.perfilOpcao}
-              onPress={() => setModalPerfilVisible(false)}
-            >
-              <Feather name="help-circle" size={20} color="#fff" />
-              <Text style={styles.perfilOpcaoText}>Ajuda</Text>
-            </TouchableOpacity>
-
-            <View style={styles.linha} />
-
-            <TouchableOpacity
-              style={styles.perfilOpcao}
-              onPress={() => (
-                navigation.navigate("InitScreen"), setModalPerfilVisible(false)
-              )}
-            >
-              <Feather name="log-out" size={20} color="#fff" />
-              <Text style={styles.perfilOpcaoText}>Sair</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
 
       <Modal
         visible={modalAddVisible}
@@ -369,12 +269,14 @@ export default function Services({ navigation }) {
               style={styles.modalInput}
               placeholder="Telefone"
               value={servicoTelefone}
+              keyboardType="numeric"
               onChangeText={setServicoTelefone}
             />
             <TextInput
               style={styles.modalInput}
               placeholder="Valor do serviço"
               value={servicoValor}
+              keyboardType="numeric"
               onChangeText={setServicoValor}
             />
             <TouchableOpacity style={styles.modalButton} onPress={addService}>

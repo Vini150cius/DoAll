@@ -8,7 +8,6 @@ export async function checkTypeUser(idUser, type) {
     .single();
   if (userData) {
     if (userData.type_user === type) {
-      console.log("Sim")
       return true;
     } else {
       return false;

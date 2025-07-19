@@ -8,3 +8,10 @@ export function formatEmail(email) {
   // Foi dificil encontrar alguem que me desse isso sem eu precisar instalar ou usar uma api...
   return email.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "");
 }
+
+export function formatOnlyNumbers(number) {
+  if (!number) return "";
+  return parseFloat(
+    number.trim().replace(",", ".").replace(/[^0-9.]/g, "")
+  );
+}

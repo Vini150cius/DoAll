@@ -21,7 +21,7 @@ import Toast from "react-native-toast-message";
 //? A, vcs devem notar uma semelhança com o flatList da Magali, já que eu peguei o código dela...
 
 
-export default function Home({ navigation }) {
+export default function Teste({ navigation }) {
   const [text, setText] = useState("");
   const [feed, setFeed] = useState([]);
   const idUser = useSelector((state) => state.userReducer.idUser);

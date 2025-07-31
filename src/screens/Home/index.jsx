@@ -15,9 +15,9 @@ import { AirbnbRating } from "react-native-ratings";
 import { useSelector } from "react-redux";
 import { Header } from "../../components/Header";
 import { formatPhone } from "../../services/format";
-import { GetFreelancers } from "../../services/get-freelancers ";
+import { readProfessionals } from "../../services/crud-professional-info";
 
-export default function Teste({ navigation }) {
+export default function Home({ navigation }) {
   const [feed, setFeed] = useState([]);
   const dataUser = useSelector((state) => state.userReducer.data);
 
@@ -74,7 +74,7 @@ export default function Teste({ navigation }) {
   const renderItem = ({ item }) => <Pessoa data={item} />;
 
   async function read() {
-    const { dataFreelancers, error } = await GetFreelancers();
+    const { dataFreelancers, error } = await readProfessionals();
 
     if (error) {
       console.error("Erro:", error);

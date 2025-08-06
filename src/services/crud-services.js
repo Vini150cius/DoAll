@@ -101,3 +101,55 @@ export async function updateServices(service_id, professional_id, status_service
     });
   }
 }
+
+export async function createService(
+  professional_id,
+  client_id = null,
+  description_service,
+  name_client,
+  phone_client,
+  status_service = "aguardando", 
+  price_service,
+  service_date
+) {
+  try {
+    const { data, error: insertError } = await supabase
+      .from("services")
+      .insert({
+        professional_id,
+        client_id,
+        description_service,
+        name_client,
+        phone_client,
+        status: status_service, 
+        price: price_service,
+        service_date,
+      })
+      .select();
+
+    if (insertError) {
+      Toast.show({
+        type: "error",
+        text1: "Erro ao inserir serviço",
+        text2: insertError.message,
+      });
+      throw insertError;
+    }
+
+    Toast.show({
+      type: "success",
+      text1: "Sucesso",
+      text2: "Serviço criado com sucesso!",
+    });
+
+    return { data, insertError };
+  } catch (err) {
+    console.error("Erro ao criar serviço:", err);
+    Toast.show({
+      type: "error",
+      text1: "Erro ao inserir serviço",
+      text2: err.message || "Erro desconhecido",
+    });
+    return err.message;
+  }
+}

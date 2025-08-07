@@ -102,7 +102,7 @@ export async function updateServices(service_id, professional_id, status_service
   }
 }
 
-export async function createService(
+export async function createService1(
   professional_id,
   client_id = null,
   description_service,

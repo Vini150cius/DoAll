@@ -53,11 +53,49 @@ export default function Home({ navigation }) {
     return (
       <View style={styles.card}>
         <Image source={{ uri: data.photo_url }} style={styles.image} />
+        {/* Botão de favoritar visível no card */}
+        <TouchableOpacity
+          onPress={async () => {
+            try {
+              if (!profissional_id || !cliente_id) return;
+              if (favorito) {
+                // REMOVER dos favoritos
+                const { error } = await supabase
+                  .from("favoritos")
+                  .delete()
+                  .match({ profissional_id, cliente_id });
+                if (error) {
+                  console.error("Erro ao remover favorito:", error);
+                  return;
+                }
+                setFavorito(false);
+              } else {
+                // ADICIONAR aos favoritos
+                const { error } = await supabase
+                  .from("favoritos")
+                  .insert([{ profissional_id, cliente_id }]);
+                if (error) {
+                  console.error("Erro ao salvar favorito:", error);
+                  return;
+                }
+                setFavorito(true);
+              }
+            } catch (err) {
+              console.error("Erro inesperado:", err);
+            }
+          }}
+          style={styles.bookmark}
+        >
+          <FontAwesome
+            name={favorito ? "bookmark" : "bookmark-o"}
+            size={22}
+            color={favorito ? "gold" : "#333"}
+          />
+        </TouchableOpacity>
         <View style={styles.info}>
           <Text></Text>
           <Text style={styles.title}>{data.services}</Text>
           <Text style={styles.subtitle}>{data.sentence}</Text>
-
           <AirbnbRating
             count={5}
             defaultRating={4}
@@ -67,45 +105,6 @@ export default function Home({ navigation }) {
             selectedColor="#f1c40f"
             starContainerStyle={styles.stars}
           />
-
-          <TouchableOpacity
-            onPress={async () => {
-              try {
-                if (!profissional_id || !cliente_id) return;
-                if (favorito) {
-                  // REMOVER dos favoritos
-                  const { error } = await supabase
-                    .from("favoritos")
-                    .delete()
-                    .match({ profissional_id, cliente_id });
-                  if (error) {
-                    console.error("Erro ao remover favorito:", error);
-                    return;
-                  }
-                  setFavorito(false);
-                } else {
-                  // ADICIONAR aos favoritos
-                  const { error } = await supabase
-                    .from("favoritos")
-                    .insert([{ profissional_id, cliente_id }]);
-                  if (error) {
-                    console.error("Erro ao salvar favorito:", error);
-                    return;
-                  }
-                  setFavorito(true);
-                }
-              } catch (err) {
-                console.error("Erro inesperado:", err);
-              }
-            }}
-          >
-            <FontAwesome
-              name={favorito ? "bookmark" : "bookmark-o"}
-              size={22}
-              color={favorito ? "gold" : "#333"}
-              style={styles.bookmark}
-            />
-          </TouchableOpacity>
         </View>
       </View>
     );

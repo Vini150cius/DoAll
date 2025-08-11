@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import styles from "./styles";
-
+import { supabase } from "./../../config/supabaseConfig.js"
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { AirbnbRating } from "react-native-ratings";
 import { useSelector } from "react-redux";
@@ -40,6 +40,7 @@ export default function Home({ navigation }) {
           <Text style={styles.title}>{data.services}</Text>
           <Text style={styles.subtitle}>{data.sentence}</Text>
 
+
           <AirbnbRating
             count={5}
             defaultRating={4}
@@ -49,14 +50,60 @@ export default function Home({ navigation }) {
             selectedColor="#f1c40f"
             starContainerStyle={styles.stars}
           />
+       
 
           <TouchableOpacity
-            onPress={() => {
-              Linking.openURL(`tel:${data.telefone}`);
-            }}
-          >
-            <Text style={styles.phone}>{formatPhone(data.telefone)}</Text>
-          </TouchableOpacity>
+  onPress={async () => {
+    try {
+      if (favorito) {
+        // REMOVER dos favoritos
+        const { error } = await supabase
+          .from("favoritos")
+          .delete()
+          .match({
+            profissional_id,
+            cliente_id
+          });
+
+        if (error) {
+          console.error("Erro ao remover favoritos:", error);
+          return;
+        }
+
+        setFavorito(false);
+      } else {
+        // ADICIONAR aos favoritos
+        const { error } = await supabase
+          .from("favoritos")
+          .insert([
+            {
+              profissional_id,
+              cliente_id
+            }
+          ]);
+
+        if (error) {
+          console.error("Erro ao salvar favorito:", error);
+          return;
+        }
+
+        setFavorito(true);
+      }
+    } catch (err) {
+      console.error("Erro inesperado:", err);
+    }
+  }}
+>
+  <FontAwesome
+    name={favorito ? "bookmark" : "bookmark-o"}
+    size={22}
+    color={favorito ? "gold" : "#333"}
+    style={styles.bookmark}
+  />
+</TouchableOpacity>
+
+
+
         </View>
 
         <TouchableOpacity onPress={() => console.log("Favorito clicado")}>

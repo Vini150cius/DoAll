@@ -42,8 +42,8 @@ export default function Home({ navigation }) {
         const { data: fav, error } = await supabase
           .from("favoritos")
           .select("*")
-          .eq("profissional_id", profissional_id)
-          .eq("cliente_id", cliente_id)
+          .eq("id_profissional", profissional_id)
+          .eq("id_cliente", cliente_id)
           .single();
         setFavorito(!!fav);
       }
@@ -53,27 +53,24 @@ export default function Home({ navigation }) {
     return (
       <View style={styles.card}>
         <Image source={{ uri: data.photo_url }} style={styles.image} />
-        {/* Botão de favoritar visível no card */}
         <TouchableOpacity
           onPress={async () => {
             try {
               if (!profissional_id || !cliente_id) return;
               if (favorito) {
-                // REMOVER dos favoritos
                 const { error } = await supabase
                   .from("favoritos")
                   .delete()
-                  .match({ profissional_id, cliente_id });
+                  .match({ id_profissional: profissional_id, id_cliente: cliente_id });
                 if (error) {
                   console.error("Erro ao remover favorito:", error);
                   return;
                 }
                 setFavorito(false);
               } else {
-                // ADICIONAR aos favoritos
                 const { error } = await supabase
                   .from("favoritos")
-                  .insert([{ profissional_id, cliente_id }]);
+                  .insert([{ id_profissional: profissional_id, id_cliente: cliente_id }]);
                 if (error) {
                   console.error("Erro ao salvar favorito:", error);
                   return;

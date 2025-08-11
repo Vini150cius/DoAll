@@ -1,166 +1,113 @@
-import React, { useEffect, useState } from "react";
-import {
-  FlatList,
-  Image,
-  Linking,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import styles from "./styles";
-import { supabase } from "./../../config/supabaseConfig.js"
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import React, { useState } from "react";
+import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { AirbnbRating } from "react-native-ratings";
-import { useSelector } from "react-redux";
-import { Header } from "../../components/Header";
-import { formatPhone } from "../../services/format";
-import { readProfessionals } from "../../services/crud-professional-info";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { supabase } from "../config/supabaseConfig";
 
-export default function Home({ navigation }) {
-  const [feed, setFeed] = useState([]);
-  const dataUser = useSelector((state) => state.userReducer.data);
+export default function Pessoa({ data, cliente_id, navigation }) {
+  const [favorito, setFavorito] = useState(false);
 
-  useEffect(() => {
-    read();
-
-    const interval = setInterval(() => {
-      read();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  function Pessoa({ data }) {
-    return (
-      <View style={styles.card}>
-        <Image source={{ uri: data.photo_url }} style={styles.image} />
-        <View style={styles.info}>
-          <Text></Text>
-          <Text style={styles.title}>{data.services}</Text>
-          <Text style={styles.subtitle}>{data.sentence}</Text>
-
-
-          <AirbnbRating
-            count={5}
-            defaultRating={4}
-            size={15}
-            showRating={false}
-            isDisabled
-            selectedColor="#f1c40f"
-            starContainerStyle={styles.stars}
-          />
-       
-
-          <TouchableOpacity
-  onPress={async () => {
+  async function toggleFavorito() {
     try {
-      if (favorito) {
-        // REMOVER dos favoritos
-        const { error } = await supabase
-          .from("favoritos")
-          .delete()
-          .match({
-            profissional_id,
-            cliente_id
-          });
-
-        if (error) {
-          console.error("Erro ao remover favoritos:", error);
-          return;
-        }
-
-        setFavorito(false);
-      } else {
-        // ADICIONAR aos favoritos
-        const { error } = await supabase
-          .from("favoritos")
-          .insert([
-            {
-              profissional_id,
-              cliente_id
-            }
-          ]);
+      if (!favorito) {
+        // Insere no banco quando marcar como favorito
+        const { error } = await supabase.from("favoritos").insert([
+          {
+            profissional_id: data.id, // id do profissional
+            cliente_id: cliente_id,   // id do cliente
+          },
+        ]);
 
         if (error) {
           console.error("Erro ao salvar favorito:", error);
           return;
         }
-
         setFavorito(true);
+      } else {
+        // Remove do banco se desmarcar
+        const { error } = await supabase
+          .from("favoritos")
+          .delete()
+          .match({ profissional_id: data.id, cliente_id: cliente_id });
+
+        if (error) {
+          console.error("Erro ao remover favorito:", error);
+          return;
+        }
+        setFavorito(false);
       }
     } catch (err) {
       console.error("Erro inesperado:", err);
     }
-  }}
->
-  <FontAwesome
-    name={favorito ? "bookmark" : "bookmark-o"}
-    size={22}
-    color={favorito ? "gold" : "#333"}
-    style={styles.bookmark}
-  />
-</TouchableOpacity>
-
-
-
-        </View>
-
-        <TouchableOpacity onPress={() => console.log("Favorito clicado")}>
-          <FontAwesome
-            name="bookmark-o"
-            size={22}
-            color="#333"
-            style={styles.bookmark}
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  }
-
-  const renderItem = ({ item }) => <Pessoa data={item} />;
-
-  async function read() {
-    const { dataFreelancers, error } = await readProfessionals();
-
-    if (error) {
-      console.error("Erro:", error);
-      return;
-    } 
-    if (dataFreelancers) {
-      if (typeof dataFreelancers === "object" && dataFreelancers !== null) {
-        const feedData = Object.keys(dataFreelancers).map((key) => ({
-          id: key,
-          ...dataFreelancers[key],
-        }));
-
-        setFeed(feedData);
-      } else {
-        setFeed([]);
-      }
-    } else {
-      console.log("Nenhum dado encontrado");
-      setFeed([]);
-    }
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header />
-      <View style={styles.listContainer}>
-        <FlatList
-          data={feed}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderItem}
-          ListEmptyComponent={
-            <Text style={styles.emptyText}>Nenhum dado encontrado</Text>
-          }
+    <View style={styles.card}>
+      <Image source={{ uri: data.photo_url }} style={styles.image} />
+
+      <View style={styles.info}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text style={styles.title}>{data.services}</Text>
+
+          <TouchableOpacity onPress={toggleFavorito}>
+            <FontAwesome
+              name={favorito ? "bookmark" : "bookmark-o"}
+              size={22}
+              color={favorito ? "gold" : "#333"}
+              style={styles.bookmark}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <Text style={styles.subtitle}>{data.sentence}</Text>
+
+        <AirbnbRating
+          count={5}
+          defaultRating={4}
+          size={15}
+          showRating={false}
+          isDisabled
+          selectedColor="#f1c40f"
+          starContainerStyle={styles.stars}
         />
       </View>
-      <View>
-        <Text style={{ color: "white" }}>{dataUser.name}</Text>
-        <Text style={{ color: "white" }}>{dataUser.photo_url}</Text>
-      </View>
-    </SafeAreaView>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    flexDirection: "row",
+    padding: 10,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    marginBottom: 10,
+    elevation: 3,
+  },
+  image: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    marginRight: 10,
+  },
+  info: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "#555",
+    marginTop: 2,
+  },
+  stars: {
+    marginTop: 5,
+    alignSelf: "flex-start",
+  },
+  bookmark: {
+    marginLeft: 8,
+  },
+});

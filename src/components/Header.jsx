@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, DrawerActions } from "@react-navigation/native";
 import { useState } from "react";
 import {
   Image,
@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -19,14 +20,24 @@ export function Header() {
   const [modalPerfilVisible, setModalPerfilVisible] = useState(false);
   const typeUser = useSelector((state) => state.userReducer.typeUser);
   const userData = useSelector((state) => state.userReducer.data);
+
+  const handleDrawerToggle = () => {
+    try {
+      const parent = navigation.getParent("DrawerNavigator");
+      if (parent?.openDrawer) {
+        parent.openDrawer();
+      } else {
+        navigation.navigate("DrawerApp");
+      }
+    } catch (error) {
+      navigation.navigate("DrawerApp");
+    }
+  };
   const dispatch = useDispatch();
 
   return (
     <View style={styles.header}>
-      <TouchableOpacity
-        onPress={() => navigation.openDrawer()}
-        style={styles.menuIcon}
-      >
+      <TouchableOpacity onPress={handleDrawerToggle} style={styles.menuIcon}>
         <Feather name="menu" size={24} color="white" />
       </TouchableOpacity>
       <TextInput
@@ -62,10 +73,12 @@ export function Header() {
             onPress={(e) => e.stopPropagation()}
           >
             <View style={styles.perfilHeader}>
-              <Image
-                source={{ uri: userData.photo_url }}
-                style={styles.perfilAvatar}
-              />
+              {typeUser === "client" ? null : (
+                <Image
+                  source={{ uri: userData.photo_url }}
+                  style={styles.perfilAvatar}
+                />
+              )}
               <View>
                 <Text style={styles.perfilName}>{userData.name}</Text>
                 <Text style={styles.perfilEmail}>{userData.email}</Text>
@@ -113,6 +126,7 @@ export function Header() {
               style={styles.perfilOpcao}
               onPress={async () => {
                 const response = await logout(dispatch);
+                console.log("Response from logout:", response);
                 if (response) {
                   setModalPerfilVisible(false);
                   navigation.navigate("InitScreen");

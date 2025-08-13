@@ -32,6 +32,7 @@ function DrawerApp() {
     // documentação: https://reactnavigation.org/docs/drawer-navigator
 
     <Drawer.Navigator
+      id="DrawerNavigator"
       screenOptions={{
         headerShown: false,
         drawerActiveTintColor: "#b18461",
@@ -122,6 +123,13 @@ function DrawerApp() {
               ),
             }}
           />
+          <Drawer.Screen
+            name="Perfil do Cliente"
+            component={Conta}
+            options={{
+              drawerItemStyle: { display: "none" },
+            }}
+          />
         </>
       )}
     </Drawer.Navigator>
@@ -141,7 +149,7 @@ export default function Routes() {
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="ProfessionalSignUp" component={ProfessionalSignUp} />
       <Stack.Screen name="Perfil do Profissional" component={PerfilProf} />
-      <Stack.Screen name="Conta" component={Conta} />
+      <Stack.Screen name="Perfil do Cliente" component={Conta} />
     </Stack.Navigator>
   );
 }

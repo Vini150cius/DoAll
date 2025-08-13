@@ -14,32 +14,15 @@ import styles from "./styles";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { Header } from "../../components/Header";
 
 export default function PerfilCliente({ navigation }) {
-
   const [modalVisible, setModalVisible] = useState(false);
   const [modalPerfilVisible, setModalPerfilVisible] = useState(false);
 
-
-
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => navigation.openDrawer()}
-          style={styles.menuIcon}
-        >
-          <Feather name="menu" size={24} color="white" />
-        </TouchableOpacity>
-
-        <Text style={styles.textoNavBar}> Perfil </Text>
-        <TouchableOpacity
-          style={{ marginLeft: 10 }}
-          onPress={() => setModalPerfilVisible(true)}
-        >
-          <MaterialIcons name="person" size={26} color="white" />
-        </TouchableOpacity>
-      </View>
+      <Header />
 
       <View style={styles.viewCard}>
         <View style={styles.card}>
@@ -70,21 +53,21 @@ export default function PerfilCliente({ navigation }) {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.containerForm}>
-            <View style={styles.containerInput}>
-              <Text style={styles.textInput}>Escreva o seu nome</Text>
-              <TextInput
-                style={styles.inputName}
-                placeholder="Ex: João da Silva"
-                placeholderTextColor="#444"
-              />
-            </View>
-            
-            <TouchableOpacity
-              style={styles.submitForm}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.textSubmitForm}>Salvar</Text>
-            </TouchableOpacity>
+          <View style={styles.containerInput}>
+            <Text style={styles.textInput}>Escreva o seu nome</Text>
+            <TextInput
+              style={styles.inputName}
+              placeholder="Ex: João da Silva"
+              placeholderTextColor="#444"
+            />
+          </View>
+
+          <TouchableOpacity
+            style={styles.submitForm}
+            onPress={() => setModalVisible(false)}
+          >
+            <Text style={styles.textSubmitForm}>Salvar</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
 

@@ -13,7 +13,7 @@ import styles from "./styles";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { AirbnbRating } from "react-native-ratings";
 import { onValue, ref, set } from "firebase/database";
-import { db } from "../../config/firebase";
+// import { db } from "../../config/firebase";
 import { Header } from "../../components/Header";
 import { formatPhone } from "../../services/format";
 import { useSelector } from "react-redux";

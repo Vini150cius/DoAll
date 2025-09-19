@@ -16,6 +16,7 @@ import { loginCompletionCheck } from "../../services/login-completion-check";
 import { checkTypeUser } from "../../services/check-type-user";
 import { logout } from "../../services/logout";
 import { formatEmail } from "../../services/format";
+import Toast from "react-native-toast-message";
 
 export default function SignIn({ navigation }) {
   const [session, setSession] = useState(null);
@@ -108,12 +109,19 @@ export default function SignIn({ navigation }) {
       password: password,
     });
 
+    console.log(data);
+    console.log(authError);
+
     if (authError) {
       Toast.show({
         type: "error",
         text1: "Erro ao entrar",
-        text2: authError.message,
+        text2:
+          authError.message === "Invalid login credentials"
+            ? "Email ou senha incorretos"
+            : authError.message,
       });
+
       setLoading(false);
       return;
     }

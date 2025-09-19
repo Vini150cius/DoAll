@@ -228,4 +228,9 @@ const styles = StyleSheet.create({
     borderBottomColor: "#fff",
     marginVertical: 10,
   },
+
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+  },
 });

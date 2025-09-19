@@ -18,8 +18,8 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
-import { onValue, ref, set, update } from "firebase/database";
-import { db } from "../../config/firebase";
+// import { onValue, ref, set, update } from "firebase/database";
+// import { db } from "../../config/firebase";
 import {
   createService,
   readService,

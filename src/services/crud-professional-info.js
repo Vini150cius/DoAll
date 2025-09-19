@@ -6,6 +6,7 @@ export async function readProfessionals() {
       .from("profiles")
       .select("*")
       .eq("type_user", "profissional")
+      .eq("login_completed", true)
 
     if (error) {
       Toast.show({

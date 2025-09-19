@@ -146,10 +146,6 @@ export default function Home({ navigation }) {
           }
         />
       </View>
-      <View>
-        <Text style={{ color: "white" }}>{dataUser.name}</Text>
-        <Text style={{ color: "white" }}>{dataUser.photo_url}</Text>
-      </View>
     </SafeAreaView>
   );
 }

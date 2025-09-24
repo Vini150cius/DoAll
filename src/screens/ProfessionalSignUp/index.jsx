@@ -72,7 +72,7 @@ export default function ProfessionalSignUp({ navigation }) {
       // Comprime a imagem
       const compressedUri = await compressImage(imageUri);
       const fileData = await FileSystem.readAsStringAsync(compressedUri, {
-        encoding: FileSystem.EncodingType.Base64,
+        encoding: "base64",
       });
 
       // Cria nome do arquivo organizando por pasta do usuário

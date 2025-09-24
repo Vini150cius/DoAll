@@ -62,6 +62,33 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
   },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)', // fundo escurecido
+  },
+  modalContent: {
+    gap: 10,
+    margin: 20,
+    padding: 35,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+    elevation: 5, // sombra em Android
+  },
+  text: {
+    textAlign: 'justify',
+  },
+  botao: {
+    backgroundColor: '#3B82F6',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  textoBotao: {
+    color: '#fff',
+    fontWeight: 700,
+  },
 });
 
 export default styles;

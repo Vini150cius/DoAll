@@ -53,11 +53,7 @@ export default function Home({ navigation }) {
 
     return (
       <>
-        <TouchableOpacity
-          onPress={() => {
-            setModalVisible(true);
-          }}
-        >
+        <TouchableOpacity onPress={() => { setModalVisible(true) }}>
           <View style={styles.card}>
             <Image source={{ uri: data.photo_url }} style={styles.image} />
             <TouchableOpacity
@@ -106,6 +102,7 @@ export default function Home({ navigation }) {
               <Text></Text>
               <Text style={styles.title}>{data.services}</Text>
               <Text style={styles.subtitle}>{data.sentence}</Text>
+
               <AirbnbRating
                 count={5}
                 defaultRating={4}
@@ -122,20 +119,12 @@ export default function Home({ navigation }) {
           animationType="slide"
           transparent={true}
           visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <Text style={styles.text}>
-                &nbsp; A tecnologia é um conceito antigo que remonta aos
-                primórdios da humanidade. Ela tem as mais diversas aplicações,
-                tanto para o bem quanto para o mal. A tecnologia desempenha um
-                papel fundamental no nosso dia-a-dia, especialmente no contexto
-                das notícias. Ela também é importante nos meios de comunicação,
-                permitindo o acesso à informação em tempo real. Além disso, a
-                tecnologia simplifica as tarefas do dia a dia.
-              </Text>
-
+              <Image source={{ uri: data.photo_url }} style={styles.image} />
+              <Text style={styles.title}>{data.services}</Text>
+              <Text style={styles.subtitle}>{data.sentence}</Text>
               <TouchableOpacity
                 style={styles.botao}
                 onPress={() => setModalVisible(false)}

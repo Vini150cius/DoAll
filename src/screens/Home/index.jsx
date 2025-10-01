@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   Image,
@@ -23,19 +23,28 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     read();
-
-    const interval = setInterval(() => {
-      read();
-    }, 5000);
-
-    return () => clearInterval(interval);
   }, []);
+  
+  // useEffect(() => {
+  //   read();
+
+  //   const interval = setInterval(() => {
+  //     read();
+  //   }, 5000);
+
+  //   return () => clearInterval(interval);
+  // }, []);
 
   function Pessoa({ data }) {
     const profissional_id = data.user_id;
     const cliente_id = dataUser.user_id || dataUser.idUser || dataUser.id;
     const [modalVisible, setModalVisible] = useState(false);
     const [favorito, setFavorito] = useState(false);
+    const modalVisibleRef = useRef(false);
+
+    useEffect(() => {
+      modalVisibleRef.current = modalVisible;
+    }, [modalVisible]);
 
     useEffect(() => {
       async function checkFavorito() {
@@ -51,13 +60,25 @@ export default function Home({ navigation }) {
       checkFavorito();
     }, [profissional_id, cliente_id]);
 
+    useEffect(() => {
+      if (modalVisibleRef.current && !modalVisible) {
+        setModalVisible(true);
+      }
+    }, [data]);
+
     return (
       <>
-        <TouchableOpacity onPress={() => { setModalVisible(true) }}>
+        <TouchableOpacity
+          onPress={(e) => {
+            e.stopPropagation();
+            setModalVisible(true);
+          }}
+        >
           <View style={styles.card}>
             <Image source={{ uri: data.photo_url }} style={styles.image} />
             <TouchableOpacity
-              onPress={async () => {
+              onPress={async (e) => {
+                e.stopPropagation();
                 try {
                   if (!profissional_id || !cliente_id) return;
                   if (favorito) {
@@ -115,11 +136,7 @@ export default function Home({ navigation }) {
             </View>
           </View>
         </TouchableOpacity>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-        >
+        <Modal animationType="slide" transparent={true} visible={modalVisible}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Image source={{ uri: data.photo_url }} style={styles.image} />

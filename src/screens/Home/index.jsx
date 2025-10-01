@@ -44,6 +44,7 @@ export default function Home({ navigation }) {
 
     useEffect(() => {
       modalVisibleRef.current = modalVisible;
+        console.log(data);
     }, [modalVisible]);
 
     useEffect(() => {
@@ -137,17 +138,30 @@ export default function Home({ navigation }) {
           </View>
         </TouchableOpacity>
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Image source={{ uri: data.photo_url }} style={styles.image} />
-              <Text style={styles.title}>{data.services}</Text>
-              <Text style={styles.subtitle}>{data.sentence}</Text>
+          <View style={styles.modalContainer1}>
+            <View style={styles.modalContent1}>
+              <Image source={{ uri: data.photo_url }} style={styles.image1} />
+              <Text style={styles.title1}>{data.services}</Text>
+              <Text style={styles.subtitle1}>{data.sentence}</Text>
+              <Text style={styles.modalText1}>Email: {data.email}</Text>
+              <Text style={styles.modalText1}>Telefone: {data.telefone}</Text>
+              <Text style={styles.modalText1}>Tipo de serviço: {data.service_type}</Text>
+              <Text style={styles.modalText1}>Serviços feitos: colocar os servicos que estão na tabela services</Text>
+              <View style={styles.buttonrow}>
               <TouchableOpacity
-                style={styles.botao}
+                style={styles.botao1}
+                onPress={() => {}}
+              >
+                <Text style={styles.textoBotao1}> Contratar serviços </Text>
+
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.botao1}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={styles.textoBotao}> Fechar </Text>
+                <Text style={styles.textoBotao1}> Fechar </Text>
               </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>

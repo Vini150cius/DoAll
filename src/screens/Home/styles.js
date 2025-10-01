@@ -89,6 +89,82 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 700,
   },
+  modalContainer1: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  modalContent1: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 24,
+    width: '85%',
+    alignItems: 'center',
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+  },
+
+  image1: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 16,
+  },
+
+  title1: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+
+  subtitle1: {
+    fontSize: 16,
+    color: '#666',
+    fontStyle: 'italic',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+
+  modalText1: {
+    fontSize: 15,
+    color: '#444',
+    marginBottom: 6,
+    textAlign: 'center',
+  },
+
+  buttonRow: {
+    flexDirection: 'row',
+    marginTop: 20,
+  },
+
+  botao2: {
+    backgroundColor: '#28a745', // Verde (contratar)
+    borderRadius: 8,
+    flex: 1,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+
+  botao1: {
+    backgroundColor: '#6c757d', // Cinza (fechar)
+    borderRadius: 8,
+    flex: 1,
+    marginLeft: 10,
+    alignItems: 'center',
+  },
+
+  textoBotao1: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
 export default styles;

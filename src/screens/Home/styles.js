@@ -94,6 +94,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 30,
+    maxHeight: '90%',
   },
 
   modalContent1: {
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#444',
     marginBottom: 6,
-    textAlign: 'center',
+    textAlign: 'left',
   },
 
   buttonRow: {
@@ -150,19 +152,24 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 10,
     alignItems: 'center',
+    padding: 5,
   },
 
   botao1: {
-    backgroundColor: '#6c757d', // Cinza (fechar)
+    backgroundColor: 'red', // Cinza (fechar)
     borderRadius: 8,
     flex: 1,
     marginLeft: 10,
     alignItems: 'center',
+    padding: 5,
   },
 
   textoBotao1: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  modalTextBold: {
     fontWeight: 'bold',
   },
 });

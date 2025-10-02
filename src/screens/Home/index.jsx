@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
@@ -140,16 +141,18 @@ export default function Home({ navigation }) {
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
           <View style={styles.modalContainer1}>
             <View style={styles.modalContent1}>
+              <ScrollView>
               <Image source={{ uri: data.photo_url }} style={styles.image1} />
               <Text style={styles.title1}>{data.services}</Text>
               <Text style={styles.subtitle1}>{data.sentence}</Text>
-              <Text style={styles.modalText1}>Email: {data.email}</Text>
-              <Text style={styles.modalText1}>Telefone: {data.telefone}</Text>
-              <Text style={styles.modalText1}>Tipo de serviço: {data.service_type}</Text>
-              <Text style={styles.modalText1}>Serviços feitos: colocar os servicos que estão na tabela services</Text>
-              <View style={styles.buttonrow}>
+              <Text style={styles.modalText1}><Text style={styles.modalTextBold}>Email:</Text> {data.email}</Text>
+              <Text style={styles.modalText1}><Text style={styles.modalTextBold}>Telefone:</Text> {data.telefone}</Text>
+              <Text style={styles.modalText1}><Text style={styles.modalTextBold}>Tipo de serviço:</Text> {data.service_type}</Text>
+              <Text style={styles.modalText1}><Text style={styles.modalTextBold}>Serviços feitos:</Text> colocar os servicos que estão na tabela services</Text>
+              </ScrollView>
+              <View style={styles.buttonRow}>
               <TouchableOpacity
-                style={styles.botao1}
+                style={styles.botao2}
                 onPress={() => {}}
               >
                 <Text style={styles.textoBotao1}> Contratar serviços </Text>

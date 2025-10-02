@@ -21,40 +21,31 @@ export default function HomeProf({ navigation }) {
 
   const Profissional = ({ data }) => (
     <View style={styles.card}>
-      <Image source={{ uri: data.file }} style={styles.image} />
-      <View style={styles.info}>
-        <Text style={styles.title}>{data.services}</Text>
-        <Text style={styles.subtitle}>{data.sentence}</Text>
-
-        <AirbnbRating
-          count={5}
-          defaultRating={4}
-          size={15}
-          showRating={false}
-          isDisabled
-          selectedColor="#f1c40f"
-          starContainerStyle={styles.stars}
-        />
-
-        <TouchableOpacity
-          onPress={() => {
-            Linking.openURL(`tel:${data.telefone}`);
-          }}
-        >
-          <Text style={styles.phone}>{formatPhone(data.telefone)}</Text>
-        </TouchableOpacity>
-      </View>
-      <FontAwesome
-        name="bookmark-o"
-        size={22}
-        color="#333"
-        style={styles.bookmark}
+      <Image
+        source={require("../../../assets/avatar.png")}
+        style={styles.image}
       />
+      <View style={styles.info}>
+        <Text style={styles.title}>Mariana Peneira</Text>
+        <Text style={styles.subtitle}>
+          Queda de energia constante em dois cômodos da casa. Suspeita de fiação
+          antiga.
+        </Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.buttonAgree}>
+            <Text style={styles.buttonText}>Aceitar</Text>
+            <FontAwesome name="check" size={22} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonReject}>
+            <Text style={styles.buttonText}>Recusar</Text>
+            <FontAwesome name="remove" size={22} color="#fff" />
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 
   const renderItem = ({ item }) => <Profissional data={item} />;
-
 
   return (
     <SafeAreaView style={styles.container}>

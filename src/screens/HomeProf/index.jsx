@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
-  FlatList,
   Image,
   Linking,
-  SafeAreaView,
+  // SafeAreaView,
   Text,
   TouchableOpacity,
   View,
@@ -12,27 +11,13 @@ import {
 import styles from "./styles";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { AirbnbRating } from "react-native-ratings";
-import { onValue, ref, set } from "firebase/database";
-// import { db } from "../../config/firebase";
 import { Header } from "../../components/Header";
 import { formatPhone } from "../../services/format";
 import { useSelector } from "react-redux";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeProf({ navigation }) {
-  const [feed, setFeed] = useState([]);
-  const [servicoPrestado, setServicoPrestado] = useState("");
   const dataUser = useSelector((state) => state.userReducer.data);
-
-  useEffect(() => {
-    read();
-    console.log(dataUser);
-
-    const interval = setInterval(() => {
-      read();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const Profissional = ({ data }) => (
     <View style={styles.card}>
@@ -70,30 +55,6 @@ export default function HomeProf({ navigation }) {
 
   const renderItem = ({ item }) => <Profissional data={item} />;
 
-  function read() {
-    const usersRef = ref(db, "users/client/");
-    onValue(usersRef, (snapshot) => {
-      const data = snapshot.val();
-
-      if (data) {
-        const feedData = Object.keys(data).map((key) => ({
-          id: key,
-          ...data[key],
-        }));
-
-        setFeed(feedData);
-      } else {
-        setFeed([]);
-      }
-    });
-  }
-
-  function salvarServico() {
-    //para salvar o serviço prestado no firebase
-    Alert.alert("Serviço registrado", `Você adicionou: ${servicoPrestado}`);
-    setServicoPrestado("");
-    setModalVisible(false);
-  }
 
   return (
     <SafeAreaView style={styles.container}>

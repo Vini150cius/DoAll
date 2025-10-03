@@ -6,20 +6,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#333E44",
   },
   header: {
-    flex: 1,
     padding: 25,
     backgroundColor: "#b18461",
     borderBottomLeftRadius: 40,
+    minHeight: 150,
   },
-  formContainer: {
-    flex: 5,
-    paddingHorizontal: 35,
-    alignContent: "center",
+  keyboardView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
     justifyContent: "center",
   },
+  formContainer: {
+    paddingHorizontal: 35,
+    paddingVertical: 20,
+  },
   titleContainer: {
-    paddingLeft: "20",
-    paddingTop: "5",
+    paddingLeft: 20,
+    paddingTop: 5,
     justifyContent: "center",
   },
   welcome: {
@@ -53,18 +58,18 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     marginVertical: 10,
     borderRadius: 50,
-    width: 200, 
+    width: 200,
     alignItems: "center",
     alignSelf: "center",
   },
   textButton: {
     fontSize: 25,
-    fontWeight: 700,
+    fontWeight: "700",
     color: "#E4E4E4",
   },
   textSignIn: {
     fontSize: 18,
-    fontWeight: 700,
+    fontWeight: "700",
     color: "#b18461",
     textDecorationLine: "underline",
   },
@@ -81,4 +86,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
 export default styles;

@@ -247,6 +247,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     gap: 10,
   },
+  emptyText: {
+    textAlign: "center",
+    color: "#fff",
+    marginTop: 20,
+  }
 });
 
 export default styles;

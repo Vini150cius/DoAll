@@ -46,6 +46,7 @@ export async function readServices(professional_id) {
       .from("services")
       .select("*")
       .eq("professional_id", professional_id)
+      .in("status_service", ['concluido', 'pendente', 'cancelado'])
       .order("created_at", { ascending: false });
 
     if (selectError) {
@@ -108,7 +109,7 @@ export async function createService1(
   description_service,
   name_client,
   phone_client,
-  status_service = "aguardando", 
+  status_service = "aguardando",
   price_service,
   service_date
 ) {
@@ -121,7 +122,7 @@ export async function createService1(
         description_service,
         name_client,
         phone_client,
-        status: status_service, 
+        status: status_service,
         price: price_service,
         service_date,
       })

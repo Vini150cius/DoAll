@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
-  SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
 import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";
@@ -62,7 +65,7 @@ export default function SignUp({ navigation }) {
 
   async function signUpWithEmail() {
     setLoading(true);
-    const cleanEmail = formatEmail(email)
+    const cleanEmail = formatEmail(email);
 
     if (
       name === "" ||
@@ -159,52 +162,69 @@ export default function SignUp({ navigation }) {
           </Text>
         </View>
       </View>
-      <View style={styles.formContainer}>
-        <Text style={styles.label}>Nome</Text>
-        <TextInput style={styles.input} value={name} onChangeText={setName} />
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          style={styles.input}
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-        />
-        <Text style={styles.label}>Senha</Text>
-        <TextInput
-          style={styles.input}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <Text style={styles.label}>Confirmar senha</Text>
-        <TextInput
-          style={styles.input}
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-        />
-        {error && <Text style={styles.error}>{error}</Text>}
-
-        <TouchableOpacity
-          style={[styles.button, loading && { opacity: 0.5 }]}
-          onPress={signUpWithEmail}
-          disabled={loading}
+      <KeyboardAvoidingView
+        style={styles.keyboardView}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={0}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.textButton}>
-            {loading ? "Carregando..." : "Entrar"}
-          </Text>
-        </TouchableOpacity>
+          <View style={styles.formContainer}>
+            <Text style={styles.label}>Nome</Text>
+            <TextInput
+              style={styles.input}
+              value={name}
+              onChangeText={setName}
+            />
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            <Text style={styles.label}>Senha</Text>
+            <TextInput
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+            <Text style={styles.label}>Confirmar senha</Text>
+            <TextInput
+              style={styles.input}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+            />
+            {error && <Text style={styles.error}>{error}</Text>}
 
-        <Text style={styles.text}>
-          Já tem uma conta?{" "}
-          <Text
-            style={styles.textSignIn}
-            onPress={() => navigation.navigate("SignIn")}
-          >
-            Entre
-          </Text>
-        </Text>
-      </View>
+            <TouchableOpacity
+              style={[styles.button, loading && { opacity: 0.5 }]}
+              onPress={signUpWithEmail}
+              disabled={loading}
+            >
+              <Text style={styles.textButton}>
+                {loading ? "Carregando..." : "Entrar"}
+              </Text>
+            </TouchableOpacity>
+
+            <Text style={styles.text}>
+              Já tem uma conta?{" "}
+              <Text
+                style={styles.textSignIn}
+                onPress={() => navigation.navigate("SignIn")}
+              >
+                Entre
+              </Text>
+            </Text>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

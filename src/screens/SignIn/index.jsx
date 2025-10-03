@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import {
   Alert,
-  SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
 import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons";
 import { supabase } from "../../config/supabaseConfig";
@@ -150,44 +153,56 @@ export default function SignIn({ navigation }) {
           </Text>
         </View>
       </View>
-      <View style={styles.formContainer}>
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          style={styles.input}
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <Text style={styles.label}>Senha</Text>
-        <TextInput
-          style={styles.input}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        {error && <Text style={styles.error}>{error}</Text>}
-        <TouchableOpacity
-          style={[styles.button, loading && { opacity: 0.5 }]}
-          onPress={signInWithEmail}
-          disabled={loading}
+      <KeyboardAvoidingView
+        style={styles.keyboardView}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={0}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.textButton}>
-            {loading ? "Entrando..." : "Entrar"}
-          </Text>
-        </TouchableOpacity>
-        <Text style={styles.text}>
-          Você ainda não tem uma conta?{" "}
-          <Text
-            style={styles.textSignUp}
-            onPress={() => {
-              navigation.navigate("SignUp");
-            }}
-          >
-            Criar conta
-          </Text>
-        </Text>
-      </View>
+          <View style={styles.formContainer}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            <Text style={styles.label}>Senha</Text>
+            <TextInput
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+            {error && <Text style={styles.error}>{error}</Text>}
+            <TouchableOpacity
+              style={[styles.button, loading && { opacity: 0.5 }]}
+              onPress={signInWithEmail}
+              disabled={loading}
+            >
+              <Text style={styles.textButton}>
+                {loading ? "Entrando..." : "Entrar"}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.text}>
+              Você ainda não tem uma conta?{" "}
+              <Text
+                style={styles.textSignUp}
+                onPress={() => {
+                  navigation.navigate("SignUp");
+                }}
+              >
+                Criar conta
+              </Text>
+            </Text>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

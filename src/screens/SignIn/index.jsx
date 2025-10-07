@@ -144,7 +144,7 @@ export default function SignIn({ navigation }) {
             navigation.goBack();
           }}
         >
-          <MaterialCommunity name="keyboard-backspace" size={30} />
+          <MaterialCommunity name="keyboard-backspace" size={30} color="#fff" />
         </TouchableOpacity>
         <View style={styles.titleContainer}>
           <Text style={styles.welcome}>Bem vindo</Text>

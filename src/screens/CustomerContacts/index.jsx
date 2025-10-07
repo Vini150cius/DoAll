@@ -15,27 +15,18 @@ import { supabase } from "./../../config/supabaseConfig.js";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { AirbnbRating } from "react-native-ratings";
 import { useSelector } from "react-redux";
-import { formatPhone } from "../../services/format";
 import { readProfessionals } from "../../services/crud-professional-info";
+import { getFavoritesByClienteId } from "../../services/crud-favoritos";
 
 export default function CustomerContacts({ navigation }) {
-  const [modalPerfilVisible, setModalPerfilVisible] = useState(false);
   const [feed, setFeed] = useState([]);
+  const [loading, setLoading] = useState(false);
   const dataUser = useSelector((state) => state.userReducer.data);
 
   useEffect(() => {
     read();
   }, []);
 
-  // useEffect(() => {
-  //   read();
-
-  //   const interval = setInterval(() => {
-  //     read();
-  //   }, 5000);
-
-  //   return () => clearInterval(interval);
-  // }, []);
 
   function Pessoa({ data }) {
     const profissional_id = data.user_id;
@@ -68,10 +59,6 @@ export default function CustomerContacts({ navigation }) {
         setModalVisible(true);
       }
     }, [data]);
-
-    useEffect(() => {
-  console.log("FEED ATUALIZADO:", feed);
-}, [feed]);
 
     return (
       <>
@@ -187,28 +174,64 @@ export default function CustomerContacts({ navigation }) {
   const renderItem = ({ item }) => <Pessoa data={item} />;
 
   async function read() {
-    const { dataFreelancers, error } = await readProfessionals();
+    const cliente_id = dataUser?.user_id || dataUser?.idUser || dataUser?.id;
+    setLoading(true);
+    if (cliente_id) {
+      const { favorites, error } = await getFavoritesByClienteId(cliente_id);
+      if (error) {
+        console.error("Erro ao obter favoritos:", error);
+      }
 
-console.log(dataFreelancers);
+      if (favorites && Array.isArray(favorites) && favorites.length > 0) {
+        const feedData = favorites.map((f) => {
+          const profile = f.profile || {};
+          return {
+            id:
+              f.id || profile.user_id || `${f.id_profissional}_${f.id_cliente}`,
+            user_id: profile.user_id || f.id_profissional,
+            photo_url: profile.photo_url,
+            services: profile.services,
+            sentence: profile.sentence,
+            email: profile.email,
+            telefone: profile.telefone,
+            service_type: profile.service_type,
+          };
+        });
+        setFeed(feedData);
+        setLoading(false);
+        return;
+      }
+    }
+
+    const { dataFreelancers, error } = await readProfessionals();
 
     if (error) {
       console.error("Erro:", error);
+      setLoading(false);
       return;
     }
     if (dataFreelancers) {
-      if (typeof dataFreelancers === "object" && dataFreelancers !== null) {
+      if (Array.isArray(dataFreelancers)) {
+        setFeed(dataFreelancers);
+      } else if (
+        typeof dataFreelancers === "object" &&
+        dataFreelancers !== null
+      ) {
         const feedData = Object.keys(dataFreelancers).map((key) => ({
           id: key,
           ...dataFreelancers[key],
         }));
 
         setFeed(feedData);
+        setLoading(false);
       } else {
         setFeed([]);
+        setLoading(false);
       }
     } else {
       console.log("Nenhum dado encontrado");
       setFeed([]);
+      setLoading(false);
     }
   }
 
@@ -216,14 +239,17 @@ console.log(dataFreelancers);
     <SafeAreaView style={styles.container}>
       <Header />
       <View style={styles.content}>
-        <Text style={styles.titleContent}>Contatos Salvos</Text>
+        <Text style={styles.titleContent}>Cntatos Salvos</Text>
         <View style={styles.listContainer}>
           <FlatList
             data={feed}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item, index) => String(item?.id ?? index)}
             renderItem={renderItem}
+            contentContainerStyle={styles.listInnerContainer}
             ListEmptyComponent={
-              <Text style={styles.emptyText}>Nenhum dado encontrado</Text>
+              <Text style={styles.emptyText}>
+                {loading ? "Carregando..." : "Nenhum dado encontrado"}
+              </Text>
             }
           />
         </View>

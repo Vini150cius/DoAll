@@ -1,20 +1,20 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  titleContent:{
+  titleContent: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
     marginBottom: 8,
-    textAlign: 'center',
-
+    textAlign: "center",
   },
   container: {
     flex: 1,
     backgroundColor: "#1c2024",
     color: "#fff",
+    paddingTop: 8,
   },
-  modalContainer: {
+  backdrop: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     justifyContent: "flex-start",
@@ -64,56 +64,60 @@ const styles = StyleSheet.create({
     right: 10,
     zIndex: 10,
     padding: 10,
-    backgroundColor: "rgba(255,255,255,0.01)",
+    backgroundColor: "transparent",
     borderRadius: 20,
   },
   listContainer: {
     flex: 1,
+    margin: 12,
+    borderRadius: 12,
+    paddingVertical: 8,
+    minHeight: "80%",
   },
-  modalContainer: {
+  modalWrapper: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)', // fundo escurecido
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,0.5)", 
   },
   modalContent: {
     gap: 10,
     margin: 20,
-    padding: 35,
-    backgroundColor: 'white',
+    padding: 20,
+    backgroundColor: "white",
     borderRadius: 10,
-    alignItems: 'center',
-    elevation: 5, // sombra em Android
+    alignItems: "center",
+    elevation: 5, 
   },
   text: {
-    textAlign: 'justify',
+    textAlign: "justify",
   },
   botao: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: "#3B82F6",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   textoBotao: {
-    color: '#fff',
-    fontWeight: 700,
+    color: "#fff",
+    fontWeight: "700",
   },
   modalContainer1: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 30,
-    maxHeight: '90%',
+    maxHeight: "90%",
   },
 
   modalContent1: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 16,
     padding: 24,
-    width: '85%',
-    alignItems: 'center',
+    width: "85%",
+    alignItems: "center",
     elevation: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
@@ -128,57 +132,73 @@ const styles = StyleSheet.create({
 
   title1: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     marginBottom: 8,
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   subtitle1: {
     fontSize: 16,
-    color: '#666',
-    fontStyle: 'italic',
+    color: "#666",
+    fontStyle: "italic",
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   modalText1: {
     fontSize: 15,
-    color: '#444',
+    color: "#444",
     marginBottom: 6,
-    textAlign: 'left',
+    textAlign: "left",
   },
 
   buttonRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 20,
   },
 
   botao2: {
-    backgroundColor: '#28a745', // Verde (contratar)
+    backgroundColor: "#28a745", 
     borderRadius: 8,
     flex: 1,
     marginRight: 10,
-    alignItems: 'center',
+    alignItems: "center",
     padding: 5,
   },
 
   botao1: {
-    backgroundColor: 'red', // Cinza (fechar)
+    backgroundColor: "red", 
     borderRadius: 8,
     flex: 1,
     marginLeft: 10,
-    alignItems: 'center',
+    alignItems: "center",
     padding: 5,
   },
 
   textoBotao1: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   modalTextBold: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
+  },
+  debugPanel: {
+    padding: 8,
+    borderRadius: 8,
+    marginHorizontal: 12,
+    marginBottom: 8,
+  },
+  listInnerContainer: {
+    paddingHorizontal: 8,
+    paddingBottom: 24,
+  },
+  emptyText: {
+    textAlign: "center",
+    color: "#333",
+    padding: 16,
+    fontSize: 14,
   },
 });
 export default styles;

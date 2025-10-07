@@ -25,7 +25,7 @@ export default function Home({ navigation }) {
   useEffect(() => {
     read();
   }, []);
-  
+
   // useEffect(() => {
   //   read();
 
@@ -45,7 +45,7 @@ export default function Home({ navigation }) {
 
     useEffect(() => {
       modalVisibleRef.current = modalVisible;
-        console.log(data);
+      console.log(data);
     }, [modalVisible]);
 
     useEffect(() => {
@@ -142,28 +142,35 @@ export default function Home({ navigation }) {
           <View style={styles.modalContainer1}>
             <View style={styles.modalContent1}>
               <ScrollView>
-              <Image source={{ uri: data.photo_url }} style={styles.image1} />
-              <Text style={styles.title1}>{data.services}</Text>
-              <Text style={styles.subtitle1}>{data.sentence}</Text>
-              <Text style={styles.modalText1}><Text style={styles.modalTextBold}>Email:</Text> {data.email}</Text>
-              <Text style={styles.modalText1}><Text style={styles.modalTextBold}>Telefone:</Text> {data.telefone}</Text>
-              <Text style={styles.modalText1}><Text style={styles.modalTextBold}>Tipo de serviço:</Text> {data.service_type}</Text>
-              <Text style={styles.modalText1}><Text style={styles.modalTextBold}>Serviços feitos:</Text> colocar os servicos que estão na tabela services</Text>
+                <Image source={{ uri: data.photo_url }} style={styles.image1} />
+                <Text style={styles.title1}>{data.services}</Text>
+                <Text style={styles.subtitle1}>{data.sentence}</Text>
+                <Text style={styles.modalText1}>
+                  <Text style={styles.modalTextBold}>Email:</Text> {data.email}
+                </Text>
+                <Text style={styles.modalText1}>
+                  <Text style={styles.modalTextBold}>Telefone:</Text>{" "}
+                  {data.telefone}
+                </Text>
+                <Text style={styles.modalText1}>
+                  <Text style={styles.modalTextBold}>Tipo de serviço:</Text>{" "}
+                  {data.service_type}
+                </Text>
+                <Text style={styles.modalText1}>
+                  <Text style={styles.modalTextBold}>Serviços feitos:</Text>{" "}
+                  colocar os servicos que estão na tabela services
+                </Text>
               </ScrollView>
               <View style={styles.buttonRow}>
-              <TouchableOpacity
-                style={styles.botao2}
-                onPress={() => {}}
-              >
-                <Text style={styles.textoBotao1}> Contratar serviços </Text>
-
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.botao1}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.textoBotao1}> Fechar </Text>
-              </TouchableOpacity>
+                <TouchableOpacity style={styles.botao2} onPress={() => {}}>
+                  <Text style={styles.textoBotao1}> Contratar serviços </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.botao1}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text style={styles.textoBotao1}> Fechar </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -204,7 +211,7 @@ export default function Home({ navigation }) {
       <View style={styles.listContainer}>
         <FlatList
           data={feed}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item, index) => String(item?.id ?? index)}
           renderItem={renderItem}
           ListEmptyComponent={
             <Text style={styles.emptyText}>Nenhum dado encontrado</Text>

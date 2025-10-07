@@ -28,10 +28,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   welcome: {
+    color: "#fff",
     fontSize: 27,
     fontWeight: "900",
   },
   typeUser: {
+    color: "#fff",
     fontSize: 17,
   },
   backButton: {

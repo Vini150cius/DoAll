@@ -23,15 +23,19 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   titleContainer: {
+    color: "#fff",
     paddingLeft: 20,
     paddingTop: 5,
     justifyContent: "center",
   },
   welcome: {
+    color: "#fff",
+
     fontSize: 27,
     fontWeight: "900",
   },
   typeUser: {
+    color: "#fff",
     fontSize: 17,
   },
   backButton: {

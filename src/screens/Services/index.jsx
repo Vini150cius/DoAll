@@ -228,7 +228,7 @@ export default function Services({ navigation }) {
       <View style={styles.viewCard}>
         <FlatList
           data={services}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item, index) => String(item?.id ?? index)}
           renderItem={renderItem}
           ListEmptyComponent={
             <Text style={styles.emptyText}>Nenhum dado encontrado</Text>

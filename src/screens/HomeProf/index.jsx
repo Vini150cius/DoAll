@@ -1,11 +1,5 @@
 import React, { use, useEffect, useState } from "react";
-import {
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-  FlatList,
-} from "react-native";
+import { Image, Text, TouchableOpacity, View, FlatList } from "react-native";
 import styles from "./styles";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { Header } from "../../components/Header";
@@ -129,7 +123,7 @@ export default function HomeProf({ navigation }) {
 
         <FlatList
           data={feed}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item, index) => String(item?.id ?? index)}
           renderItem={renderItem}
           contentContainerStyle={styles.listaContainer}
           ListEmptyComponent={

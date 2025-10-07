@@ -1,7 +1,8 @@
 import Toast from "react-native-toast-message";
 import { supabase } from "../config/supabaseConfig";
 
-export async function createService(professional_id, client_id = null, description_service, name_client, phone_client, status_service = "pendente", price_service) {
+export async function createService(professional_id, client_id = null, description_service, name_client, phone_client, status_service = "pendente", price_service, service_date = new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear()) {
+  console.log(professional_id, client_id, description_service, name_client, phone_client, status_service, price_service, service_date)
   try {
     const { data, error: insertError } = await supabase.from("services").insert({
       professional_id,
@@ -11,6 +12,7 @@ export async function createService(professional_id, client_id = null, descripti
       phone_client,
       status_service,
       price_service,
+      service_date,
     }).select();
 
     if (insertError) {
@@ -100,57 +102,5 @@ export async function updateServices(service_id, professional_id, status_service
       text1: "Erro ao atualizar serviços",
       text2: err || "Erro desconhecido"
     });
-  }
-}
-
-export async function createService1(
-  professional_id,
-  client_id = null,
-  description_service,
-  name_client,
-  phone_client,
-  status_service = "aguardando",
-  price_service,
-  service_date
-) {
-  try {
-    const { data, error: insertError } = await supabase
-      .from("services")
-      .insert({
-        professional_id,
-        client_id,
-        description_service,
-        name_client,
-        phone_client,
-        status: status_service,
-        price: price_service,
-        service_date,
-      })
-      .select();
-
-    if (insertError) {
-      Toast.show({
-        type: "error",
-        text1: "Erro ao inserir serviço",
-        text2: insertError.message,
-      });
-      throw insertError;
-    }
-
-    Toast.show({
-      type: "success",
-      text1: "Sucesso",
-      text2: "Serviço criado com sucesso!",
-    });
-
-    return { data, insertError };
-  } catch (err) {
-    console.error("Erro ao criar serviço:", err);
-    Toast.show({
-      type: "error",
-      text1: "Erro ao inserir serviço",
-      text2: err.message || "Erro desconhecido",
-    });
-    return err.message;
   }
 }

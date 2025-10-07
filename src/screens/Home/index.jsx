@@ -15,8 +15,9 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { AirbnbRating } from "react-native-ratings";
 import { useSelector } from "react-redux";
 import { Header } from "../../components/Header";
-import { formatPhone } from "../../services/format";
 import { readProfessionals } from "../../services/crud-professional-info";
+import Toast from "react-native-toast-message";
+import { createService } from "../../services/crud-services.js";
 
 export default function Home({ navigation }) {
   const [feed, setFeed] = useState([]);
@@ -26,15 +27,29 @@ export default function Home({ navigation }) {
     read();
   }, []);
 
-  // useEffect(() => {
-  //   read();
-
-  //   const interval = setInterval(() => {
-  //     read();
-  //   }, 5000);
-
-  //   return () => clearInterval(interval);
-  // }, []);
+  //  Olá Goias, o código para adicionar um serviço já estava pronto, ai para facilitar a progressão da sociedade, quando fizer o modal, nos inputs adiciona uns setBanana no onChangeText e no onPress do botão de enviar chama a função abaixo
+  // se estiver com duvidas dá um grito.
+  async function handleCreateService() {
+    try {
+      const response = await createService(
+        profissional_id,
+        client_id,
+        description_service,
+        name_client,
+        phone_client,
+        status_service,
+        price_service,
+        service_date
+      );
+      console.log(response);
+    } catch (err) {
+      Toast.show({
+        type: "error",
+        text1: "Erro ao criar serviço",
+        text2: err.message || "Erro desconhecido",
+      });
+    }
+  }
 
   function Pessoa({ data }) {
     const profissional_id = data.user_id;

@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
-import { Animated, FlatList, SafeAreaView } from "react-native";
+import { Animated, FlatList } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import SlideItem from "./../../components/SlideItem";
 import styles from "./styles";
 import Pagination from "../../components/Pagination";

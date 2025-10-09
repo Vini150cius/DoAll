@@ -16,6 +16,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { AirbnbRating } from "react-native-ratings";
 import { useSelector } from "react-redux";
 import { Header } from "../../components/Header";
+import { formatPhone } from "../../services/format";
 import { readProfessionals } from "../../services/crud-professional-info";
 import Toast from "react-native-toast-message";
 import { createService } from "../../services/crud-services.js";
@@ -38,14 +39,21 @@ export default function Home({ navigation }) {
     service_date,
     status_service = "em_analise",
     name_client = dataUser.name,
-    phone_client = dataUser.phone
+    phone_client = numberService
   ) {
     try {
       if (!profissional_id || !client_id) {
         throw new Error("IDs de profissional ou cliente inválidos");
       }
 
-      if (!description_service || !price_service || !service_date) {
+      if (
+        !description_service ||
+        !price_service ||
+        !service_date ||
+        !status_service ||
+        !name_client ||
+        !phone_client
+      ) {
         throw new Error("Dados do serviço inválidos");
       }
 
@@ -78,12 +86,13 @@ export default function Home({ navigation }) {
     const [description_service, setDescriptionService] = useState("");
     const [price_service, setPriceService] = useState(0);
     const [service_date, setServiceDate] = useState(new Date());
+    const [numberService, setNumberService] = useState(dataUser.telefone || "");
     const [showDatePicker, setShowDatePicker] = useState(false);
     const modalVisibleRef = useRef(false);
 
     useEffect(() => {
       modalVisibleRef.current = modalVisible;
-      console.log(data);
+      console.log(dataUser);
     }, [modalVisible]);
 
     useEffect(() => {
@@ -231,6 +240,14 @@ export default function Home({ navigation }) {
                 <Text style={styles.titleModal1}>Contratar Serviço</Text>
               </View>
               <ScrollView>
+                <Text>Número para contato: </Text>
+                <TextInput
+                  style={styles.modalInput}
+                  placeholder="(xx) xxxxx-xxxx"
+                  value={numberService}
+                  onChangeText={(text) => setNumberService(formatPhone(text))}
+                  keyboardType="phone-pad"
+                />
                 <Text>Descrição do serviço: </Text>
                 <TextInput
                   style={styles.modalInput1}
@@ -260,6 +277,7 @@ export default function Home({ navigation }) {
                       : "Selecionar data"}
                   </Text>
                 </TouchableOpacity>
+
                 {showDatePicker && (
                   <DateTimePicker
                     display="default"
@@ -285,9 +303,17 @@ export default function Home({ navigation }) {
                       cliente_id,
                       description_service,
                       price_service,
-                      service_date
+                      service_date,
+                      undefined,
+                      undefined,
+                      numberService
                     );
                     setServiceVisible(false);
+                    setDescriptionService("");
+                    setPriceService(0);
+                    setNumberService(dataUser.telefone || "");
+                    setServiceDate(new Date());
+                    setStatusService("em_analise");
                     setModalVisible(true);
                   }}
                 >

@@ -1,40 +1,32 @@
 import React, { useEffect, useState } from "react";
 import {
-  Image,
-  ScrollView,
-  SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
   Modal,
-  Alert,
   FlatList,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
 import Feather from "react-native-vector-icons/Feather";
-// import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-// import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
-// import { onValue, ref, set, update } from "firebase/database";
-// import { db } from "../../config/firebase";
 import {
   createService,
-  readService,
   readServices,
   updateServices,
 } from "../../services/crud-services";
 import { Header } from "../../components/Header";
-import { formatOnlyNumbers } from "../../services/format";
+import { formatOnlyNumbers, formatPhone } from "../../services/format";
+import CurrencyInput from "react-native-currency-input";
 
 export default function Services({ navigation }) {
   const idUser = useSelector((state) => state.userReducer.idUser);
   const [services, setServices] = useState([]);
   const [filter, setFilter] = useState("");
   const [modalAddVisible, setModalAddVisible] = useState(false);
-  const [modalPerfilVisible, setModalPerfilVisible] = useState(false);
 
   // Estados para o modal de adicionar serviço
   const [servicoNome, setServicoNome] = useState("");
@@ -133,13 +125,14 @@ export default function Services({ navigation }) {
       servicoTelefone !== "" &&
       servicoValor !== ""
     ) {
+
       const serviceData = {
         professional_id: idUser,
         description_service: servicoDescricao,
         name_client: servicoNome,
         phone_client: servicoTelefone,
-        status_client: "pendente",
-        price_service: formatOnlyNumbers(servicoValor),
+        status_service: "pendente",
+        price_service: servicoValor,
       };
       const { data, insertError } = await createService(
         serviceData.professional_id,
@@ -147,9 +140,12 @@ export default function Services({ navigation }) {
         serviceData.description_service,
         serviceData.name_client,
         serviceData.phone_client,
-        serviceData.status_client,
+        serviceData.status_service,
         serviceData.price_service
       );
+      if (insertError) {
+        console.log("Erro ao inserir serviço:", insertError);
+      }
       if (!insertError) {
         setServicoNome("");
         setServicoDescricao("");
@@ -269,15 +265,19 @@ export default function Services({ navigation }) {
               style={styles.modalInput}
               placeholder="Telefone"
               value={servicoTelefone}
-              keyboardType="numeric"
-              onChangeText={setServicoTelefone}
+              keyboardType="phone-pad"
+              onChangeText={(text) => setServicoTelefone(formatPhone(text))}
             />
-            <TextInput
-              style={styles.modalInput}
+            <CurrencyInput
+              prefix="R$ "
+              delimiter="."
+              separator=","
+              precision={2}
+              minValue={0}
               placeholder="Valor do serviço"
+              style={styles.modalInput}
               value={servicoValor}
-              keyboardType="numeric"
-              onChangeText={setServicoValor}
+              onChangeValue={setServicoValor}
             />
             <TouchableOpacity style={styles.modalButton} onPress={addService}>
               <Text style={styles.modalButtonText}>Adicionar</Text>

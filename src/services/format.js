@@ -1,6 +1,23 @@
 export const formatPhone = (telefone) => {
-  if (!telefone) return "";
-  return telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+  if (telefone === null || telefone === undefined) return "";
+
+  const digits = String(telefone).replace(/\D/g, "");
+
+  if (digits.length === 0) return "";
+
+  if (digits.length <= 2) {
+    return `(${digits}`;
+  }
+
+  if (digits.length <= 6) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  }
+
+  if (digits.length <= 10) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  }
+
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
 };
 
 export function formatEmail(email) {

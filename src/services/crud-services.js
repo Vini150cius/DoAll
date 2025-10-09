@@ -2,8 +2,32 @@ import Toast from "react-native-toast-message";
 import { supabase } from "../config/supabaseConfig";
 
 export async function createService(professional_id, client_id = null, description_service, name_client, phone_client, status_service = "pendente", price_service, service_date = new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear()) {
-  console.log(professional_id, client_id, description_service, name_client, phone_client, status_service, price_service, service_date)
   try {
+    if (client_id && phone_client) {
+      try {
+        const { data: updateNumberData, error: updateNumberError } = await supabase
+          .from("profiles")
+          .update({ telefone: phone_client })
+          .eq("user_id", client_id)
+          .select();
+        if (updateNumberError) {
+          Toast.show({
+            type: "error",
+            text1: "Erro ao atualizar o telefone do cliente",
+            text2: updateNumberError.message
+          });
+          throw updateNumberError;
+        }
+      } catch (error) {
+        console.error("Erro ao atualizar o telefone do cliente:", error);
+        Toast.show({
+          type: "error",
+          text1: "Erro ao atualizar o telefone do cliente",
+          text2: error.message
+        });
+      }
+    }
+
     const { data, error: insertError } = await supabase.from("services").insert({
       professional_id,
       client_id,

@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 import Toast from "react-native-toast-message";
 import { supabase } from "../../config/supabaseConfig";
 import { updateProfessionalInfo } from "../../services/crud-professional-info";
-import { formatEmail } from "../../services/format";
+import { formatEmail, formatPhone } from "../../services/format";
 
 export default function ProfessionalSignUp({ navigation }) {
   const [name, setName] = useState("");
@@ -341,7 +341,8 @@ export default function ProfessionalSignUp({ navigation }) {
               placeholder="Telefone"
               placeholderTextColor="#444"
               value={telefone}
-              onChangeText={setTelefone}
+              onChangeText={(text) => setTelefone(formatPhone(text))}
+              keyboardType="phone-pad"
               editable={!uploading}
             />
             <TextInput

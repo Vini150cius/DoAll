@@ -19,7 +19,7 @@ import {
   updateServices,
 } from "../../services/crud-services";
 import { Header } from "../../components/Header";
-import { formatOnlyNumbers, formatPhone } from "../../services/format";
+import { formatPhone } from "../../services/format";
 import CurrencyInput from "react-native-currency-input";
 
 export default function Services({ navigation }) {
@@ -44,6 +44,7 @@ export default function Services({ navigation }) {
   }, []);
 
   function toggleFilter(filterType) {
+    if (!idUser) return;
     if (filter === filterType) {
       setFilter("");
       read("");
@@ -55,6 +56,7 @@ export default function Services({ navigation }) {
 
   async function read(filter = "") {
     setFilter(filter);
+    if (!idUser || idUser === "undefined") return;
     const data = await readServices(idUser);
     if (data) {
       if (typeof data === "object" && data !== null) {
@@ -125,7 +127,6 @@ export default function Services({ navigation }) {
       servicoTelefone !== "" &&
       servicoValor !== ""
     ) {
-
       const serviceData = {
         professional_id: idUser,
         description_service: servicoDescricao,

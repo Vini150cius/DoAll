@@ -17,6 +17,10 @@ export default function HomeProf({ navigation }) {
   const [feed, setFeed] = useState([]);
 
   async function read() {
+    if (!idUser || idUser === "undefined") {
+      setFeed([]);
+      return;
+    }
     const { data: dataFutureServices, error } = await readServicesWithStatus(
       idUser,
       "em_analise"
@@ -46,6 +50,7 @@ export default function HomeProf({ navigation }) {
   }
 
   async function updateStatus(id, accepted) {
+    if (!idUser || idUser === "undefined") return;
     const newStatus = accepted ? "pendente" : "recusado";
     const { data, error } = await updateStatusOfService(id, newStatus);
     if (error) {
@@ -65,12 +70,12 @@ export default function HomeProf({ navigation }) {
   }
 
   useEffect(() => {
-    read();
+    if (idUser && idUser !== "undefined") read();
   }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      read();
+      if (idUser && idUser !== "undefined") read();
     }, 30000);
 
     return () => clearInterval(interval);

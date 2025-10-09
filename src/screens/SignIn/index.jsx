@@ -112,8 +112,6 @@ export default function SignIn({ navigation }) {
       password: password,
     });
 
-    console.error(authError);
-
     if (authError) {
       Toast.show({
         type: "error",
@@ -123,15 +121,16 @@ export default function SignIn({ navigation }) {
             ? "Email ou senha incorretos"
             : authError.message,
       });
-
       setLoading(false);
       return;
     }
 
-    dispatch(idUser(session.user.id));
-    dispatch(login(typeUser));
-
-    await checkLoginCompletionAndType();
+    if (data && data.session && data.session.user && data.session.user.id) {
+      dispatch(idUser(data.session.user.id));
+      dispatch(login(typeUser));
+      await checkLoginCompletionAndType();
+    }
+    setLoading(false);
   }
 
   return (

@@ -172,6 +172,28 @@ const styles = StyleSheet.create({
   modalTextBold: {
     fontWeight: 'bold',
   },
+  modalInput:{
+    backgroundColor: 'lightgray',
+    width: '100%',
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  modalInput1:{
+    backgroundColor: 'lightgray',
+    width: 300,
+    height:100,
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    textAlignVertical: 'top',
+  },
+  titleModal1:{
+    fontSize: 20,
+    fontWeight: 'bold', 
+  }
 });
 
 export default styles;

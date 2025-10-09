@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
@@ -18,6 +19,8 @@ import { Header } from "../../components/Header";
 import { readProfessionals } from "../../services/crud-professional-info";
 import Toast from "react-native-toast-message";
 import { createService } from "../../services/crud-services.js";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import CurrencyInput from "react-native-currency-input";
 
 export default function Home({ navigation }) {
   const [feed, setFeed] = useState([]);
@@ -55,7 +58,12 @@ export default function Home({ navigation }) {
     const profissional_id = data.user_id;
     const cliente_id = dataUser.user_id || dataUser.idUser || dataUser.id;
     const [modalVisible, setModalVisible] = useState(false);
+    const [serviceVisible, setServiceVisible] = useState(false);
     const [favorito, setFavorito] = useState(false);
+    const [description_service, setDescriptionService] = useState("");
+    const [price_service, setPriceService] = useState(0);
+    const [service_date, setServiceDate] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
     const modalVisibleRef = useRef(false);
 
     useEffect(() => {
@@ -177,12 +185,103 @@ export default function Home({ navigation }) {
                 </Text>
               </ScrollView>
               <View style={styles.buttonRow}>
-                <TouchableOpacity style={styles.botao2} onPress={() => {}}>
+                <TouchableOpacity
+                  style={styles.botao2}
+                  onPress={() => {
+                    setServiceVisible(true);
+                    setModalVisible(false);
+                  }}
+                >
                   <Text style={styles.textoBotao1}> Contratar serviços </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.botao1}
                   onPress={() => setModalVisible(false)}
+                >
+                  <Text style={styles.textoBotao1}> Fechar </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={serviceVisible}
+        >
+          <View style={styles.modalContainer1}>
+            <View style={styles.modalContent1}>
+              <View>
+                <Text style={styles.titleModal1}>Contratar Serviço</Text>
+              </View>
+              <ScrollView>
+                <Text>Descrição do serviço: </Text>
+                <TextInput
+                  style={styles.modalInput1}
+                  placeholder="Descrição do serviço"
+                  value={description_service}
+                  onChangeText={setDescriptionService}
+                />
+                <Text>Preço do serviço: </Text>
+                <CurrencyInput
+                  style={styles.modalInput}
+                  prefix="R$ "
+                  delimiter="."
+                  separator=","
+                  precision={2}
+                  minValue={0}
+                  value={price_service}
+                  onChangeValue={setPriceService}
+                />
+                <Text>Data do serviço: </Text>
+                <TouchableOpacity
+                  style={styles.modalInput}
+                  onPress={() => setShowDatePicker(true)}
+                >
+                  <Text>
+                    {service_date
+                      ? service_date.toLocaleDateString()
+                      : "Selecionar data"}
+                  </Text>
+                </TouchableOpacity>
+                {showDatePicker && (
+                  <DateTimePicker
+                    display="default"
+                    value={service_date}
+                    onChange={(event, selectedDate) => {
+                      if (event.type === "set" && selectedDate) {
+                        setServiceDate(selectedDate);
+                        setShowDatePicker(false);
+                      } else if (event.type === "dismissed") {
+                        setShowDatePicker(false);
+                      }
+                    }}
+                    mode="date"
+                  />
+                )}
+              </ScrollView>
+              <View style={styles.buttonRow}>
+                <TouchableOpacity
+                  style={styles.botao2}
+                  onPress={async () => {
+                    await createService(
+                      profissional_id,
+                      cliente_id,
+                      description_service,
+                      price_service,
+                      service_date,
+                      (status_service = "em_analise")
+                    );
+                    setServiceVisible(false);
+                    setModalVisible(true);
+                  }}
+                >
+                  <Text style={styles.textoBotao1}> Contratar serviços </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.botao1}
+                  onPress={() => setServiceVisible(false)}
                 >
                   <Text style={styles.textoBotao1}> Fechar </Text>
                 </TouchableOpacity>

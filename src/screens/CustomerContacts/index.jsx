@@ -239,7 +239,7 @@ export default function CustomerContacts({ navigation }) {
     <SafeAreaView style={styles.container}>
       <Header />
       <View style={styles.content}>
-        <Text style={styles.titleContent}>Cntatos Salvos</Text>
+        <Text style={styles.titleContent}>Contatos Salvos</Text>
         <View style={styles.listContainer}>
           <FlatList
             data={feed}

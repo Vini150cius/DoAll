@@ -30,10 +30,25 @@ export default function Home({ navigation }) {
     read();
   }, []);
 
-  //  Olá Goias, o código para adicionar um serviço já estava pronto, ai para facilitar a progressão da sociedade, quando fizer o modal, nos inputs adiciona uns setBanana no onChangeText e no onPress do botão de enviar chama a função abaixo
-  // se estiver com duvidas dá um grito.
-  async function handleCreateService() {
+  async function handleCreateService(
+    profissional_id,
+    client_id,
+    description_service,
+    price_service,
+    service_date,
+    status_service = "em_analise",
+    name_client = dataUser.name,
+    phone_client = dataUser.phone
+  ) {
     try {
+      if (!profissional_id || !client_id) {
+        throw new Error("IDs de profissional ou cliente inválidos");
+      }
+
+      if (!description_service || !price_service || !service_date) {
+        throw new Error("Dados do serviço inválidos");
+      }
+
       const response = await createService(
         profissional_id,
         client_id,
@@ -265,13 +280,12 @@ export default function Home({ navigation }) {
                 <TouchableOpacity
                   style={styles.botao2}
                   onPress={async () => {
-                    await createService(
+                    await handleCreateService(
                       profissional_id,
                       cliente_id,
                       description_service,
                       price_service,
-                      service_date,
-                      (status_service = "em_analise")
+                      service_date
                     );
                     setServiceVisible(false);
                     setModalVisible(true);

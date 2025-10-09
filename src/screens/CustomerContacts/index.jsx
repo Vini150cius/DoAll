@@ -37,7 +37,6 @@ export default function CustomerContacts({ navigation }) {
 
     useEffect(() => {
       modalVisibleRef.current = modalVisible;
-      console.log(data);
     }, [modalVisible]);
 
     useEffect(() => {

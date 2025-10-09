@@ -126,7 +126,6 @@ export function Header() {
               style={styles.perfilOpcao}
               onPress={async () => {
                 const response = await logout(dispatch);
-                console.log("Response from logout:", response);
                 if (response) {
                   setModalPerfilVisible(false);
                   navigation.navigate("InitScreen");

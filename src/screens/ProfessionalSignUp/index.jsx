@@ -191,7 +191,6 @@ export default function ProfessionalSignUp({ navigation }) {
       if (!selectedServiceType) {
         throw new Error("Tipo de serviço inválido");
       }
-      console.log(imageUrl);
       const { updateData, updateError } = await updateProfessionalInfo(
         userId,
         name,

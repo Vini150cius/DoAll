@@ -112,8 +112,7 @@ export default function SignIn({ navigation }) {
       password: password,
     });
 
-    console.log(data);
-    console.log(authError);
+    console.error(authError);
 
     if (authError) {
       Toast.show({

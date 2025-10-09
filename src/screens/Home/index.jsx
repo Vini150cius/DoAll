@@ -67,7 +67,6 @@ export default function Home({ navigation }) {
         price_service,
         service_date
       );
-      console.log(response);
     } catch (err) {
       Toast.show({
         type: "error",
@@ -92,7 +91,6 @@ export default function Home({ navigation }) {
 
     useEffect(() => {
       modalVisibleRef.current = modalVisible;
-      console.log(dataUser);
     }, [modalVisible]);
 
     useEffect(() => {

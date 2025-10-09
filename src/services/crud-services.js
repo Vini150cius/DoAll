@@ -97,7 +97,6 @@ export async function readServices(professional_id) {
 
 export async function updateServices(service_id, professional_id, status_service = "pendente") {
   try {
-    console.log(service_id, professional_id, status_service)
     const { data: updateData, error: updateError } = await supabase
       .from("services")
       .update({

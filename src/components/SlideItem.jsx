@@ -29,7 +29,7 @@ const SlideItem = ({ item, navigation }) => {
             } else if (item.title == "Profissional") {
               dispatch(typeUser("profissional"));
             } else {
-              console.log("erro");
+              console.error("erro");
             }
           }}
           style={styles.button}

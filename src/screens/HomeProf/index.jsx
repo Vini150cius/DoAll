@@ -21,7 +21,6 @@ export default function HomeProf({ navigation }) {
       idUser,
       "em_analise"
     );
-    console.log(dataFutureServices);
     if (error) {
       console.error("Erro:", error);
       return;

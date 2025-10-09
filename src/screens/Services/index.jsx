@@ -144,7 +144,7 @@ export default function Services({ navigation }) {
         serviceData.price_service
       );
       if (insertError) {
-        console.log("Erro ao inserir serviço:", insertError);
+        console.error("Erro ao inserir serviço:", insertError);
       }
       if (!insertError) {
         setServicoNome("");

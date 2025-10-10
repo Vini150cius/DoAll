@@ -1,3 +1,4 @@
+
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
@@ -46,6 +47,21 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginVertical: 4,
   },
+  bulletList: {
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  bulletItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 2,
+  },
+  bulletPoint: {
+    fontWeight: 'bold',
+    marginRight: 4,
+    color: '#333',
+    fontSize: 16,
+  },
   phone: {
     color: "#007BFF",
     fontSize: 13,
@@ -65,7 +81,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)', 
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
     gap: 10,
@@ -74,7 +90,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     alignItems: 'center',
-    elevation: 5, // sombra em Android
+    elevation: 5,
   },
   text: {
     textAlign: 'justify',
@@ -147,7 +163,7 @@ const styles = StyleSheet.create({
   },
 
   botao2: {
-    backgroundColor: '#28a745', // Verde (contratar)
+    backgroundColor: '#28a745',
     borderRadius: 8,
     flex: 1,
     marginRight: 10,
@@ -156,7 +172,7 @@ const styles = StyleSheet.create({
   },
 
   botao1: {
-    backgroundColor: 'red', // Cinza (fechar)
+    backgroundColor: 'red',
     borderRadius: 8,
     flex: 1,
     marginLeft: 10,
@@ -172,7 +188,7 @@ const styles = StyleSheet.create({
   modalTextBold: {
     fontWeight: 'bold',
   },
-  modalInput:{
+  modalInput: {
     backgroundColor: 'lightgray',
     width: '100%',
     borderRadius: 8,
@@ -180,20 +196,35 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
-  modalInput1:{
+  modalInput1: {
     backgroundColor: 'lightgray',
     width: 300,
-    height:100,
+    height: 100,
     borderRadius: 8,
     padding: 10,
     marginTop: 10,
     marginBottom: 10,
     textAlignVertical: 'top',
   },
-  titleModal1:{
+  titleModal1: {
     fontSize: 20,
-    fontWeight: 'bold', 
-  }
+    fontWeight: 'bold',
+  },
+  bulletList: {
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  bulletItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 2,
+  },
+  bulletPoint: {
+    fontWeight: 'bold',
+    marginRight: 4,
+    color: '#333',
+    fontSize: 16,
+  },
 });
 
 export default styles;

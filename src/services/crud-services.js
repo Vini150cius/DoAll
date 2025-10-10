@@ -127,3 +127,32 @@ export async function updateServices(service_id, professional_id, status_service
     });
   }
 }
+
+export async function readServicesDone(professional_id) {
+  try {
+    const { data, error: selectError } = await supabase
+      .from("services")
+      .select("*")
+      .eq("professional_id", professional_id)
+      .eq("status_service", 'concluido')
+      .order("created_at", { ascending: false });
+
+    if (selectError) {
+      Toast.show({
+        type: "error",
+        text1: "Erro ao ler serviços concluídos",
+        text2: selectError.message
+      });
+      throw selectError;
+    }
+    return data;
+  } catch (err) {
+    console.error("Erro ao ler serviços concluídos:", err);
+    Toast.show({
+      type: "error",
+      text1: "Erro ao ler serviços concluídos",
+      text2: err.message || "Erro desconhecido",
+    });
+    return err.message;
+  }
+}

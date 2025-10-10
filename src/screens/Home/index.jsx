@@ -19,7 +19,10 @@ import { Header } from "../../components/Header";
 import { formatPhone } from "../../services/format";
 import { readProfessionals } from "../../services/crud-professional-info";
 import Toast from "react-native-toast-message";
-import { createService } from "../../services/crud-services.js";
+import {
+  createService,
+  readServicesDone,
+} from "../../services/crud-services.js";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CurrencyInput from "react-native-currency-input";
 
@@ -87,6 +90,7 @@ export default function Home({ navigation }) {
     const [service_date, setServiceDate] = useState(new Date());
     const [numberService, setNumberService] = useState(dataUser.telefone || "");
     const [showDatePicker, setShowDatePicker] = useState(false);
+    const [servicesDone, setServicesDone] = useState([]);
     const modalVisibleRef = useRef(false);
 
     useEffect(() => {
@@ -106,6 +110,20 @@ export default function Home({ navigation }) {
       }
       checkFavorito();
     }, [profissional_id, cliente_id]);
+
+    useEffect(() => {
+      if (modalVisible) {
+        async function fetchServicesDone() {
+          try {
+            const response = await readServicesDone(profissional_id);
+            setServicesDone(Array.isArray(response) ? response : []);
+          } catch (err) {
+            setServicesDone([]);
+          }
+        }
+        fetchServicesDone();
+      }
+    }, [modalVisible, profissional_id]);
 
     useEffect(() => {
       if (modalVisibleRef.current && !modalVisible) {
@@ -201,10 +219,25 @@ export default function Home({ navigation }) {
                   <Text style={styles.modalTextBold}>Tipo de serviço:</Text>{" "}
                   {data.service_type}
                 </Text>
-                <Text style={styles.modalText1}>
-                  <Text style={styles.modalTextBold}>Serviços feitos:</Text>{" "}
-                  colocar os servicos que estão na tabela services
-                </Text>
+                <View style={styles.bulletList}>
+                  <Text style={styles.modalTextBold}>Serviços feitos:</Text>
+                  {servicesDone.length === 0 ? (
+                    <Text style={styles.modalText1}>
+                      Nenhum serviço concluído.
+                    </Text>
+                  ) : (
+                    <View>
+                      {servicesDone.map((serv, idx) => (
+                        <View key={serv.id || idx} style={styles.bulletItem}>
+                          <Text style={styles.bulletPoint}>•</Text>
+                          <Text style={styles.modalText1}>
+                            {serv.description_service}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+                </View>
               </ScrollView>
               <View style={styles.buttonRow}>
                 <TouchableOpacity
@@ -368,6 +401,8 @@ export default function Home({ navigation }) {
           ListEmptyComponent={
             <Text style={styles.emptyText}>Nenhum dado encontrado</Text>
           }
+          refreshing={false}
+          onRefresh={read}
         />
       </View>
     </SafeAreaView>

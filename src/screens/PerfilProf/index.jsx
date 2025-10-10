@@ -2,22 +2,19 @@ import React, { useState } from "react";
 import {
   Image,
   ScrollView,
-  SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
   Modal,
-  Alert,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
 import Feather from "react-native-vector-icons/Feather";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useSelector } from "react-redux";
+import { Header } from "../../components/Header";
 
 export default function PerfilProf({ navigation }) {
-  const [feed, setFeed] = useState([]);
   const [name, setName] = useState("");
   const [services, setServices] = useState("");
   const [sentence, setSentence] = useState("");
@@ -60,31 +57,7 @@ export default function PerfilProf({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => navigation.openDrawer()}
-          style={styles.menuIcon}
-        >
-          <Feather name="menu" size={24} color="white" />
-        </TouchableOpacity>
-
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Buscar..."
-          placeholderTextColor="#999"
-        />
-
-        <TouchableOpacity style={styles.searchIcon}>
-          <Ionicons name="notifications" size={24} color="white" />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{ marginLeft: 10 }}
-          onPress={() => setModalPerfilVisible(true)}
-        >
-          <MaterialIcons name="person" size={26} color="white" />
-        </TouchableOpacity>
-      </View>
+      <Header />
 
       <View style={styles.viewCard}>
         <View style={styles.card}>

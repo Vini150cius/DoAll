@@ -92,6 +92,7 @@ export default function Home({ navigation }) {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [servicesDone, setServicesDone] = useState([]);
     const modalVisibleRef = useRef(false);
+    const [loading, setLoading] = useState();
 
     useEffect(() => {
       modalVisibleRef.current = modalVisible;
@@ -327,8 +328,10 @@ export default function Home({ navigation }) {
               </ScrollView>
               <View style={styles.buttonRow}>
                 <TouchableOpacity
+                  disabled={loading}
                   style={styles.botao2}
                   onPress={async () => {
+                    setLoading(true);
                     await handleCreateService(
                       profissional_id,
                       cliente_id,
@@ -345,10 +348,15 @@ export default function Home({ navigation }) {
                     setNumberService(dataUser.telefone || "");
                     setServiceDate(new Date());
                     setStatusService("em_analise");
+                    setLoading(false);
                     setModalVisible(true);
                   }}
                 >
-                  <Text style={styles.textoBotao1}> Contratar serviços </Text>
+                  {loading ? (
+                    <Text style={styles.textoBotao1}> Contratando... </Text>
+                  ) : (
+                    <Text style={styles.textoBotao1}> Contratar serviços </Text>
+                  )}
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.botao1}

@@ -1,24 +1,22 @@
 import React, { useState } from "react";
 import {
   Image,
-  ScrollView,
-  SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
   Modal,
-  Alert,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
 import Feather from "react-native-vector-icons/Feather";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { Header } from "../../components/Header";
+import { useSelector } from "react-redux";
 
 export default function PerfilCliente({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalPerfilVisible, setModalPerfilVisible] = useState(false);
+  const userData = useSelector((state) => state.userReducer.data);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -31,8 +29,8 @@ export default function PerfilCliente({ navigation }) {
             style={styles.image}
           />
           <View style={styles.info}>
-            <Text style={styles.title}>Nome do Cliente</Text>
-            <Text style={styles.subtitle}>Email: cliente@gmail.com</Text>
+            <Text style={styles.title}>{userData.name}</Text>
+            <Text style={styles.subtitle}>Email: {userData.email}</Text>
           </View>
         </View>
       </View>
@@ -53,21 +51,43 @@ export default function PerfilCliente({ navigation }) {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.containerForm}>
-          <View style={styles.containerInput}>
-            <Text style={styles.textInput}>Escreva o seu nome</Text>
-            <TextInput
-              style={styles.inputName}
-              placeholder="Ex: João da Silva"
-              placeholderTextColor="#444"
-            />
-          </View>
+          <View style={styles.containerForm1}>
+            <View style={styles.containerInput}>
+              <Text style={styles.textInput}>Edite o seu nome:</Text>
+              <TextInput
+                style={styles.inputName}
+                placeholder="Ex: João da Silva"
+                placeholderTextColor="#444"
+              />
+            </View>
+            <View style={styles.containerInput}>
+              <Text style={styles.textInput}>Edite o seu telefone:</Text>
+              <TextInput
+                style={styles.inputName}
+                placeholder="(11) 99999-9999"
+                placeholderTextColor="#444"
+              />
+            </View>
+            <View style={styles.containerInput}>
+              <Text style={styles.textInput}>Senha atual:</Text>
+              <TextInput
+                style={styles.inputName}
+              />
+            </View>
+            <View style={styles.containerInput}>
+              <Text style={styles.textInput}>Nova senha:</Text>
+              <TextInput
+                style={styles.inputName}
+              />
+            </View>
 
-          <TouchableOpacity
-            style={styles.submitForm}
-            onPress={() => setModalVisible(false)}
-          >
-            <Text style={styles.textSubmitForm}>Salvar</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.submitForm}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.textSubmitForm}>Salvar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
 

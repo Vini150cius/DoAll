@@ -45,9 +45,9 @@ export function Header() {
         placeholder="Buscar..."
         placeholderTextColor="#999"
       />
-      <TouchableOpacity style={styles.searchIcon}>
+      {/* <TouchableOpacity style={styles.searchIcon}>
         <Ionicons name="notifications" size={24} color="white" />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity
         style={styles.userButton}
@@ -103,16 +103,6 @@ export function Header() {
             >
               <Feather name="user" size={20} color="#fff" />
               <Text style={styles.perfilOpcaoText}>Conta</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.perfilOpcao}>
-              <Feather name="settings" size={20} color="#fff" />
-              <Text style={styles.perfilOpcaoText}>Configuração</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.perfilOpcao}>
-              <Feather name="book-open" size={20} color="#fff" />
-              <Text style={styles.perfilOpcaoText}>Guia</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.perfilOpcao}>

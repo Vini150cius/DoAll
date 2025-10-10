@@ -69,19 +69,6 @@ function DrawerApp() {
             }}
           />
           <Drawer.Screen
-            name="Perfil"
-            component={PerfilProf}
-            options={{
-              drawerIcon: ({ focused, size }) => (
-                <MaterialIcons
-                  name="person"
-                  size={size}
-                  color={focused ? "#b18461" : "#ccc"}
-                />
-              ),
-            }}
-          />
-          <Drawer.Screen
             name="Serviços"
             component={Services}
             options={{

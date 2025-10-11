@@ -15,7 +15,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../services/logout";
 
-export function Header() {
+export function Header({ onSearch }) {
   const navigation = useNavigation(); // Estou adicionando assim pq é a opção mais utilizada e se for utilizar pegando como parametro fica meio feio.
   const [modalPerfilVisible, setModalPerfilVisible] = useState(false);
   const typeUser = useSelector((state) => state.userReducer.typeUser);
@@ -35,6 +35,7 @@ export function Header() {
   };
   const dispatch = useDispatch();
 
+  const [searchValue, setSearchValue] = useState("");
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={handleDrawerToggle} style={styles.menuIcon}>
@@ -44,6 +45,11 @@ export function Header() {
         style={styles.searchInput}
         placeholder="Buscar..."
         placeholderTextColor="#999"
+        value={searchValue}
+        onChangeText={(text) => {
+          setSearchValue(text);
+          if (onSearch) onSearch(text);
+        }}
       />
       {/* <TouchableOpacity style={styles.searchIcon}>
         <Ionicons name="notifications" size={24} color="white" />

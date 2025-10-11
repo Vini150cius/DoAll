@@ -27,6 +27,7 @@ export default function Services({ navigation }) {
   const [services, setServices] = useState([]);
   const [filter, setFilter] = useState("");
   const [modalAddVisible, setModalAddVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Estados para o modal de adicionar serviço
   const [servicoNome, setServicoNome] = useState("");
@@ -118,6 +119,13 @@ export default function Services({ navigation }) {
     );
   }
 
+  const filteredServices = services.filter((item) => {
+    if (!searchTerm) return true;
+    const text = `${item?.description_service ?? ""} ${
+      item?.name_client ?? ""
+    } ${item?.phone_client ?? ""}`.toLowerCase();
+    return text.includes(searchTerm.toLowerCase());
+  });
   const renderItem = ({ item }) => <ServiceItem data={item} />;
 
   async function addService() {
@@ -170,7 +178,7 @@ export default function Services({ navigation }) {
   }
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
+      <Header onSearch={setSearchTerm} />
 
       <View style={styles.filtersContainer}>
         <TouchableOpacity
@@ -224,12 +232,14 @@ export default function Services({ navigation }) {
 
       <View style={styles.viewCard}>
         <FlatList
-          data={services}
+          data={filteredServices}
           keyExtractor={(item, index) => String(item?.id ?? index)}
           renderItem={renderItem}
           ListEmptyComponent={
             <Text style={styles.emptyText}>Nenhum dado encontrado</Text>
           }
+          refreshing={false}
+          onRefresh={read}
         />
       </View>
 

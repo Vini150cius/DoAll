@@ -28,6 +28,7 @@ import CurrencyInput from "react-native-currency-input";
 
 export default function Home({ navigation }) {
   const [feed, setFeed] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const dataUser = useSelector((state) => state.userReducer.data);
 
   useEffect(() => {
@@ -372,6 +373,13 @@ export default function Home({ navigation }) {
     );
   }
 
+  const filteredFeed = feed.filter((item) => {
+    if (!searchTerm) return true;
+    const text = `${item?.services ?? ""} ${item?.sentence ?? ""} ${
+      item?.name_client ?? ""
+    }`.toLowerCase();
+    return text.includes(searchTerm.toLowerCase());
+  });
   const renderItem = ({ item }) => <Pessoa data={item} />;
 
   async function read() {
@@ -400,10 +408,10 @@ export default function Home({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
+      <Header onSearch={setSearchTerm} />
       <View style={styles.listContainer}>
         <FlatList
-          data={feed}
+          data={filteredFeed}
           keyExtractor={(item, index) => String(item?.id ?? index)}
           renderItem={renderItem}
           ListEmptyComponent={

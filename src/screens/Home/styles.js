@@ -225,6 +225,12 @@ const styles = StyleSheet.create({
     color: '#333',
     fontSize: 16,
   },
+  emptyText: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 20,
+  }
 });
 
 export default styles;

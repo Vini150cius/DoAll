@@ -15,6 +15,7 @@ export default function HomeProf({ navigation }) {
   const dataUser = useSelector((state) => state.userReducer.data);
   const idUser = dataUser.user_id || dataUser.idUser || dataUser.id;
   const [feed, setFeed] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   async function read() {
     if (!idUser || idUser === "undefined") {
@@ -117,22 +118,31 @@ export default function HomeProf({ navigation }) {
     </View>
   );
 
+  const filteredFeed = feed.filter((item) => {
+    if (!searchTerm) return true;
+    const text = `${item?.name_client ?? ""} ${
+      item?.description_service ?? ""
+    }`.toLowerCase();
+    return text.includes(searchTerm.toLowerCase());
+  });
   const renderItem = ({ item }) => <Service data={item} />;
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
+      <Header onSearch={setSearchTerm} />
       <View style={styles.listContainer}>
         <Text style={styles.listCliente}>Lista de Clientes</Text>
 
         <FlatList
-          data={feed}
+          data={filteredFeed}
           keyExtractor={(item, index) => String(item?.id ?? index)}
           renderItem={renderItem}
           contentContainerStyle={styles.listaContainer}
           ListEmptyComponent={
             <Text style={styles.emptyText}>Nenhum dado encontrado</Text>
           }
+          refreshing={false}
+          onRefresh={read}
         />
       </View>
     </SafeAreaView>

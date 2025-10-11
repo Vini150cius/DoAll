@@ -24,6 +24,7 @@ import CurrencyInput from "react-native-currency-input";
 
 export default function CustomerContacts({ navigation }) {
   const [feed, setFeed] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const dataUser = useSelector((state) => state.userReducer.data);
 
@@ -92,8 +93,6 @@ export default function CustomerContacts({ navigation }) {
         ) {
           throw new Error("Dados do serviço inválidos");
         }
-        // Aqui você pode chamar a função de criação do serviço, se existir
-        // Exemplo: await createService(...)
         Toast.show({
           type: "success",
           text1: "Serviço contratado com sucesso!",
@@ -324,6 +323,13 @@ export default function CustomerContacts({ navigation }) {
     );
   }
 
+  const filteredFeed = feed.filter((item) => {
+    if (!searchTerm) return true;
+    const text = `${item?.services ?? ""} ${item?.sentence ?? ""} ${
+      item?.name_client ?? ""
+    }`.toLowerCase();
+    return text.includes(searchTerm.toLowerCase());
+  });
   const renderItem = ({ item }) => <Pessoa data={item} />;
 
   async function read() {
@@ -390,10 +396,10 @@ export default function CustomerContacts({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
+      <Header onSearch={setSearchTerm} />
       <View style={styles.listContainer}>
         <FlatList
-          data={feed}
+          data={filteredFeed}
           keyExtractor={(item, index) => String(item?.id ?? index)}
           renderItem={renderItem}
           ListEmptyComponent={

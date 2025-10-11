@@ -36,6 +36,15 @@ const SlideItem = ({ item, navigation }) => {
         >
           <Text style={styles.textButton}>Entrar</Text>
         </TouchableOpacity>
+        {item.title === "Profissional" ? (
+          <Text style={styles.footer}>
+            {"<<<"} Deslize para trocar o tipo de usuário
+          </Text>
+        ) : (
+          <Text style={styles.footer}>
+            Deslize para trocar o tipo de usuário {">>>"}
+          </Text>
+        )}
       </View>
     </View>
   );
@@ -50,7 +59,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    marginTop: "50%",
+    marginTop: "40%",
     flex: 0.5,
     width: "80%",
     height: "80%",
@@ -86,5 +95,10 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 700,
     color: "#E4E4E4",
+  },
+  footer: {
+    color: "#E4E4E4",
+    textAlign: "center",
+    marginTop: 20,
   },
 });

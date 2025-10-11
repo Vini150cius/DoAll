@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     alignItems: 'center',
-    elevation: 5, 
+    elevation: 5,
   },
   text: {
     textAlign: 'justify',
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   },
 
   botao2: {
-    backgroundColor: '#28a745', 
+    backgroundColor: '#28a745',
     borderRadius: 8,
     flex: 1,
     marginRight: 10,
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
 
   botao1: {
-    backgroundColor: 'red', 
+    backgroundColor: 'red',
     borderRadius: 8,
     flex: 1,
     marginLeft: 10,
@@ -193,6 +193,12 @@ const styles = StyleSheet.create({
   titleModal1: {
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  emptyText: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 20,
   }
 });
 

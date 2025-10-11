@@ -44,7 +44,15 @@ export default function ToggleTypeUser({ navigation }) {
   };
 
   const handleOnViewableItemsChanged = useRef(({ viewableItems }) => {
-    setIndex(viewableItems[0].index);
+    // Gambiarra para evitar erro quando o array estiver vazio
+    if (
+      Array.isArray(viewableItems) &&
+      viewableItems.length > 0 &&
+      viewableItems[0] &&
+      typeof viewableItems[0].index === "number"
+    ) {
+      setIndex(viewableItems[0].index);
+    }
   }).current;
 
   const viewabilityConfig = useRef({

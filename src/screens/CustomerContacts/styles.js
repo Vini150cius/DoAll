@@ -76,6 +76,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 5,
   },
+  modalContainerWrapper: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   text: {
     textAlign: 'justify',
   },
@@ -146,12 +152,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 
+
   botao2: {
     backgroundColor: '#28a745',
     borderRadius: 8,
     flex: 1,
     marginRight: 10,
     alignItems: 'center',
+    justifyContent: 'center',
     padding: 5,
   },
 
@@ -161,13 +169,16 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
     alignItems: 'center',
+    justifyContent: 'center',
     padding: 5,
-  },
 
+  },
   textoBotao1: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
   modalTextBold: {
     fontWeight: 'bold',

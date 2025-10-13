@@ -1,16 +1,20 @@
 import {
   Image,
   ImageBackground,
-  SafeAreaView,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
 import { LinearGradient } from "expo-linear-gradient";
 
-const Background = ["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0.753)",
-  "rgba(0, 0, 0, 0.877)", "rgb(0, 0, 0)"];
+const Background = [
+  "rgba(0, 0, 0, 0)",
+  "rgba(0, 0, 0, 0.753)",
+  "rgba(0, 0, 0, 0.877)",
+  "rgb(0, 0, 0)",
+];
 
 export default function InitScreen({ navigation }) {
   return (
@@ -26,7 +30,10 @@ export default function InitScreen({ navigation }) {
             <Text style={styles.welcomeText}>
               Conectando quem faz com quem precisa.
             </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('ToggleTypeUser')} style={styles.button}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("ToggleTypeUser")}
+              style={styles.button}
+            >
               <Text style={styles.textButton}>Começar</Text>
             </TouchableOpacity>
           </View>

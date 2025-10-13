@@ -1,24 +1,25 @@
 import { useState } from "react";
 import {
   Image,
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import Feather from "react-native-vector-icons/Feather";
 import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Toast from "react-native-toast-message";
 import { supabase } from "../../config/supabaseConfig";
 import { updateProfessionalInfo } from "../../services/crud-professional-info";
 import { formatEmail, formatPhone } from "../../services/format";
+import { data, idUser } from "../../redux/User/slice";
 
 export default function ProfessionalSignUp({ navigation }) {
   const [name, setName] = useState("");
@@ -32,6 +33,8 @@ export default function ProfessionalSignUp({ navigation }) {
   const [uploading, setUploading] = useState(false);
   const userId = useSelector((state) => state.userReducer.idUser);
   const typeUser = useSelector((state) => state.userReducer.typeUser);
+
+  const dispatch = useDispatch();
 
   // Função para comprimir imagem
   const compressImage = async (uri) => {
@@ -123,23 +126,44 @@ export default function ProfessionalSignUp({ navigation }) {
         return;
       }
 
+      // Não sei qual é a opção correta, então tentei várias...
+      const mediaTypesOption =
+        ImagePicker.MediaType?.Images ??
+        ImagePicker.MediaTypeOptions?.Images ??
+        ImagePicker.MediaType?.All ??
+        ImagePicker.MediaTypeOptions?.All ??
+        undefined;
+
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: mediaTypesOption,
         allowsEditing: true,
         aspect: [1, 1],
         quality: 0.8,
       });
 
-      if (!result.canceled) {
-        setFile(result.assets[0].uri);
+      const canceled = result.canceled ?? result.cancelled ?? false;
+      if (canceled) return;
 
+      const uri = result.assets?.[0]?.uri ?? result.uri;
+      if (!uri) {
+        console.error("pickImage: resultado sem URI", result);
         Toast.show({
-          type: "info",
-          text1: "Imagem selecionada",
-          text2: "Pronta para upload!",
+          type: "error",
+          text1: "Erro",
+          text2: "Não foi possível obter a imagem selecionada.",
         });
+        return;
       }
+
+      setFile(uri);
+
+      Toast.show({
+        type: "info",
+        text1: "Imagem selecionada",
+        text2: "Pronta para upload!",
+      });
     } catch (error) {
+      console.error("Erro em pickImage:", error);
       Toast.show({
         type: "error",
         text1: "Erro",
@@ -202,21 +226,6 @@ export default function ProfessionalSignUp({ navigation }) {
         selectedServiceType.name,
         typeUser
       );
-      // const { data: updateData, error: updateError } = await supabase
-      //   .from("profiles")
-      //   .update({
-      //     name,
-      //     email,
-      //     services,
-      //     sentence,
-      //     telefone,
-      //     photo_url: imageUrl,
-      //     service_type: selectedServiceType.name,
-      //     type_user: typeUser,
-      //     login_completed: true,
-      //   })
-      //   .eq("user_id", userId)
-      //   .select();
 
       let result = { data: updateData, error: updateError };
 
@@ -248,6 +257,9 @@ export default function ProfessionalSignUp({ navigation }) {
         text1: "Sucesso!",
         text2: "Perfil salvo com sucesso!",
       });
+
+      dispatch(idUser(result.data[0].user_id));
+      dispatch(data(result.data[0]));
       navigation.navigate("DrawerApp");
     } catch (error) {
       console.error("Erro completo:", error);

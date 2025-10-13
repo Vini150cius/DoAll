@@ -204,7 +204,7 @@ export default function Home({ navigation }) {
           </View>
         </TouchableOpacity>
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
-          <View style={styles.modalContainer1}>
+          <View style={styles.modalContainerWrapper}>
             <View style={styles.modalContent1}>
               <ScrollView>
                 <Image source={{ uri: data.photo_url }} style={styles.image1} />

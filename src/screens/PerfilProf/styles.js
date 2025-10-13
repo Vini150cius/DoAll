@@ -220,8 +220,7 @@ const styles = StyleSheet.create({
   },
 
   scrollView: {
-    width: "100%",
-    maxHeight: "90%",
+    maxHeight: "80%",
     backgroundColor: "#fff",
     borderRadius: 20,
     padding: 20,

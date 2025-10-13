@@ -105,6 +105,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 700,
   },
+  modalContainerWrapper: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   modalContainer1: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -168,6 +174,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 10,
     alignItems: 'center',
+    justifyContent: 'center',
     padding: 5,
   },
 
@@ -177,13 +184,16 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
     alignItems: 'center',
+    justifyContent: 'center',
     padding: 5,
-  },
 
+  },
   textoBotao1: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
   modalTextBold: {
     fontWeight: 'bold',

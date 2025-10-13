@@ -7,53 +7,74 @@ import {
   TouchableOpacity,
   View,
   Modal,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
 import Feather from "react-native-vector-icons/Feather";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { data as setData } from "../../redux/User/slice";
 import { Header } from "../../components/Header";
+import updateProfileService from "../../services/crud-profile";
+import Toast from "react-native-toast-message";
+import { formatPhone } from "../../services/format";
 
 export default function PerfilProf({ navigation }) {
   const [name, setName] = useState("");
   const [services, setServices] = useState("");
   const [sentence, setSentence] = useState("");
-  const [file, setFile] = useState("");
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalPerfilVisible, setModalPerfilVisible] = useState(false);
-  const [servicoPrestado, setServicoPrestado] = useState("");
   const dataUser = useSelector((state) => state.userReducer.data);
 
-  const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  const dispatch = useDispatch();
 
-    if (status !== "granted") {
+  async function handleUpdateProfile() {
+    if (!name || !services || !sentence || !telefone || !email) {
+      setError("Por favor, preencha todos os campos.");
+      return;
+    }
+
+    try {
+      setUploading(true);
+      const formattedPhone = formatPhone(telefone);
+      const response = await updateProfileService(dataUser.user_id, {
+        name,
+        services,
+        sentence,
+        telefone: formattedPhone,
+        email,
+      });
+      if (response.error) {
+        Toast.show({
+          type: "error",
+          text1: "Erro ao atualizar perfil.",
+          text2: response.error.message,
+        });
+      } else {
+        Toast.show({
+          type: "success",
+          text1: "Perfil atualizado com sucesso.",
+        });
+        if (response.data) {
+          dispatch(setData(response.data));
+        }
+        setModalVisible(false);
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar perfil:", error);
       Toast.show({
         type: "error",
-        text1: "Erro",
-        text2: "Desculpe, precisamos de permissão para acessar a galeria.",
+        text1: "Erro ao atualizar perfil.",
       });
-    } else {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
-      });
-      if (!result.canceled) {
-        const imageUri = result.assets ? result.assets[0].uri : result.uri;
-        const base64Image = await convertImageToBase64(imageUri);
-        if (base64Image) {
-          setFile(base64Image);
-          setError(null);
-        }
-      }
+    } finally {
+      setUploading(false);
     }
-  };
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -77,7 +98,15 @@ export default function PerfilProf({ navigation }) {
       <View style={styles.viewButton}>
         <TouchableOpacity
           style={styles.buttonRegistrar}
-          onPress={() => setModalVisible(true)}
+          onPress={() => {
+            setName(dataUser?.name ?? "");
+            setServices(dataUser?.services ?? "");
+            setSentence(dataUser?.sentence ?? "");
+            setTelefone(formatPhone(dataUser?.telefone ?? ""));
+            setEmail(dataUser?.email ?? "");
+            setError("");
+            setModalVisible(true);
+          }}
         >
           <Text style={styles.buttonText}>Editar perfil</Text>
         </TouchableOpacity>
@@ -131,24 +160,6 @@ export default function PerfilProf({ navigation }) {
               />
             </View>
             <View style={styles.containerInput}>
-              <Text style={styles.textInput}>Coloque a sua foto aqui</Text>
-              {/* Fonte: https://www.geeksforgeeks.org/how-to-upload-and-preview-an-image-in-react-native/ */}
-              <TouchableOpacity
-                style={styles.buttonUpload}
-                onPress={pickImage}
-                disabled={uploading}
-              >
-                <Feather
-                  name={uploading ? "clock" : "upload-cloud"}
-                  size={60}
-                  color={uploading ? "#ccc" : "#888"}
-                />
-                {uploading && (
-                  <Text style={styles.uploadingText}>Processando...</Text>
-                )}
-              </TouchableOpacity>
-            </View>
-            <View style={styles.containerInput}>
               <Text style={styles.textInput}>
                 Como os clientes podem entrar em contato com você?
               </Text>
@@ -157,7 +168,8 @@ export default function PerfilProf({ navigation }) {
                 placeholder="Telefone"
                 placeholderTextColor="#444"
                 value={telefone}
-                onChangeText={setTelefone}
+                onChangeText={(text) => setTelefone(formatPhone(text))}
+                keyboardType="phone-pad"
                 editable={!uploading}
               />
               <TextInput
@@ -171,9 +183,16 @@ export default function PerfilProf({ navigation }) {
             </View>
             <TouchableOpacity
               style={styles.submitForm}
-              onPress={() => setModalVisible(false)}
+              onPress={async () => {
+                await handleUpdateProfile();
+              }}
+              disabled={uploading}
             >
-              <Text style={styles.textSubmitForm}>Salvar</Text>
+              {uploading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.textSubmitForm}>Salvar</Text>
+              )}
             </TouchableOpacity>
           </ScrollView>
         </View>

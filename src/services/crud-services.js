@@ -1,7 +1,7 @@
 import Toast from "react-native-toast-message";
 import { supabase } from "../config/supabaseConfig";
 
-export async function createService(professional_id, client_id = null, description_service, name_client, phone_client, status_service = "pendente", price_service, service_date = new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear()) {
+export async function createService(professional_id, client_id = null, description_service, name_client, phone_client, status_service = "pendente", price_service, service_date = new Date()) {
   try {
     if (client_id && phone_client) {
       try {

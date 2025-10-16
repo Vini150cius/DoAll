@@ -16,6 +16,13 @@ O aplicativo foi desenvolvido utilizando **React Native** e utiliza o **Supabase
 
 Este projeto foi desenvolvido como parte da disciplina de **Programação de Aplicativos Mobile (PAM)**, sob orientação da professora **Magali Benedita Teixeira Nery** e **Gustavo Guerreiro Lima Dias da Silva**.
 
+## 🙍‍♂️ Membros do projeto
+
+* [José Souza](https://github.com/JoseSouza2007).
+* [Nicolas Spinelli](https://github.com/nicolasspinelli008).
+* [Nícollas Reis](https://github.com/NicollasMSR).
+* [Vinícius Porto](https://github.com/Vini150cius).
+
 ## 🚀 Instalação
 
 Para rodar o projeto localmente, siga os passos abaixo:

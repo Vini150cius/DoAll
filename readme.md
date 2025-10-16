@@ -12,9 +12,9 @@ O **DoAll** é um aplicativo desenvolvido para facilitar a conexão entre client
 
 Além de permitir a visualização da avaliação de cada profissional, o aplicativo ajuda os clientes a escolherem a melhor opção para suas necessidades.  
 
-O aplicativo foi desenvolvido utilizando **React Native** e utiliza o **Firebase** como banco de dados.
+O aplicativo foi desenvolvido utilizando **React Native** e utiliza o **Supabase** como banco de dados.
 
-Este projeto foi desenvolvido como parte da disciplina de **Programação de Aplicativos Mobile (PAM)**, sob orientação da professora **Magali Benedita Teixeira Nery**.
+Este projeto foi desenvolvido como parte da disciplina de **Programação de Aplicativos Mobile (PAM)**, sob orientação da professora **Magali Benedita Teixeira Nery** e **Gustavo Guerreiro Lima Dias da Silva**.
 
 ## 🚀 Instalação
 

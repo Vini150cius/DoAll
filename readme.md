@@ -46,7 +46,7 @@ npm start
 ## 🔧 Tecnologias utilizadas
 
 - **React Native** — Framework para desenvolvimento mobile multiplataforma.
-- **Firebase** — utilizado para autenticação, banco de dados em tempo real e armazenamento.
+- **Supabase** — utilizado para autenticação, banco de dados em tempo real e armazenamento.
 
 ## 📝 Licença
 
